@@ -10,9 +10,46 @@
 
 ---
 
-## 🌟 Overview
+## 🖼 Application Screenshots
 
-**ContractIQ v2** is an enterprise-grade SaaS platform designed for automated contract ingestion, multi-agent AI risk analysis, human-in-the-loop approval governance, and controlled ERP integration. No LLM agent is ever permitted to directly mutate enterprise record systems, decide tenant isolation, or bypass authorization.
+### Executive Governance Dashboard
+![Executive Governance Dashboard](docs/assets/screenshots/dashboard_overview.png)
+*Real-time executive dashboard featuring KPI metrics, active tenant switcher, Recharts volume trend analytics, and portfolio risk breakdown.*
+
+---
+
+### Contract Ingestion & Risk Analytics
+![Contract Ingestion & Risk Profile](docs/assets/screenshots/dashboard_charts.png)
+*Interactive volume ingestion trend curve vs high-risk clause detection rate.*
+
+---
+
+### Multi-Tenant Contract Repository (Light & Dark Mode)
+
+<div align="center">
+  <img src="docs/assets/screenshots/contract_repository_grid.png" width="49%" alt="Contract Repository Light Mode" />
+  <img src="docs/assets/screenshots/contract_repository_dark.png" width="49%" alt="Contract Repository Dark Mode" />
+</div>
+
+*Multi-tenant contract repository with real-time risk classification filters, counterparty metadata, and instant search.*
+
+---
+
+### Human-in-the-Loop Approval Inbox
+![Human-in-the-Loop Inbox](docs/assets/screenshots/human_approvals_inbox.png)
+*SLA countdown timers and policy validation gates requiring human authorization before SAP & Salesforce ERP execution.*
+
+---
+
+### Cryptographic Audit Chain Ledger & SQL Tamper Detector
+![Cryptographic Audit Chain](docs/assets/screenshots/audit_chain_ledger.png)
+*SHA-256 hash-chained event ledger visualizer with real-time SQL record tampering detection.*
+
+---
+
+### LangGraph Supervisor Agent Execution Trace
+![LangGraph Agent Trace Graph](docs/assets/screenshots/agent_trace_graph.png)
+*Real-time state execution pipeline across multi-agent nodes (`ingestion`, `extraction`, `risk`, `compliance`, `critic`, `approval_gate`, `integration`, `audit`).*
 
 ---
 
