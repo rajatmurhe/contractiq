@@ -1,0 +1,408 @@
+name: contractiq
+
+services:
+  # ─── Infrastructure ──────────────────────────────────────────────────────────
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "ContractIQ_Dev!2024"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "ContractIQ_Dev!2024", "-C", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: contractiq
+      RABBITMQ_DEFAULT_PASS: contractiq
+      RABBITMQ_DEFAULT_VHOST: contractiq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 45s
+    networks:
+      - internal
+
+  redis:
+    image: redis:7.4-alpine
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - internal
+
+  qdrant:
+    image: qdrant/qdrant:v1.11.0
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      # qdrant has no curl/wget — check TCP port via bash proc
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/6333' 2>/dev/null && exit 0 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - internal
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.32.0
+    command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - azurite-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "nc -zw2 127.0.0.1 10000"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - internal
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: dev-mem
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    healthcheck:
+      # Keycloak on ARM64 takes 3-4 minutes — give it a very long start_period
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.0\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK' && exit 0 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 300s
+    networks:
+      - internal
+
+  # ─── Mock Servers ────────────────────────────────────────────────────────────
+
+  sap-mock:
+    image: wiremock/wiremock:3.9.1-alpine
+    platform: linux/amd64
+    command: --port 4004 --root-dir /home/wiremock --verbose
+    ports:
+      - "4004:4004"
+    environment:
+      SAP_FAULT_INJECTION: "${SAP_FAULT_INJECTION:-false}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4004/__admin/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - internal
+      - egress
+
+  salesforce-mock:
+    image: wiremock/wiremock:3.9.1-alpine
+    platform: linux/amd64
+    command: --port 8080 --root-dir /home/wiremock --verbose
+    ports:
+      - "9090:8080"
+    volumes:
+      - ../../infra/mocks/salesforce-mock:/home/wiremock
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/__admin/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - internal
+      - egress
+
+  # ─── Application Services ────────────────────────────────────────────────────
+
+  gateway:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Gateway/ContractIQ.Gateway.csproj
+    ports:
+      - "5001:8080"
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: contractiq
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  tenants-api:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Tenants/ContractIQ.Tenants.Api
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Tenants;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  contracts-api:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Contracts/ContractIQ.Contracts.Api
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Contracts;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+      AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OTiEunht68sI7FIJUXY8SzONgN==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      RABBITMQ_CONNECTION_STRING: "amqp://contractiq:contractiq@rabbitmq:5672/contractiq"
+      QDRANT_URL: http://qdrant:6333
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  workflow-api:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Workflow/ContractIQ.Workflow.Api
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Workflow;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+      RABBITMQ_CONNECTION_STRING: "amqp://contractiq:contractiq@rabbitmq:5672/contractiq"
+      AGENT_SERVICE_URL: http://agent-service:8000
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  audit-api:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Audit/ContractIQ.Audit.Api
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Audit;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  integrations-api:
+    build:
+      context: ../../src/backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: Integrations/ContractIQ.Integrations.Api
+    env_file: ../../.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Integrations;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+      SAP_BASE_URL: http://sap-mock:4004/sap/opu/odata/sap
+      SALESFORCE_BASE_URL: http://salesforce-mock:8080
+      SALESFORCE_INSTANCE_URL: http://salesforce-mock:8080
+      AUDIT_API_URL: http://audit-api:8080
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      sap-mock:
+        condition: service_healthy
+      salesforce-mock:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+      - egress
+
+  agent-service:
+    build:
+      context: ../../src/agent
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    env_file: ../../.env
+    environment:
+      LLM_PROVIDER: "${LLM_PROVIDER:-fake}"
+      OLLAMA_BASE_URL: http://ollama:11434
+      QDRANT_URL: http://qdrant:6333
+      RABBITMQ_CONNECTION_STRING: "amqp://contractiq:contractiq@rabbitmq:5672/contractiq"
+      CONTRACTS_API_URL: http://contracts-api:8080
+      WORKFLOW_API_URL: http://workflow-api:8080
+      AUDIT_API_URL: http://audit-api:8080
+      SQLSERVER_CONNECTION_STRING: "Server=sqlserver,1433;Database=ContractIQ_Agent;User Id=sa;Password=ContractIQ_Dev!2024;TrustServerCertificate=True"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      sqlserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health/live')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  mcp-server:
+    build:
+      context: ../../src/mcp-server
+      dockerfile: Dockerfile
+    env_file: ../../.env
+    environment:
+      CONTRACTS_API_URL: http://contracts-api:8080
+      WORKFLOW_API_URL: http://workflow-api:8080
+      AUDIT_API_URL: http://audit-api:8080
+      INTEGRATIONS_API_URL: http://integrations-api:8080
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: contractiq
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    ports:
+      - "8001:8001"
+    depends_on:
+      contracts-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health/live')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+  frontend:
+    build:
+      context: ../../src/frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5001
+        VITE_KEYCLOAK_URL: http://localhost:8080
+        VITE_KEYCLOAK_REALM: contractiq
+        VITE_KEYCLOAK_CLIENT_ID: contractiq-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+
+volumes:
+  sqlserver-data:
+  rabbitmq-data:
+  redis-data:
+  qdrant-data:
+  azurite-data:
+
+networks:
+  internal:
+    driver: bridge
+  egress:
+    driver: bridge

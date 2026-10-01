@@ -1,0 +1,227 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 5.55kB done
+#1 DONE 0.0s
+
+#2 [gateway internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.77kB done
+#2 DONE 0.0s
+
+#3 [agent-service internal] load build definition from Dockerfile
+#3 transferring dockerfile: 887B done
+#3 DONE 0.0s
+
+#4 [frontend internal] load build definition from Dockerfile
+#4 transferring dockerfile: 889B done
+#4 DONE 0.0s
+
+#5 [mcp-server internal] load build definition from Dockerfile
+#5 transferring dockerfile: 861B done
+#5 DONE 0.0s
+
+#6 [integrations-api internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0-alpine
+#6 DONE 0.3s
+
+#7 [workflow-api internal] load metadata for mcr.microsoft.com/dotnet/aspnet:8.0-alpine
+#7 DONE 0.3s
+
+#8 [integrations-api internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.0s
+
+#9 [integrations-api build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#9 resolve mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d 0.0s done
+#9 DONE 0.0s
+
+#10 [contracts-api runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#10 resolve mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a 0.0s done
+#10 DONE 0.0s
+
+#11 [tenants-api runtime 2/4] WORKDIR /app
+#11 CACHED
+
+#12 [tenants-api runtime 3/4] RUN addgroup -S contractiq && adduser -S contractiq -G contractiq
+#12 CACHED
+
+#13 [integrations-api internal] load build context
+#13 transferring context: 19.22MB 0.4s done
+#13 transferring context: 19.22MB 0.4s done
+#13 DONE 0.4s
+
+#14 [tenants-api build 25/30] COPY Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj Integrations/ContractIQ.Integrations.Api/
+#14 CACHED
+
+#15 [tenants-api build 12/30] COPY Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj Workflow/ContractIQ.Workflow.Infrastructure/
+#15 CACHED
+
+#16 [tenants-api build 21/30] COPY Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj Tenants/ContractIQ.Tenants.Api/
+#16 CACHED
+
+#17 [tenants-api build 17/30] COPY Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj Audit/ContractIQ.Audit.Api/
+#17 CACHED
+
+#18 [tenants-api build 19/30] COPY Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj Tenants/ContractIQ.Tenants.Application/
+#18 CACHED
+
+#19 [tenants-api build 13/30] COPY Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj Workflow/ContractIQ.Workflow.Api/
+#19 CACHED
+
+#20 [tenants-api build 26/30] COPY Gateway/ContractIQ.Gateway.csproj Gateway/
+#20 CACHED
+
+#21 [tenants-api build  5/30] COPY SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj SharedKernel/ContractIQ.SharedKernel.Infrastructure/
+#21 CACHED
+
+#22 [tenants-api build  9/30] COPY Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj Contracts/ContractIQ.Contracts.Api/
+#22 CACHED
+
+#23 [tenants-api build 10/30] COPY Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj Workflow/ContractIQ.Workflow.Domain/
+#23 CACHED
+
+#24 [tenants-api build  2/30] WORKDIR /src
+#24 CACHED
+
+#25 [tenants-api build 15/30] COPY Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj Audit/ContractIQ.Audit.Application/
+#25 CACHED
+
+#26 [tenants-api build 11/30] COPY Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj Workflow/ContractIQ.Workflow.Application/
+#26 CACHED
+
+#27 [tenants-api build 24/30] COPY Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj Integrations/ContractIQ.Integrations.Infrastructure/
+#27 CACHED
+
+#28 [tenants-api build  6/30] COPY Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj Contracts/ContractIQ.Contracts.Domain/
+#28 CACHED
+
+#29 [tenants-api build 20/30] COPY Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj Tenants/ContractIQ.Tenants.Infrastructure/
+#29 CACHED
+
+#30 [tenants-api build 23/30] COPY Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj Integrations/ContractIQ.Integrations.Application/
+#30 CACHED
+
+#31 [tenants-api build  4/30] COPY SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj SharedKernel/ContractIQ.SharedKernel/
+#31 CACHED
+
+#32 [tenants-api build  7/30] COPY Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj Contracts/ContractIQ.Contracts.Application/
+#32 CACHED
+
+#33 [tenants-api build 16/30] COPY Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj Audit/ContractIQ.Audit.Infrastructure/
+#33 CACHED
+
+#34 [tenants-api build 18/30] COPY Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj Tenants/ContractIQ.Tenants.Domain/
+#34 CACHED
+
+#35 [tenants-api build 22/30] COPY Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj Integrations/ContractIQ.Integrations.Domain/
+#35 CACHED
+
+#36 [tenants-api build 27/30] COPY Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj Tests/ContractIQ.Contracts.Tests/
+#36 CACHED
+
+#37 [tenants-api build  8/30] COPY Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj Contracts/ContractIQ.Contracts.Infrastructure/
+#37 CACHED
+
+#38 [tenants-api build  3/30] COPY ContractIQ.sln .
+#38 CACHED
+
+#39 [tenants-api build 14/30] COPY Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj Audit/ContractIQ.Audit.Domain/
+#39 CACHED
+
+#40 [tenants-api build 28/30] RUN dotnet restore ContractIQ.sln
+#40 CACHED
+
+#41 [tenants-api build 29/30] COPY . .
+#41 DONE 2.5s
+
+#42 [workflow-api build 30/30] RUN dotnet publish Workflow/ContractIQ.Workflow.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#42 ...
+
+#43 [mcp-server internal] load metadata for docker.io/library/python:3.12-slim
+#43 DONE 4.6s
+
+#44 [frontend internal] load metadata for docker.io/library/nginx:1.27-alpine
+#44 DONE 4.7s
+
+#45 [frontend internal] load metadata for docker.io/library/node:20-alpine
+#45 DONE 4.7s
+
+#46 [frontend internal] load .dockerignore
+#46 ...
+
+#47 [gateway build 30/30] RUN dotnet publish Gateway/ContractIQ.Gateway     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#47 1.021 MSBUILD : error MSB1009: Project file does not exist.
+#47 1.021 Switch: Gateway/ContractIQ.Gateway
+#47 ERROR: process "/bin/sh -c dotnet publish ${SERVICE}     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false" did not complete successfully: exit code: 1
+
+#48 [mcp-server internal] load .dockerignore
+#48 transferring context: 2B 0.0s done
+#48 DONE 0.4s
+
+#46 [frontend internal] load .dockerignore
+#46 transferring context: 2B 0.0s done
+#46 DONE 0.4s
+
+#49 [agent-service internal] load .dockerignore
+#49 transferring context: 2B done
+#49 DONE 0.5s
+
+#50 [mcp-server internal] load build context
+#50 DONE 0.0s
+
+#51 [agent-service internal] load build context
+#51 DONE 0.0s
+
+#52 [agent-service base 1/3] FROM docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+#52 resolve docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+#52 resolve docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f 0.1s done
+#52 CANCELED
+
+#53 [frontend internal] load build context
+#53 CANCELED
+
+#54 [frontend build 1/6] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#54 CANCELED
+
+#55 [frontend runtime 1/4] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#55 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 0.0s done
+#55 CANCELED
+
+#42 [workflow-api build 30/30] RUN dotnet publish Workflow/ContractIQ.Workflow.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#42 CANCELED
+
+#56 [audit-api build 30/30] RUN dotnet publish Audit/ContractIQ.Audit.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#56 CANCELED
+
+#57 [integrations-api build 30/30] RUN dotnet publish Integrations/ContractIQ.Integrations.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#57 CANCELED
+
+#58 [tenants-api build 30/30] RUN dotnet publish Tenants/ContractIQ.Tenants.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#58 CANCELED
+
+#59 [contracts-api build 30/30] RUN dotnet publish Contracts/ContractIQ.Contracts.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#59 CANCELED
+------
+ > [gateway build 30/30] RUN dotnet publish Gateway/ContractIQ.Gateway     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false:
+1.021 MSBUILD : error MSB1009: Project file does not exist.
+1.021 Switch: Gateway/ContractIQ.Gateway
+------
+Dockerfile:43
+
+--------------------
+
+  42 |     ARG SERVICE
+
+  43 | >>> RUN dotnet publish ${SERVICE} \
+
+  44 | >>>     --configuration Release \
+
+  45 | >>>     --no-restore \
+
+  46 | >>>     --output /app/publish \
+
+  47 | >>>     /p:UseAppHost=false
+
+  48 |     
+
+--------------------
+
+target gateway: failed to solve: process "/bin/sh -c dotnet publish ${SERVICE}     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false" did not complete successfully: exit code: 1
+

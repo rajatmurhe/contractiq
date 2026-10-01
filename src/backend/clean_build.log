@@ -1,0 +1,204 @@
+Build started 10/01/2026 18:32:42.
+     1>Project "/src/ContractIQ.sln" on node 1 (Clean target(s)).
+     1>ValidateSolutionConfiguration:
+         Building solution configuration "Debug|Any CPU".
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj" (2) on node 1 (Clean target(s)).
+     2>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package xunit.analyzers, version 1.4.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj]
+     2>Done Building Project "/src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj" (3) on node 5 (Clean target(s)).
+     3>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj]
+     3>Done Building Project "/src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj" (4) on node 4 (Clean target(s)).
+     4>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj]
+     4>Done Building Project "/src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj" (7) on node 1 (Clean target(s)).
+     7>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj]
+     7>Done Building Project "/src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj" (6) on node 3 (Clean target(s)).
+     6>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.Extensions.Logging.Abstractions, version 8.0.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj]
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj" (5) on node 8 (Clean target(s)).
+     5>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+     6>Done Building Project "/src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     5>Done Building Project "/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Gateway/ContractIQ.Gateway.csproj" (8) on node 6 (Clean target(s)).
+     8>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.Extensions.Configuration.Binder, version 9.0.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Gateway/ContractIQ.Gateway.csproj]
+     8>Done Building Project "/src/Gateway/ContractIQ.Gateway.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj" (11) on node 5 (Clean target(s)).
+    11>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj]
+    11>Done Building Project "/src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj" (12) on node 1 (Clean target(s)).
+    12>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj]
+    12>Done Building Project "/src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj" (9) on node 2 (Clean target(s)).
+     9>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj]
+     9>Done Building Project "/src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj" (10) on node 7 (Clean target(s)).
+    10>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj]
+    10>Done Building Project "/src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj" (13) on node 3 (Clean target(s)).
+    13>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj]
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj" (14) on node 8 (Clean target(s)).
+    14>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj]
+    14>Done Building Project "/src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj" (Clean target(s)) -- FAILED.
+    13>Done Building Project "/src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj" (15) on node 5 (Clean target(s)).
+    15>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj]
+    15>Done Building Project "/src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj" (16) on node 4 (Clean target(s)).
+    16>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj]
+    16>Done Building Project "/src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj" (17) on node 1 (Clean target(s)).
+    17>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj]
+    17>Done Building Project "/src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj" (18) on node 2 (Clean target(s)).
+    18>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj]
+    18>Done Building Project "/src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj" (20) on node 6 (Clean target(s)).
+    20>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj]
+    20>Done Building Project "/src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj" (19) on node 3 (Clean target(s)).
+    19>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj]
+    19>Done Building Project "/src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj" (21) on node 8 (Clean target(s)).
+    21>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj]
+    21>Done Building Project "/src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj" (22) on node 5 (Clean target(s)).
+    22>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj]
+    22>Done Building Project "/src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj" (23) on node 4 (Clean target(s)).
+    23>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj]
+    23>Done Building Project "/src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj" (24) on node 1 (Clean target(s)).
+    24>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj]
+    24>Done Building Project "/src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj" (Clean target(s)) -- FAILED.
+     1>Project "/src/ContractIQ.sln" (1) is building "/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj" (25) on node 7 (Clean target(s)).
+    25>/usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+    25>Done Building Project "/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj" (Clean target(s)) -- FAILED.
+     1>Done Building Project "/src/ContractIQ.sln" (Clean target(s)) -- FAILED.
+
+Build FAILED.
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj" (Clean target) (2) ->
+       (ResolvePackageAssets target) -> 
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package xunit.analyzers, version 1.4.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj" (Clean target) (3) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj" (Clean target) (4) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj" (Clean target) (7) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj" (Clean target) (6) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.Extensions.Logging.Abstractions, version 8.0.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj" (Clean target) (5) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Gateway/ContractIQ.Gateway.csproj" (Clean target) (8) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.Extensions.Configuration.Binder, version 9.0.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Gateway/ContractIQ.Gateway.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj" (Clean target) (11) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj" (Clean target) (12) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj" (Clean target) (9) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj" (Clean target) (10) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj" (Clean target) (13) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj" (Clean target) (14) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj" (Clean target) (15) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj" (Clean target) (16) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj" (Clean target) (17) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj" (Clean target) (18) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj" (Clean target) (20) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj" (Clean target) (19) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj" (Clean target) (21) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj" (Clean target) (22) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj" (Clean target) (23) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj" (Clean target) (24) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package FluentValidation, version 11.9.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj]
+
+
+       "/src/ContractIQ.sln" (Clean target) (1) ->
+       "/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj" (Clean target) (25) ->
+         /usr/share/dotnet/sdk/8.0.425/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets(266,5): error NETSDK1064: Package Microsoft.EntityFrameworkCore.Analyzers, version 8.0.2 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions. [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+
+    0 Warning(s)
+    24 Error(s)
+
+Time Elapsed 00:00:06.45

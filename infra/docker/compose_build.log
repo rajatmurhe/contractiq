@@ -1,0 +1,552 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 692B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 3.77kB 0.0s done
+#2 DONE 1.1s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:8.0-alpine
+#3 DONE 7.2s
+
+#4 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0-alpine
+#4 DONE 7.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context:
+#5 transferring context: 2B done
+#5 DONE 0.2s
+
+#6 [internal] load build context
+#6 DONE 0.0s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 resolve mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 resolve mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d 0.3s done
+#7 DONE 0.3s
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 resolve mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 resolve mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a 0.3s done
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 0B / 10.77MB 0.2s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 0B / 30.86MB 0.2s
+#8 sha256:c639b20b42b99c1ac44bba7e13ce31b323740f1c9862d30f86e373278371dece 0B / 946B 0.2s
+#8 sha256:cc899c4eaa5ec34c3c9a92293a08b02e81ee61c4cae7b81367cf1e3f29750f23 0B / 163B 0.2s
+#8 sha256:c639b20b42b99c1ac44bba7e13ce31b323740f1c9862d30f86e373278371dece 946B / 946B 0.5s done
+#8 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 0B / 4.19MB 0.2s
+#8 sha256:cc899c4eaa5ec34c3c9a92293a08b02e81ee61c4cae7b81367cf1e3f29750f23 163B / 163B 0.7s done
+#8 sha256:3d8596a62acfb293683efbc2ca0c2232e691fd4dc74256fe135a87f4f3aa7b16 0B / 1.02MB 0.2s
+#8 ...
+
+#6 [internal] load build context
+#6 transferring context: 62.32MB 2.9s done
+#6 DONE 3.3s
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 1.05MB / 4.19MB 3.5s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 1.05MB / 10.77MB 5.3s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 1.05MB / 30.86MB 5.3s
+#8 sha256:3d8596a62acfb293683efbc2ca0c2232e691fd4dc74256fe135a87f4f3aa7b16 1.02MB / 1.02MB 4.7s done
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 3.15MB / 30.86MB 8.4s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:87248311b0a2b5a5002940cc04364594950e207949aeda49416cf971797a97a4 2.62kB / 2.62kB 0.2s done
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 1.05MB / 174.53MB 3.0s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 2.10MB / 4.19MB 8.4s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 1.05MB / 10.77MB 10.4s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 4.94MB / 30.86MB 11.0s
+#8 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 3.15MB / 4.19MB 10.5s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 2.10MB / 10.77MB 12.9s
+#8 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 4.19MB / 4.19MB 13.7s done
+#8 extracting sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00
+#8 extracting sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 0.7s done
+#8 extracting sha256:3d8596a62acfb293683efbc2ca0c2232e691fd4dc74256fe135a87f4f3aa7b16
+#8 extracting sha256:3d8596a62acfb293683efbc2ca0c2232e691fd4dc74256fe135a87f4f3aa7b16 0.1s done
+#8 extracting sha256:c639b20b42b99c1ac44bba7e13ce31b323740f1c9862d30f86e373278371dece 0.0s done
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 3.15MB / 10.77MB 15.5s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 5.24MB / 30.86MB 16.1s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 4.19MB / 10.77MB 18.2s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 6.29MB / 174.53MB 13.4s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 1.05MB / 22.32MB 4.8s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 6.29MB / 30.86MB 21.2s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 4.19MB / 10.77MB 23.3s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 8.39MB / 30.86MB 23.1s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 5.24MB / 10.77MB 27.9s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 9.44MB / 30.86MB 28.2s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 10.49MB / 174.53MB 23.4s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 4.19MB / 22.32MB 14.9s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 6.29MB / 10.77MB 29.6s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 11.53MB / 30.86MB 30.6s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 7.34MB / 10.77MB 31.2s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 8.39MB / 10.77MB 32.6s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 11.53MB / 30.86MB 35.7s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 9.44MB / 10.77MB 36.6s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 13.63MB / 174.53MB 33.5s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 6.29MB / 22.32MB 24.9s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 10.49MB / 10.77MB 40.7s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 11.53MB / 30.86MB 40.8s
+#8 sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 10.77MB / 10.77MB 41.0s done
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 11.53MB / 30.86MB 45.9s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 17.83MB / 174.53MB 41.6s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 9.44MB / 22.32MB 33.0s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 13.63MB / 30.86MB 48.6s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 13.63MB / 30.86MB 53.7s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 23.07MB / 174.53MB 49.4s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 11.53MB / 22.32MB 40.8s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 13.63MB / 30.86MB 58.8s
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 15.73MB / 30.86MB 61.3s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 25.17MB / 174.53MB 57.1s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 14.68MB / 22.32MB 48.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 29.36MB / 174.53MB 62.2s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 15.73MB / 22.32MB 53.6s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 17.83MB / 22.32MB 55.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 30.41MB / 174.53MB 67.3s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 17.83MB / 30.86MB 73.1s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 18.87MB / 22.32MB 60.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 32.51MB / 174.53MB 72.4s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 18.87MB / 22.32MB 65.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 32.51MB / 174.53MB 77.5s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 19.92MB / 30.86MB 83.5s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 19.92MB / 22.32MB 71.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 33.55MB / 174.53MB 82.6s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 20.97MB / 22.32MB 76.1s
+#7 sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 22.32MB / 22.32MB 77.9s done
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 34.60MB / 174.53MB 87.6s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 20.97MB / 30.86MB 93.9s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 34.60MB / 174.53MB 92.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 35.65MB / 174.53MB 97.8s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 23.07MB / 30.86MB 104.2s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 36.70MB / 174.53MB 102.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 37.75MB / 174.53MB 108.0s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 23.07MB / 30.86MB 114.5s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 38.80MB / 174.53MB 113.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 39.85MB / 174.53MB 118.2s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 25.17MB / 30.86MB 124.5s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 39.85MB / 174.53MB 123.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 39.85MB / 174.53MB 128.4s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 25.17MB / 30.86MB 134.6s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 39.85MB / 174.53MB 133.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 41.94MB / 174.53MB 138.5s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 26.21MB / 30.86MB 144.6s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 41.94MB / 174.53MB 143.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 44.04MB / 174.53MB 148.7s
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 29.36MB / 30.86MB 154.8s
+#8 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 ...
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 30.86MB / 30.86MB 157.5s done
+#8 extracting sha256:4dc3cd5a95d072a1ab19d56d991dddb225c1b5a7c838b64e81102790ac6aa3d0 1.5s done
+#8 DONE 160.4s
+
+#8 [runtime 1/4] FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine@sha256:628ffa789119d231880f32653b75aca3f528968058fdc3cdfb6969e583f8243a
+#8 extracting sha256:cc899c4eaa5ec34c3c9a92293a08b02e81ee61c4cae7b81367cf1e3f29750f23 0.0s done
+#8 extracting sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789
+#8 extracting sha256:0dbf33945cfff072f164e513f1408cc173df6979ff8ff4ebf10b87073e131789 0.5s done
+#8 DONE 160.8s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 45.09MB / 174.53MB 153.8s
+#7 extracting sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 45.09MB / 174.53MB 158.9s
+#7 ...
+
+#9 [runtime 2/4] WORKDIR /app
+#9 ...
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 47.19MB / 174.53MB 164.0s
+#7 ...
+
+#9 [runtime 2/4] WORKDIR /app
+#9 DONE 10.6s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 extracting sha256:64da1e607ce1441848d9cafe8668be920747d66905397682079e6a185448e3f5 10.6s done
+#7 ...
+
+#10 [runtime 3/4] RUN addgroup -S contractiq && adduser -S contractiq -G contractiq
+#10 DONE 1.4s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 48.23MB / 174.53MB 169.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 51.38MB / 174.53MB 174.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 54.53MB / 174.53MB 179.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 57.67MB / 174.53MB 184.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 60.82MB / 174.53MB 189.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 65.01MB / 174.53MB 194.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 67.11MB / 174.53MB 199.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 67.11MB / 174.53MB 204.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 68.16MB / 174.53MB 209.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 68.16MB / 174.53MB 214.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 219.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 225.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 230.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 235.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 240.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 245.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 250.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 255.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 260.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 69.21MB / 174.53MB 265.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 70.25MB / 174.53MB 270.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 71.30MB / 174.53MB 276.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 71.30MB / 174.53MB 281.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 71.30MB / 174.53MB 286.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 71.30MB / 174.53MB 291.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 72.35MB / 174.53MB 296.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 72.35MB / 174.53MB 301.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 72.35MB / 174.53MB 306.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 73.40MB / 174.53MB 311.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 74.45MB / 174.53MB 316.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 74.45MB / 174.53MB 321.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 74.45MB / 174.53MB 327.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 75.50MB / 174.53MB 332.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 76.55MB / 174.53MB 337.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 76.55MB / 174.53MB 342.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 76.55MB / 174.53MB 347.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 77.59MB / 174.53MB 352.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 78.64MB / 174.53MB 358.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 78.64MB / 174.53MB 363.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 79.69MB / 174.53MB 368.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 79.69MB / 174.53MB 373.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 79.69MB / 174.53MB 378.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 80.74MB / 174.53MB 383.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 80.74MB / 174.53MB 388.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 81.79MB / 174.53MB 393.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 82.84MB / 174.53MB 398.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 82.84MB / 174.53MB 404.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 83.89MB / 174.53MB 409.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 83.89MB / 174.53MB 414.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 83.89MB / 174.53MB 419.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 83.89MB / 174.53MB 424.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 84.93MB / 174.53MB 429.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 87.03MB / 174.53MB 434.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 87.03MB / 174.53MB 439.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 88.08MB / 174.53MB 445.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 88.08MB / 174.53MB 450.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 89.13MB / 174.53MB 455.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 90.18MB / 174.53MB 460.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 91.23MB / 174.53MB 465.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 91.23MB / 174.53MB 470.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 93.32MB / 174.53MB 475.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 93.32MB / 174.53MB 480.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 93.32MB / 174.53MB 485.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 94.37MB / 174.53MB 491.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 95.42MB / 174.53MB 496.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 95.42MB / 174.53MB 501.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 96.47MB / 174.53MB 506.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 98.57MB / 174.53MB 511.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 99.61MB / 174.53MB 516.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 99.61MB / 174.53MB 521.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 100.66MB / 174.53MB 526.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 101.71MB / 174.53MB 531.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 102.76MB / 174.53MB 536.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 103.81MB / 174.53MB 541.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 105.91MB / 174.53MB 546.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 106.95MB / 174.53MB 552.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 108.00MB / 174.53MB 557.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 109.05MB / 174.53MB 562.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 109.05MB / 174.53MB 567.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 110.10MB / 174.53MB 572.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 110.10MB / 174.53MB 577.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 111.15MB / 174.53MB 582.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 111.15MB / 174.53MB 587.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 112.20MB / 174.53MB 592.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 112.20MB / 174.53MB 597.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 113.25MB / 174.53MB 603.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 114.29MB / 174.53MB 608.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 115.34MB / 174.53MB 613.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 116.39MB / 174.53MB 618.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 118.49MB / 174.53MB 623.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 119.54MB / 174.53MB 628.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 120.59MB / 174.53MB 633.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 121.63MB / 174.53MB 638.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 121.63MB / 174.53MB 643.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 121.63MB / 174.53MB 648.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 121.63MB / 174.53MB 654.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 122.68MB / 174.53MB 659.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 123.73MB / 174.53MB 664.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 123.73MB / 174.53MB 669.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 123.73MB / 174.53MB 674.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 123.73MB / 174.53MB 679.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 125.83MB / 174.53MB 684.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 127.93MB / 174.53MB 689.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 130.02MB / 174.53MB 694.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 134.22MB / 174.53MB 699.9s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 136.31MB / 174.53MB 705.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 139.46MB / 174.53MB 710.1s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 141.56MB / 174.53MB 715.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 142.61MB / 174.53MB 720.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 144.70MB / 174.53MB 725.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 144.70MB / 174.53MB 730.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 145.75MB / 174.53MB 735.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 147.85MB / 174.53MB 740.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 147.85MB / 174.53MB 745.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 148.90MB / 174.53MB 750.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 149.95MB / 174.53MB 755.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 150.99MB / 174.53MB 761.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 152.04MB / 174.53MB 766.0s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 154.14MB / 174.53MB 771.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 155.19MB / 174.53MB 776.2s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 156.24MB / 174.53MB 781.3s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 158.33MB / 174.53MB 786.4s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 161.48MB / 174.53MB 791.5s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 163.58MB / 174.53MB 796.6s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 167.77MB / 174.53MB 801.7s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 169.87MB / 174.53MB 806.8s
+#7 sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 173.02MB / 174.53MB 811.9s
+#7 DONE 820.4s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 extracting sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053
+#7 extracting sha256:7d7f344413dd06d4a704d1b432f2f08fa1161f6eca87411d6633d5ee319e3053 13.2s done
+#7 DONE 833.6s
+
+#7 [build  1/30] FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine@sha256:3111b113abec80b4a8a3d4b5cebebf61a4cdab019b7e56ca3e6389e6ac4e1c8d
+#7 extracting sha256:87248311b0a2b5a5002940cc04364594950e207949aeda49416cf971797a97a4 0.1s done
+#7 DONE 833.7s
+
+#11 [build  2/30] WORKDIR /src
+#11 DONE 0.8s
+
+#12 [build  3/30] COPY ContractIQ.sln .
+#12 DONE 0.1s
+
+#13 [build  4/30] COPY SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj SharedKernel/ContractIQ.SharedKernel/
+#13 DONE 0.1s
+
+#14 [build  5/30] COPY SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj SharedKernel/ContractIQ.SharedKernel.Infrastructure/
+#14 DONE 0.1s
+
+#15 [build  6/30] COPY Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj Contracts/ContractIQ.Contracts.Domain/
+#15 DONE 0.1s
+
+#16 [build  7/30] COPY Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj Contracts/ContractIQ.Contracts.Application/
+#16 DONE 0.1s
+
+#17 [build  8/30] COPY Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj Contracts/ContractIQ.Contracts.Infrastructure/
+#17 DONE 0.1s
+
+#18 [build  9/30] COPY Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj Contracts/ContractIQ.Contracts.Api/
+#18 DONE 0.1s
+
+#19 [build 10/30] COPY Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj Workflow/ContractIQ.Workflow.Domain/
+#19 DONE 0.1s
+
+#20 [build 11/30] COPY Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj Workflow/ContractIQ.Workflow.Application/
+#20 DONE 0.2s
+
+#21 [build 12/30] COPY Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj Workflow/ContractIQ.Workflow.Infrastructure/
+#21 DONE 0.0s
+
+#22 [build 13/30] COPY Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj Workflow/ContractIQ.Workflow.Api/
+#22 DONE 0.1s
+
+#23 [build 14/30] COPY Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj Audit/ContractIQ.Audit.Domain/
+#23 DONE 0.0s
+
+#24 [build 15/30] COPY Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj Audit/ContractIQ.Audit.Application/
+#24 DONE 0.1s
+
+#25 [build 16/30] COPY Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj Audit/ContractIQ.Audit.Infrastructure/
+#25 DONE 0.1s
+
+#26 [build 17/30] COPY Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj Audit/ContractIQ.Audit.Api/
+#26 DONE 0.1s
+
+#27 [build 18/30] COPY Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj Tenants/ContractIQ.Tenants.Domain/
+#27 DONE 0.1s
+
+#28 [build 19/30] COPY Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj Tenants/ContractIQ.Tenants.Application/
+#28 DONE 0.1s
+
+#29 [build 20/30] COPY Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj Tenants/ContractIQ.Tenants.Infrastructure/
+#29 DONE 0.1s
+
+#30 [build 21/30] COPY Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj Tenants/ContractIQ.Tenants.Api/
+#30 DONE 0.1s
+
+#31 [build 22/30] COPY Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj Integrations/ContractIQ.Integrations.Domain/
+#31 DONE 0.1s
+
+#32 [build 23/30] COPY Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj Integrations/ContractIQ.Integrations.Application/
+#32 DONE 0.1s
+
+#33 [build 24/30] COPY Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj Integrations/ContractIQ.Integrations.Infrastructure/
+#33 DONE 0.1s
+
+#34 [build 25/30] COPY Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj Integrations/ContractIQ.Integrations.Api/
+#34 DONE 0.1s
+
+#35 [build 26/30] COPY Gateway/ContractIQ.Gateway.csproj Gateway/
+#35 DONE 0.1s
+
+#36 [build 27/30] COPY Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj Tests/ContractIQ.Contracts.Tests/
+#36 DONE 0.1s
+
+#37 [build 28/30] RUN dotnet restore ContractIQ.sln
+#37 10.66   Determining projects to restore...
+#37 43.18   Restored /src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj (in 27.78 sec).
+#37 43.18   Restored /src/SharedKernel/ContractIQ.SharedKernel/ContractIQ.SharedKernel.csproj (in 27.78 sec).
+#37 43.18   Restored /src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj (in 27.78 sec).
+#37 43.18   Restored /src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj (in 27.77 sec).
+#37 43.22   Restored /src/Integrations/ContractIQ.Integrations.Application/ContractIQ.Integrations.Application.csproj (in 15 ms).
+#37 43.22   Restored /src/Integrations/ContractIQ.Integrations.Domain/ContractIQ.Integrations.Domain.csproj (in 16 ms).
+#37 43.24   Restored /src/Contracts/ContractIQ.Contracts.Application/ContractIQ.Contracts.Application.csproj (in 7 ms).
+#37 43.27   Restored /src/Audit/ContractIQ.Audit.Domain/ContractIQ.Audit.Domain.csproj (in 8 ms).
+#37 43.35   Restored /src/Audit/ContractIQ.Audit.Application/ContractIQ.Audit.Application.csproj (in 26 ms).
+#37 52.35   Restored /src/Gateway/ContractIQ.Gateway.csproj (in 9.14 sec).
+#37 52.37   Restored /src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj (in 12 ms).
+#37 56.71   Restored /src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj (in 41.35 sec).
+#37 56.71   Restored /src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj (in 41.35 sec).
+#37 56.77   Restored /src/Tenants/ContractIQ.Tenants.Domain/ContractIQ.Tenants.Domain.csproj (in 42 ms).
+#37 56.79   Restored /src/Tenants/ContractIQ.Tenants.Application/ContractIQ.Tenants.Application.csproj (in 5 ms).
+#37 148.5   Restored /src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj (in 1.6 min).
+#37 148.5   Restored /src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj (in 2.22 min).
+#37 148.5   Restored /src/Audit/ContractIQ.Audit.Infrastructure/ContractIQ.Audit.Infrastructure.csproj (in 2.22 min).
+#37 148.5   Restored /src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj (in 1.53 min).
+#37 148.5   Restored /src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj (in 1.75 min).
+#37 148.5   Restored /src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj (in 17 ms).
+#37 152.1   Restored /src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj (in 1.81 min).
+#37 152.1   Restored /src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj (in 1.81 min).
+#37 175.1   Restored /src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj (in 1.97 min).
+#37 DONE 176.4s
+
+#38 [build 29/30] COPY . .
+#38 DONE 2.9s
+
+#39 [build 30/30] RUN dotnet publish Tenants/ContractIQ.Tenants.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false
+#39 4.508   ContractIQ.SharedKernel -> /src/SharedKernel/ContractIQ.SharedKernel/bin/Release/net8.0/ContractIQ.SharedKernel.dll
+#39 5.108   ContractIQ.Tenants.Domain -> /src/Tenants/ContractIQ.Tenants.Domain/bin/Release/net8.0/ContractIQ.Tenants.Domain.dll
+#39 5.313   ContractIQ.SharedKernel.Infrastructure -> /src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/bin/Release/net8.0/ContractIQ.SharedKernel.Infrastructure.dll
+#39 6.029   ContractIQ.Tenants.Application -> /src/Tenants/ContractIQ.Tenants.Application/bin/Release/net8.0/ContractIQ.Tenants.Application.dll
+#39 16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)'. 'TenantRepository.GetByIdAsync(TenantId, CancellationToken)' cannot implement 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)' because it does not have the matching return type of 'Task<Tenant?>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+#39 16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.ListAsync(CancellationToken)'. 'TenantRepository.ListAsync(CancellationToken)' cannot implement 'ITenantRepository.ListAsync(CancellationToken)' because it does not have the matching return type of 'Task<IReadOnlyList<Tenant>>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+#39 16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.AddAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+#39 16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.UpdateAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+#39 ERROR: process "/bin/sh -c dotnet publish ${SERVICE}     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false" did not complete successfully: exit code: 1
+------
+ > [build 30/30] RUN dotnet publish Tenants/ContractIQ.Tenants.Api     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false:
+4.508   ContractIQ.SharedKernel -> /src/SharedKernel/ContractIQ.SharedKernel/bin/Release/net8.0/ContractIQ.SharedKernel.dll
+5.108   ContractIQ.Tenants.Domain -> /src/Tenants/ContractIQ.Tenants.Domain/bin/Release/net8.0/ContractIQ.Tenants.Domain.dll
+5.313   ContractIQ.SharedKernel.Infrastructure -> /src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/bin/Release/net8.0/ContractIQ.SharedKernel.Infrastructure.dll
+6.029   ContractIQ.Tenants.Application -> /src/Tenants/ContractIQ.Tenants.Application/bin/Release/net8.0/ContractIQ.Tenants.Application.dll
+16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)'. 'TenantRepository.GetByIdAsync(TenantId, CancellationToken)' cannot implement 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)' because it does not have the matching return type of 'Task<Tenant?>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.ListAsync(CancellationToken)'. 'TenantRepository.ListAsync(CancellationToken)' cannot implement 'ITenantRepository.ListAsync(CancellationToken)' because it does not have the matching return type of 'Task<IReadOnlyList<Tenant>>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.AddAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+16.31 /src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.UpdateAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+------
+Dockerfile:43
+
+--------------------
+
+  42 |     ARG SERVICE
+
+  43 | >>> RUN dotnet publish ${SERVICE} \
+
+  44 | >>>     --configuration Release \
+
+  45 | >>>     --no-restore \
+
+  46 | >>>     --output /app/publish \
+
+  47 | >>>     /p:UseAppHost=false
+
+  48 |     
+
+--------------------
+
+failed to solve: process "/bin/sh -c dotnet publish ${SERVICE}     --configuration Release     --no-restore     --output /app/publish     /p:UseAppHost=false" did not complete successfully: exit code: 1
+

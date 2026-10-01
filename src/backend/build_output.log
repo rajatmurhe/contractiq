@@ -1,0 +1,57 @@
+  Determining projects to restore...
+  Restored /src/Contracts/ContractIQ.Contracts.Domain/ContractIQ.Contracts.Domain.csproj (in 10.16 sec).
+  Restored /src/Integrations/ContractIQ.Integrations.Infrastructure/ContractIQ.Integrations.Infrastructure.csproj (in 10.16 sec).
+  Restored /src/Workflow/ContractIQ.Workflow.Application/ContractIQ.Workflow.Application.csproj (in 10.17 sec).
+  Restored /src/Workflow/ContractIQ.Workflow.Domain/ContractIQ.Workflow.Domain.csproj (in 10.17 sec).
+  Restored /src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/ContractIQ.SharedKernel.Infrastructure.csproj (in 31.1 sec).
+  Restored /src/Integrations/ContractIQ.Integrations.Api/ContractIQ.Integrations.Api.csproj (in 41.4 sec).
+  Restored /src/Gateway/ContractIQ.Gateway.csproj (in 8.6 sec).
+  Restored /src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj (in 1.49 min).
+  Restored /src/Workflow/ContractIQ.Workflow.Infrastructure/ContractIQ.Workflow.Infrastructure.csproj (in 1.49 min).
+  Restored /src/Tenants/ContractIQ.Tenants.Api/ContractIQ.Tenants.Api.csproj (in 1.49 min).
+  Restored /src/Workflow/ContractIQ.Workflow.Api/ContractIQ.Workflow.Api.csproj (in 1.32 min).
+  Restored /src/Audit/ContractIQ.Audit.Api/ContractIQ.Audit.Api.csproj (in 1.32 min).
+  Restored /src/Contracts/ContractIQ.Contracts.Infrastructure/ContractIQ.Contracts.Infrastructure.csproj (in 52.59 sec).
+  Restored /src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj (in 43.98 sec).
+  Restored /src/Tests/ContractIQ.Contracts.Tests/ContractIQ.Contracts.Tests.csproj (in 3.51 min).
+  9 of 24 projects are up-to-date for restore.
+  ContractIQ.SharedKernel -> /src/SharedKernel/ContractIQ.SharedKernel/bin/Release/net8.0/ContractIQ.SharedKernel.dll
+  ContractIQ.Contracts.Tests -> /src/Tests/ContractIQ.Contracts.Tests/bin/Release/net8.0/ContractIQ.Contracts.Tests.dll
+  ContractIQ.Gateway -> /src/Gateway/bin/Release/net8.0/ContractIQ.Gateway.dll
+  ContractIQ.SharedKernel.Infrastructure -> /src/SharedKernel/ContractIQ.SharedKernel.Infrastructure/bin/Release/net8.0/ContractIQ.SharedKernel.Infrastructure.dll
+  ContractIQ.Tenants.Domain -> /src/Tenants/ContractIQ.Tenants.Domain/bin/Release/net8.0/ContractIQ.Tenants.Domain.dll
+  ContractIQ.Contracts.Domain -> /src/Contracts/ContractIQ.Contracts.Domain/bin/Release/net8.0/ContractIQ.Contracts.Domain.dll
+  ContractIQ.Integrations.Domain -> /src/Integrations/ContractIQ.Integrations.Domain/bin/Release/net8.0/ContractIQ.Integrations.Domain.dll
+  ContractIQ.Workflow.Domain -> /src/Workflow/ContractIQ.Workflow.Domain/bin/Release/net8.0/ContractIQ.Workflow.Domain.dll
+  ContractIQ.Audit.Domain -> /src/Audit/ContractIQ.Audit.Domain/bin/Release/net8.0/ContractIQ.Audit.Domain.dll
+  ContractIQ.Contracts.Application -> /src/Contracts/ContractIQ.Contracts.Application/bin/Release/net8.0/ContractIQ.Contracts.Application.dll
+  ContractIQ.Audit.Application -> /src/Audit/ContractIQ.Audit.Application/bin/Release/net8.0/ContractIQ.Audit.Application.dll
+  ContractIQ.Tenants.Application -> /src/Tenants/ContractIQ.Tenants.Application/bin/Release/net8.0/ContractIQ.Tenants.Application.dll
+  ContractIQ.Workflow.Application -> /src/Workflow/ContractIQ.Workflow.Application/bin/Release/net8.0/ContractIQ.Workflow.Application.dll
+  ContractIQ.Contracts.Infrastructure -> /src/Contracts/ContractIQ.Contracts.Infrastructure/bin/Release/net8.0/ContractIQ.Contracts.Infrastructure.dll
+  ContractIQ.Integrations.Application -> /src/Integrations/ContractIQ.Integrations.Application/bin/Release/net8.0/ContractIQ.Integrations.Application.dll
+  ContractIQ.Audit.Infrastructure -> /src/Audit/ContractIQ.Audit.Infrastructure/bin/Release/net8.0/ContractIQ.Audit.Infrastructure.dll
+  ContractIQ.Integrations.Infrastructure -> /src/Integrations/ContractIQ.Integrations.Infrastructure/bin/Release/net8.0/ContractIQ.Integrations.Infrastructure.dll
+  ContractIQ.Workflow.Infrastructure -> /src/Workflow/ContractIQ.Workflow.Infrastructure/bin/Release/net8.0/ContractIQ.Workflow.Infrastructure.dll
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)'. 'TenantRepository.GetByIdAsync(TenantId, CancellationToken)' cannot implement 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)' because it does not have the matching return type of 'Task<Tenant?>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.ListAsync(CancellationToken)'. 'TenantRepository.ListAsync(CancellationToken)' cannot implement 'ITenantRepository.ListAsync(CancellationToken)' because it does not have the matching return type of 'Task<IReadOnlyList<Tenant>>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.AddAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.UpdateAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Contracts/ContractIQ.Contracts.Api/Controllers/V1/ContractsController.cs(7,40): error CS0234: The type or namespace name 'Commands' does not exist in the namespace 'ContractIQ.Contracts.Application' (are you missing an assembly reference?) [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+/src/Contracts/ContractIQ.Contracts.Api/Controllers/V1/ContractsController.cs(8,40): error CS0234: The type or namespace name 'Queries' does not exist in the namespace 'ContractIQ.Contracts.Application' (are you missing an assembly reference?) [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+  ContractIQ.Workflow.Api -> /src/Workflow/ContractIQ.Workflow.Api/bin/Release/net8.0/ContractIQ.Workflow.Api.dll
+  ContractIQ.Audit.Api -> /src/Audit/ContractIQ.Audit.Api/bin/Release/net8.0/ContractIQ.Audit.Api.dll
+  ContractIQ.Integrations.Api -> /src/Integrations/ContractIQ.Integrations.Api/bin/Release/net8.0/ContractIQ.Integrations.Api.dll
+
+Build FAILED.
+
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)'. 'TenantRepository.GetByIdAsync(TenantId, CancellationToken)' cannot implement 'ITenantRepository.GetByIdAsync(TenantId, CancellationToken)' because it does not have the matching return type of 'Task<Tenant?>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0738: 'TenantRepository' does not implement interface member 'ITenantRepository.ListAsync(CancellationToken)'. 'TenantRepository.ListAsync(CancellationToken)' cannot implement 'ITenantRepository.ListAsync(CancellationToken)' because it does not have the matching return type of 'Task<IReadOnlyList<Tenant>>'. [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.AddAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Tenants/ContractIQ.Tenants.Infrastructure/Persistence/TenantsDbContext.cs(38,61): error CS0535: 'TenantRepository' does not implement interface member 'ITenantRepository.UpdateAsync(Tenant, CancellationToken)' [/src/Tenants/ContractIQ.Tenants.Infrastructure/ContractIQ.Tenants.Infrastructure.csproj]
+/src/Contracts/ContractIQ.Contracts.Api/Controllers/V1/ContractsController.cs(7,40): error CS0234: The type or namespace name 'Commands' does not exist in the namespace 'ContractIQ.Contracts.Application' (are you missing an assembly reference?) [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+/src/Contracts/ContractIQ.Contracts.Api/Controllers/V1/ContractsController.cs(8,40): error CS0234: The type or namespace name 'Queries' does not exist in the namespace 'ContractIQ.Contracts.Application' (are you missing an assembly reference?) [/src/Contracts/ContractIQ.Contracts.Api/ContractIQ.Contracts.Api.csproj]
+    0 Warning(s)
+    6 Error(s)
+
+Time Elapsed 00:04:05.80

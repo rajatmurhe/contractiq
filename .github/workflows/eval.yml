@@ -1,0 +1,87 @@
+name: Eval Gate
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/agent/**'
+      - 'tests/eval/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/agent/**'
+      - 'tests/eval/**'
+  workflow_dispatch:
+    inputs:
+      save_baseline:
+        description: "Save this run as the new baseline?"
+        type: boolean
+        default: false
+
+jobs:
+  eval:
+    name: Agent Eval Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install agent dependencies
+        run: cd src/agent && uv pip install -e ".[dev]" --python 3.12 --system
+
+      - name: Run eval suite (fake LLM provider)
+        run: |
+          cd src/agent && python -m app.eval.runner \
+            --dataset ../../tests/eval/extraction_eval.jsonl \
+            --adversarial ../../tests/eval/adversarial_corpus.jsonl \
+            --baseline ../../tests/eval/baseline.json \
+            --output ../../docs/eval-report.md \
+            --fail-on-regression
+        env:
+          LLM_PROVIDER: fake
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          LANGSMITH_PROJECT: contractiq-ci
+          LANGCHAIN_TRACING_V2: ${{ secrets.LANGSMITH_API_KEY != '' }}
+
+      - name: Save as baseline (manual trigger only)
+        if: ${{ inputs.save_baseline == 'true' && github.ref == 'refs/heads/main' }}
+        run: |
+          cd src/agent && python -m app.eval.runner \
+            --dataset ../../tests/eval/extraction_eval.jsonl \
+            --save-baseline ../../tests/eval/baseline.json
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/eval/baseline.json
+          git commit -m "chore(eval): update eval baseline [skip ci]"
+          git push
+
+      - name: Upload eval report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-report
+          path: docs/eval-report.md
+
+      - name: Comment eval results on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.existsSync('docs/eval-report.md')
+              ? fs.readFileSync('docs/eval-report.md', 'utf8').slice(0, 65000)
+              : 'Eval report not generated.';
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📊 Eval Report\n\n${report}`
+            });

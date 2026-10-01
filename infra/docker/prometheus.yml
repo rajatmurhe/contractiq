@@ -1,0 +1,58 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'gateway'
+    static_configs:
+      - targets: ['gateway:8080']
+    metrics_path: /metrics
+
+  - job_name: 'contracts-api'
+    static_configs:
+      - targets: ['contracts-api:8080']
+    metrics_path: /metrics
+
+  - job_name: 'workflow-api'
+    static_configs:
+      - targets: ['workflow-api:8080']
+    metrics_path: /metrics
+
+  - job_name: 'audit-api'
+    static_configs:
+      - targets: ['audit-api:8080']
+    metrics_path: /metrics
+
+  - job_name: 'integrations-api'
+    static_configs:
+      - targets: ['integrations-api:8080']
+    metrics_path: /metrics
+
+  - job_name: 'tenants-api'
+    static_configs:
+      - targets: ['tenants-api:8080']
+    metrics_path: /metrics
+
+  - job_name: 'agent-service'
+    static_configs:
+      - targets: ['agent-service:8000']
+    metrics_path: /metrics
+
+  - job_name: 'mcp-server'
+    static_configs:
+      - targets: ['mcp-server:8001']
+    metrics_path: /metrics
+
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15692']
+    metrics_path: /metrics
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:9121']
+
+  - job_name: 'qdrant'
+    static_configs:
+      - targets: ['qdrant:6333']
+    metrics_path: /metrics

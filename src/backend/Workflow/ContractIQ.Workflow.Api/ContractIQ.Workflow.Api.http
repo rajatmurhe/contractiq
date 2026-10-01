@@ -1,0 +1,6 @@
+@ContractIQ.Workflow.Api_HostAddress = http://localhost:5029
+
+GET {{ContractIQ.Workflow.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
