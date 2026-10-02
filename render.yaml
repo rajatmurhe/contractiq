@@ -1,0 +1,73 @@
+# Render Blueprint Infrastructure-as-Code for ContractIQ v2
+# https://render.com/docs/blueprint-spec
+
+services:
+  # 1. React Frontend SPA
+  - type: web
+    name: contractiq-frontend
+    runtime: docker
+    dockerfilePath: ./src/frontend/Dockerfile
+    dockerContext: ./src/frontend
+    plan: free
+    region: oregon
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: contractiq-gateway
+          property: url
+      - key: VITE_KEYCLOAK_URL
+        value: https://contractiq-gateway.onrender.com
+      - key: VITE_KEYCLOAK_REALM
+        value: contractiq
+      - key: VITE_KEYCLOAK_CLIENT_ID
+        value: contractiq-frontend
+
+  # 2. YARP API Gateway
+  - type: web
+    name: contractiq-gateway
+    runtime: docker
+    dockerfilePath: ./src/backend/Dockerfile
+    dockerContext: ./src/backend
+    plan: free
+    region: oregon
+    envVars:
+      - key: SERVICE
+        value: Gateway/ContractIQ.Gateway.csproj
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+
+  # 3. Python Agent Service (LangGraph Supervisor)
+  - type: web
+    name: contractiq-agent-service
+    runtime: docker
+    dockerfilePath: ./src/agent/Dockerfile
+    dockerContext: ./src/agent
+    plan: free
+    region: oregon
+    envVars:
+      - key: LLM_PROVIDER
+        value: fake
+      - key: PORT
+        value: 8000
+
+  # 4. Python MCP Server
+  - type: web
+    name: contractiq-mcp-server
+    runtime: docker
+    dockerfilePath: ./src/mcp-server/Dockerfile
+    dockerContext: ./src/mcp-server
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8001
+
+  # 5. 24/7 Keep-Alive Cron Worker (Prevents Render Free Tier Sleep Mode)
+  - type: cron
+    name: contractiq-24-7-keepalive
+    runtime: python
+    schedule: "*/5 * * * *" # Trigger every 5 minutes
+    buildCommand: "pip install httpx"
+    startCommand: "python scripts/keepalive.py"
+    plan: free
