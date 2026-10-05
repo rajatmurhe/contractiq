@@ -1,4 +1,4 @@
-# ContractIQ v2 — Multi-Tenant Agentic Contract Intelligence Platform
+# ContractIQ — Multi-Tenant Agentic Contract Intelligence Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
