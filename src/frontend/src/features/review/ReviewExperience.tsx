@@ -167,7 +167,20 @@ export default function ReviewExperience() {
         .catch((e) => setError(e.message));
   }, [session, review]);
   useEffect(() => {
-    evidence.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const mark = evidence.current;
+    const source = mark?.parentElement;
+    if (mark && source) {
+      source.scrollTo({
+        top:
+          source.scrollTop +
+          mark.getBoundingClientRect().top -
+          source.getBoundingClientRect().top -
+          60,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+    }
   }, [selected, review?.id]);
 
   async function startDemo() {
