@@ -1,3 +1,5 @@
+> **Hackathon review pilot:** A new evidence-first frontend and standalone FastAPI service are available. See [setup, deployment, limits, and demo script](docs/review-pilot.md). The new frontend requires the new review API; deploy them together. The architecture and screenshots below describe the earlier prototype, including mock integrations, and are not a claim that every listed capability is production-ready.
+
 # ContractIQ — Multi-Tenant Agentic Contract Intelligence Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

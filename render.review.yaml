@@ -1,0 +1,24 @@
+# Optional NEW service; does not modify the existing multi-service deployment.
+# A persistent disk requires a paid Render instance. Review cost before creating.
+services:
+  - type: web
+    name: contractiq-review
+    runtime: docker
+    dockerfilePath: ./Dockerfile.review
+    dockerContext: .
+    healthCheckPath: /health/ready
+    disk:
+      name: review-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: REVIEW_LLM_API_KEY
+        sync: false
+      - key: REVIEW_LLM_BASE_URL
+        value: https://api.openai.com/v1
+      - key: REVIEW_LLM_MODEL
+        value: gpt-4o-mini
+      - key: REVIEW_HOURLY_MODEL_LIMIT
+        value: 60
