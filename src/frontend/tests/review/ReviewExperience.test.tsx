@@ -38,6 +38,7 @@ let rejectDecision: boolean;
 let liveEvaluation: boolean;
 
 beforeEach(() => {
+  sessionStorage.clear();
   requests = [];
   rejectDecision = false;
   liveEvaluation = false;
@@ -79,6 +80,8 @@ beforeEach(() => {
           demo: false,
           guest: true,
         };
+      else if (path === "/auth/session")
+        data = { name: "Guest reviewer", demo: false, guest: true };
       else if (path === "/auth/demo")
         data = {
           token: "isolated-session",
@@ -329,4 +332,19 @@ it("opens an editable guest evaluation without Google when live AI is configured
   expect(screen.getByLabelText("Contract text")).toHaveValue(source);
   expect(requests.some((r) => r.path === "/auth/guest")).toBe(true);
   expect(requests.some((r) => r.path === "/auth/google")).toBe(false);
+});
+
+it("restores a validated guest session and selected review after refresh", async () => {
+  sessionStorage.setItem(
+    "contractiq-session",
+    JSON.stringify({ token: "guest-session", reviewId: "review-1" }),
+  );
+  render(<ReviewExperience />);
+  expect(
+    await screen.findByRole("heading", { name: review.title }),
+  ).toBeVisible();
+  expect(requests.find((r) => r.path === "/auth/session")?.authorization).toBe(
+    "Bearer guest-session",
+  );
+  expect(requests.some((r) => r.path === "/auth/guest")).toBe(false);
 });

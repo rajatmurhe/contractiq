@@ -201,3 +201,27 @@ def test_guest_session_creation_is_rate_limited(client, monkeypatch):
     for _ in range(5):
         assert client.post('/api/review/auth/guest').status_code == 200
     assert client.post('/api/review/auth/guest').status_code == 429
+
+
+def test_session_resume_returns_metadata_without_stored_token(client):
+    headers = auth(client)
+    response = client.get('/api/review/auth/session', headers=headers)
+    assert response.status_code == 200
+    assert response.json()['demo'] is True
+    assert 'token' not in response.json()
+    client.post('/api/review/auth/logout', headers=headers)
+    assert client.get('/api/review/auth/session', headers=headers).status_code == 401
+
+
+def test_evidence_export_contains_source_comparison_and_audit_and_is_owned(client):
+    from app.review.engine import REVISED_SAMPLE
+    headers = auth(client)
+    baseline = create(client, headers)
+    revised = client.post('/api/review/contracts', headers=headers, json={'text': REVISED_SAMPLE, 'baseline_id': baseline['id']}).json()
+    path = '/api/review/contracts/' + revised['id'] + '/export'
+    bundle = client.get(path, headers=headers).json()
+    assert bundle['review']['text'] == REVISED_SAMPLE
+    assert bundle['review']['comparison']['baseline_id'] == baseline['id']
+    assert bundle['audit']['valid']
+    assert 'P1:' in bundle['playbook']
+    assert client.get(path, headers=auth(client)).status_code == 404

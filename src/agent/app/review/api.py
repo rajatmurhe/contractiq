@@ -154,6 +154,16 @@ def google_session(payload: GoogleLogin, request: Request) -> Json:
     return new_session("google:" + claims["sub"], claims.get("name", "Reviewer"), False)
 
 
+@app.get("/api/review/auth/session")
+def current_session(user: Annotated[Json, Depends(session)]) -> Json:
+    return {
+        "name": user["name"],
+        "demo": bool(user["demo"]),
+        "guest": user["owner"].startswith("guest:"),
+        "expires_at": user["expires"],
+    }
+
+
 @app.post("/api/review/auth/logout")
 def logout(user: Annotated[Json, Depends(session)]) -> Json:
     with database() as db:
@@ -298,6 +308,10 @@ def audit(review_id: str, user: Annotated[Json, Depends(session)]) -> Json:
         rows = db.execute(
             "SELECT * FROM events WHERE review_id=? ORDER BY id", (review_id,)
         ).fetchall()
+    return audit_rows(rows)
+
+
+def audit_rows(rows: list[sqlite3.Row]) -> Json:
     previous = "0" * 64
     valid = bool(rows)
     events = []
@@ -324,6 +338,24 @@ def audit(review_id: str, user: Annotated[Json, Depends(session)]) -> Json:
         "valid": valid,
         "events": events,
         "scope": "Local hash-chain consistency; not externally anchored.",
+    }
+
+
+@app.get("/api/review/contracts/{review_id}/export")
+def export_review(review_id: str, user: Annotated[Json, Depends(session)]) -> Json:
+    with database() as db:
+        db.execute("BEGIN")
+        body = owned(db, review_id, user["owner"])
+        rows = db.execute(
+            "SELECT * FROM events WHERE review_id=? ORDER BY id", (review_id,)
+        ).fetchall()
+    return {
+        "schema_version": 1,
+        "exported_at": time.time(),
+        "review": body,
+        "audit": audit_rows(rows),
+        "playbook": PLAYBOOK,
+        "notice": "Commercial review support, not a legal opinion. No contract was signed.",
     }
 
 

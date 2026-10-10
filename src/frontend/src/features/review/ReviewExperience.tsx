@@ -104,6 +104,10 @@ async function api<T>(
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
   const data = await response.json();
+  if (response.status === 401 && token)
+    window.dispatchEvent(
+      new CustomEvent("contractiq-session-expired", { detail: token }),
+    );
   if (!response.ok)
     throw new Error(
       typeof data.detail === "string"
@@ -115,6 +119,7 @@ async function api<T>(
 
 export default function ReviewExperience() {
   const [config, setConfig] = useState<Config>();
+  const [restoring, setRestoring] = useState(true);
   const [session, setSession] = useState<Session>();
   const [review, setReview] = useState<Review>();
   const [history, setHistory] = useState<History[]>([]);
@@ -146,12 +151,85 @@ export default function ReviewExperience() {
   const evidence = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    let active = true;
+    async function restore() {
+      try {
+        const saved = JSON.parse(
+          sessionStorage.getItem("contractiq-session") || "null",
+        );
+        if (!saved?.token || typeof saved.token !== "string") return;
+        const metadata = await api<Omit<Session, "token">>(
+          "/auth/session",
+          saved.token,
+        );
+        if (!active) return;
+        setSession({ ...metadata, token: saved.token });
+        if (saved.reviewId && typeof saved.reviewId === "string") {
+          try {
+            const prior = await api<Review>(
+              `/contracts/${encodeURIComponent(saved.reviewId)}`,
+              saved.token,
+            );
+            if (active) setReview(prior);
+          } catch {
+            /* A missing review must not prevent opening the workspace. */
+          }
+        }
+      } catch {
+        try {
+          sessionStorage.removeItem("contractiq-session");
+        } catch {
+          /* Storage may be disabled. */
+        }
+      } finally {
+        if (active) setRestoring(false);
+      }
+    }
+    void restore();
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (restoring) return;
+    try {
+      if (session)
+        sessionStorage.setItem(
+          "contractiq-session",
+          JSON.stringify({ token: session.token, reviewId: review?.id }),
+        );
+      else sessionStorage.removeItem("contractiq-session");
+    } catch {
+      /* In-memory evaluation still works when browser storage is disabled. */
+    }
+  }, [session, review?.id, restoring]);
+  useEffect(() => {
+    const expire = (event: Event) => {
+      if ((event as CustomEvent<string>).detail !== session?.token) return;
+      setSession(undefined);
+      setReview(undefined);
+      setHistory([]);
+      setAnswer("");
+      setCitations([]);
+      setAudit(undefined);
+      setReason("");
+      setText("");
+      setChatOpen(false);
+      setError(
+        "Your session expired. Start a new free evaluation or sign in again.",
+      );
+    };
+    window.addEventListener("contractiq-session-expired", expire);
+    return () =>
+      window.removeEventListener("contractiq-session-expired", expire);
+  }, [session?.token]);
+  useEffect(() => {
     api<Config>("/config")
       .then(setConfig)
       .catch((e) => setError(e.message));
   }, []);
   useEffect(() => {
-    if (!config?.google_client_id || session) return;
+    if (!config?.google_client_id || session || restoring) return;
     const mount = () => {
       const google = (window as unknown as { google?: Google }).google;
       if (!google || !googleButton.current) return;
@@ -189,7 +267,7 @@ export default function ReviewExperience() {
     return () => {
       script.remove();
     };
-  }, [config?.google_client_id, session]);
+  }, [config?.google_client_id, session, restoring]);
   useEffect(() => {
     if (session)
       api<History[]>("/contracts", session.token)
@@ -374,25 +452,29 @@ export default function ReviewExperience() {
       setChatBusy(false);
     }
   }
-  function download() {
-    const content =
-      `# ${review!.title}\n\nMode: ${review!.mode}\nStatus: ${review!.status}\nModel: ${review!.model}\n\n` +
-      review!.findings
-        .map(
-          (f) =>
-            `## ${f.id}: ${f.title} (${f.severity})\n\nSource, line ${f.line}: ${f.quote}\n\n${f.rationale}\n\nProposed language (requires legal review): ${f.proposed_language}\n`,
-        )
-        .join("\n") +
-      `\nDecision reason: ${review!.decision_reason || "Pending"}\n\nCommercial playbook review; not a legal opinion.\n`;
-    const url = URL.createObjectURL(
-      new Blob([content], { type: "text/markdown" }),
-    );
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "contractiq-review.md";
-    a.click();
-    URL.revokeObjectURL(url);
+  async function download() {
+    if (!review || !session) return;
+    setError("");
+    try {
+      const bundle = await api<unknown>(
+        `/contracts/${review.id}/export`,
+        session.token,
+      );
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(bundle, null, 2)], {
+          type: "application/json",
+        }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `contractiq-${review.id}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError((e as Error).message);
+    }
   }
+
   async function signOut() {
     try {
       await api("/auth/logout", session?.token, {});
@@ -520,7 +602,7 @@ export default function ReviewExperience() {
               <button
                 className="ciq-button ciq-dark"
                 onClick={startEvaluation}
-                disabled={!config || !!busy}
+                disabled={!config || !!busy || restoring}
               >
                 Test for free <ArrowUpRight size={15} />
               </button>
@@ -560,7 +642,7 @@ export default function ReviewExperience() {
         <ProductLanding
           evaluate={startEvaluation}
           liveEnabled={!!config?.live_enabled}
-          ready={!!config}
+          ready={!!config && !restoring}
           busy={!!busy}
           start={startDemo}
           googleRef={googleButton}
@@ -724,7 +806,7 @@ export default function ReviewExperience() {
                 {session.demo
                   ? "Curated findings. No model calls. Sign out to access Google login."
                   : session.guest
-                    ? "One-hour isolated guest session. Export before signing out; guest access cannot be recovered. No payment required."
+                    ? "Free one-hour guest workspace. Refresh is supported in this tab. Export before signing out or closing the tab."
                     : "Your reviews are scoped to your verified Google identity."}
               </p>
             </div>

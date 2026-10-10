@@ -70,7 +70,7 @@ export function ProductLanding({
               </button>
               <small>
                 {liveEnabled
-                  ? "No account needed. Try your own text or the prefilled sample with live AI. One-hour guest session; export before signing out."
+                  ? "No account needed. Try your own text or the prefilled sample with live AI. One-hour guest session; refresh is supported. Export before signing out or closing the tab."
                   : "This server currently offers the complete curated walkthrough. Live analysis of your own text becomes available when the host configures AI—no purchase needed."}
               </small>
             </div>
