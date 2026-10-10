@@ -35,10 +35,12 @@ let requests: {
   authorization: string | undefined;
 }[];
 let rejectDecision: boolean;
+let liveEvaluation: boolean;
 
 beforeEach(() => {
   requests = [];
   rejectDecision = false;
+  liveEvaluation = false;
   Object.defineProperty(HTMLElement.prototype, "scrollTo", {
     configurable: true,
     value: vi.fn(),
@@ -68,7 +70,14 @@ beforeEach(() => {
           revised_sample: source + " Revised terms.",
           playbook: "P1: Cap liability at twelve months of fees.",
           google_client_id: "",
-          live_enabled: false,
+          live_enabled: liveEvaluation,
+        };
+      else if (path === "/auth/guest")
+        data = {
+          token: "guest-session",
+          name: "Guest reviewer",
+          demo: false,
+          guest: true,
         };
       else if (path === "/auth/demo")
         data = {
@@ -306,4 +315,18 @@ it("offers free evaluation with an honest sample fallback when AI is unavailable
   expect(
     await screen.findByRole("heading", { name: review.title }),
   ).toBeVisible();
+});
+
+it("opens an editable guest evaluation without Google when live AI is configured", async () => {
+  liveEvaluation = true;
+  render(<ReviewExperience />);
+  const start = screen.getByRole("button", { name: "Start free evaluation" });
+  await waitFor(() => expect(start).toBeEnabled());
+  fireEvent.click(start);
+  expect(
+    await screen.findByRole("heading", { name: "What are we reviewing?" }),
+  ).toBeVisible();
+  expect(screen.getByLabelText("Contract text")).toHaveValue(source);
+  expect(requests.some((r) => r.path === "/auth/guest")).toBe(true);
+  expect(requests.some((r) => r.path === "/auth/google")).toBe(false);
 });
