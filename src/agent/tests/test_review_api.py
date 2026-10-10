@@ -173,3 +173,31 @@ def test_comparison_text_changes_preserve_exact_before_and_after_passages():
     old = {'id': 'a', 'title': 'A', 'text': 'Heading\nUnlimited liability.\nFooter', 'findings': []}
     new = {'text': 'Heading\nLiability capped at annual fees.\nFooter', 'findings': []}
     assert compare_reviews(old, new)['changed_passages'] == [{'operation': 'replace', 'before_line': 2, 'after_line': 2, 'before': 'Unlimited liability.', 'after': 'Liability capped at annual fees.'}]
+
+
+def test_free_guest_evaluation_requires_host_model_not_payment(client):
+    response = client.post('/api/review/auth/guest')
+    assert response.status_code == 503
+    assert 'not configured' in response.json()['detail']
+
+
+def test_guest_can_review_arbitrary_text_without_google_and_is_isolated(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
+    async def fake_completion(*args):
+        return sample_review().model_dump_json()
+    monkeypatch.setattr('app.review.engine.completion', fake_completion)
+    guest = client.post('/api/review/auth/guest').json()
+    assert guest['guest'] is True and guest['demo'] is False
+    headers = {'Authorization': 'Bearer ' + guest['token']}
+    result = client.post('/api/review/contracts', headers=headers, json={'text': SAMPLE + '\nAdditional synthetic contact information.'})
+    assert result.status_code == 200
+    assert result.json()['mode'] == 'live'
+    other = client.post('/api/review/auth/guest').json()
+    assert client.get('/api/review/contracts/' + result.json()['id'], headers={'Authorization': 'Bearer ' + other['token']}).status_code == 404
+
+
+def test_guest_session_creation_is_rate_limited(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
+    for _ in range(5):
+        assert client.post('/api/review/auth/guest').status_code == 200
+    assert client.post('/api/review/auth/guest').status_code == 429

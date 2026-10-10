@@ -90,7 +90,7 @@ def new_session(owner: str, name: str, demo: bool) -> Json:
             "INSERT INTO sessions VALUES (?,?,?,?,?)",
             (digest(token), owner, name, demo, time.time() + 3600),
         )
-    return {"token": token, "name": name, "demo": demo}
+    return {"token": token, "name": name, "demo": demo, "guest": owner.startswith("guest:")}
 
 
 @app.get("/api/review/config")
@@ -114,6 +114,16 @@ def ready() -> Json:
     with database() as db:
         db.execute("SELECT 1")
     return {"status": "ready", "live_ai_configured": bool(os.getenv("REVIEW_LLM_API_KEY"))}
+
+
+@app.post("/api/review/auth/guest")
+def guest_session(request: Request) -> Json:
+    if not os.getenv("REVIEW_LLM_API_KEY"):
+        raise HTTPException(
+            503, "Live AI is not configured. The free sample walkthrough is available."
+        )
+    throttle("guests:" + (request.client.host if request.client else "unknown"), 5)
+    return new_session("guest:" + str(uuid4()), "Guest reviewer", False)
 
 
 @app.post("/api/review/auth/demo")
@@ -456,7 +466,10 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
         "The public demo uses two synthetic agreement versions with curated findings. "
         "Revision comparison shows exact text changes and findings grouped by playbook rule. "
         "No longer flagged does not prove resolution; each version needs its own human decision. "
-        "Google login and a configured model are required to review your own text. "
+        "Guest evaluation is free with no signup or credit card when a model is configured. "
+        "Guests can review their own text, compare revisions, ask questions, and export. "
+        "Guest sessions expire after one hour and cannot be recovered after sign-out. "
+        "Google login enables returning to reviews under a verified identity. "
         "Proposed launch pricing: Starter $49/month for 50 reviews; Team $"
         "199/month for 300 reviews; Enterprise custom. "
         "Pricing is a proposal, billing is not implemented. This pilot use"
@@ -468,7 +481,8 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
         q = payload.question.lower()
         if any(w in q for w in ["price", "pricing", "cost", "plan"]):
             answer = (
-                "Proposed launch plans: Starter $49/month for 50 reviews, Team $19"
+                "Hackathon evaluation is free, with no credit card or payment required. "
+                "Future proposed plans: Starter $49/month for 50 reviews, Team $19"
                 "9/month for 300 reviews, and custom Enterprise pricing. Billing i"
                 "s not enabled in this pilot."
             )
@@ -482,8 +496,8 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
             )
         elif any(w in q for w in ["secure", "data", "privacy", "login"]):
             answer = (
-                "The sample uses synthetic data. Live reviews require Google sign-"
-                "in and are isolated by user. Contract text is sent to the configu"
+                "The sample uses synthetic data. Guest reviews are isolated by session; "
+                "Google reviews by user. Contract text is sent to the configu"
                 "red model provider. This pilot does not yet implement organizatio"
                 "n roles or a retention policy."
             )
