@@ -20,7 +20,7 @@ Open http://127.0.0.1:8017. Sample review works without accounts or model keys. 
 
 | Capability | Implementation and limits |
 | --- | --- |
-| Sample review | Fixed synthetic agreement and five curated findings. Explicitly labeled; no model call. |
+| Sample review | Fixed synthetic baseline (five findings) and revision (two findings). Explicitly labeled; no model call. |
 | Private review | Google ID-token verification on the server, opaque one-hour bearer session stored only in browser memory, hashed session tokens in SQLite. |
 | Live analysis | Configured OpenAI-compatible chat provider returns schema-validated commercial findings and draft changes. Exact source quotation checks reject a whole response if any citation is fabricated. No invented offsets: the server computes them. |
 | Evidence assistant | Retrieves up to three verified findings using lexical overlap, then answers from that evidence. Live answers are model-generated; sample answers are deterministic. Citation IDs are allow-listed. Not semantic search. |
@@ -43,7 +43,7 @@ Set the variables in `.env.review.example` in the hosting environment. Local uvi
 - `REVIEW_DB`: persistent SQLite path.
 - `REVIEW_HOURLY_MODEL_LIMIT`: global live model-call limit, default 60. Per-user live reviews are also limited to 10/hour and chat to 20/hour. Requests count even when a provider fails.
 
-Contract text and selected evidence are transmitted to the configured provider. Review that provider’s data policy before using real customer agreements. The public demo accepts only the supplied synthetic agreement.
+Contract text and selected evidence are transmitted to the configured provider. Review that provider’s data policy before using real customer agreements. The public demo accepts only the two supplied synthetic agreement versions.
 
 ## Render deployment
 
@@ -77,12 +77,24 @@ The suite checks exact evidence, fabricated citations, demo restrictions, cross-
 - **1:45–2:20 — Human control.** Request changes with a reason. Show the persistent decision and verified audit chain. Explain that the application does not sign the document or silently write to external tools.
 - **2:20–3:00 — Business.** Initial buyer: procurement leads at growing software companies. Proposed Starter $49/50 reviews and Team $199/300 reviews. Validate willingness to pay and actual review cost during pilots; no measured ROI or customer traction is claimed.
 
-The strongest next differentiator is a small labeled evaluation corpus that measures citation accuracy, risk recall and unsupported-answer rate across adversarial contracts. Automated plumbing tests are not model-quality evaluation.
+Revision comparison and a 20-case synthetic evaluation corpus are now included. See `evals/review/README.md` for the live evaluation command and metric definitions. The checked-in report validates the corpus only; live model quality remains unmeasured. Automated plumbing tests are not model-quality evaluation.
 
 ## Additional validation
 
-The review module passes Ruff and strict mypy checks. Frontend lint, type checking, build and five user-flow tests pass (the three older placeholder tests are still present). The five new tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. UI coverage is approximately 52% of lines; Google popup and real inference are not covered by these tests.
+The review module passes Ruff and strict mypy checks. Frontend lint, type checking, build and review-flow tests pass (the three older placeholder tests are still present). The review tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. UI coverage is approximately 52% of lines; Google popup and real inference are not covered by these tests.
 
 The repository-wide legacy CI is still separate from this pilot’s focused checks. Its evaluation job references the absent `app.eval.runner`; legacy Python lint and .NET service validation require additional work. Do not report the entire repository as green based on the pilot workflow.
 
 The deployment image was built and smoke-tested locally: frontend serving, readiness, sample review, human decision, isolation and a saved review surviving full container recreation using a named persistent volume all passed. Temporary test containers and volumes were removed afterward.
+
+## Revision comparison and submission preparation
+
+Open **Compare revision** from any review. Live users can paste a revised agreement; sample users can load the curated revised version. Each revision is a separate record with its own pending human decision. Comparisons group findings by P1–P5, show exact changed text passages, and identify remaining, newly flagged, no-longer-flagged, or uncertain coverage. Disappearance of a finding is not proof of legal resolution.
+
+- `evals/review/README.md`: reproducible live model evaluation and honest metrics.
+- `scripts/verify_review_deployment.py`: same-origin API smoke test with synthetic data.
+- `docs/judging/demo-script.md`: three-minute presentation and fallback.
+- `docs/judging/practitioner-validation.md`: neutral test protocol and economics worksheet.
+- `docs/judging/october-15-release.md`: dated release checklist and outstanding access needs.
+
+Execution & audit displays measured review latency and provider token usage. Optional server-side per-million token prices produce an estimate; missing pricing or usage is shown as unknown. Sample processing is explicitly not live inference latency.
