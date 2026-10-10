@@ -1,9 +1,9 @@
 name: Review pilot
 on:
   push:
-    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review_api.py', 'requirements-review.txt', '.github/workflows/review.yml']
+    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review*.py', 'evals/review/**', 'requirements-review.txt', '.github/workflows/review.yml']
   pull_request:
-    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review_api.py', 'requirements-review.txt', '.github/workflows/review.yml']
+    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review*.py', 'evals/review/**', 'requirements-review.txt', '.github/workflows/review.yml']
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -20,6 +20,7 @@ jobs:
       - run: pip install -r requirements-review.txt pytest pytest-asyncio ruff mypy
       - run: ruff check src/agent/app/review
       - run: mypy src/agent/app/review --strict --ignore-missing-imports
-      - run: PYTHONPATH=src/agent pytest src/agent/tests/test_review_api.py -q
+      - run: PYTHONPATH=src/agent pytest src/agent/tests/test_review*.py -q
+      - run: PYTHONPATH=src/agent python -m app.review.evaluate --output /tmp/corpus-validation.json
       - run: npm ci && npm run lint && npm run type-check && npm run test:unit -- --coverage && npm run build && npm audit --audit-level=high
         working-directory: src/frontend

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-10T10:14:47.913039+00:00",
+  "corpus_sha256": "89b4573b06eb9976777e64927cd44b174640a3b16d215ee13a5ab62b553efba3",
+  "mode": "corpus_validation_only",
+  "model": null,
+  "case_count": 20,
+  "limitations": [
+    "Synthetic, author-labeled corpus; no independent expert validation.",
+    "Recall is measured per playbook rule, not every possible legal issue.",
+    "Exact quotations verify provenance, not interpretation or completeness.",
+    "Provider failures count as missed expected rules; they are not discarded."
+  ],
+  "results": [],
+  "metrics": null
+}
