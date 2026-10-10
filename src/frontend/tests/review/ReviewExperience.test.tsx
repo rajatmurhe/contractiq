@@ -65,6 +65,7 @@ beforeEach(() => {
       if (path === "/config")
         data = {
           sample: source,
+          revised_sample: source + " Revised terms.",
           playbook: "P1: Cap liability at twelve months of fees.",
           google_client_id: "",
           live_enabled: false,
@@ -75,7 +76,30 @@ beforeEach(() => {
           name: "Demo workspace",
           demo: true,
         };
-      else if (path === "/contracts" && init?.method === "POST") data = review;
+      else if (path === "/contracts" && init?.method === "POST")
+        data = body.baseline_id
+          ? {
+              ...review,
+              id: "revision-2",
+              title: "Revised agreement",
+              findings: [],
+              comparison: {
+                baseline_id: review.id,
+                baseline_title: review.title,
+                notice: "No longer flagged does not prove resolution.",
+                counts: { no_longer_flagged: 1 },
+                changes: [
+                  {
+                    rule: "P1",
+                    state: "no_longer_flagged",
+                    before: [finding],
+                    after: [],
+                  },
+                ],
+              },
+            }
+          : review;
+      else if (path === "/contracts/review-1") data = review;
       else if (path === "/contracts")
         data = [{ id: review.id, title: review.title, status: review.status }];
       else if (path.endsWith("/decision")) {
@@ -224,4 +248,26 @@ it("copies the selected proposed language and confirms the action", async () => 
   );
   expect(await screen.findByText("Copied")).toBeVisible();
   expect(writeText).toHaveBeenCalledWith(finding.proposed_language);
+});
+
+it("compares a revision without transferring the baseline decision", async () => {
+  await openSample();
+  fireEvent.click(screen.getByRole("button", { name: "Compare revision" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Compare sample revision" }),
+  );
+  expect(
+    await screen.findByRole("heading", { name: "Revised agreement" }),
+  ).toBeVisible();
+  expect(
+    screen.getByText("No longer flagged does not prove resolution."),
+  ).toBeVisible();
+  expect(screen.getByText(quote)).toBeVisible();
+  expect(requests.find((r) => r.body?.baseline_id)?.body?.baseline_id).toBe(
+    "review-1",
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Open baseline" }));
+  expect(
+    await screen.findByRole("heading", { name: review.title }),
+  ).toBeVisible();
 });

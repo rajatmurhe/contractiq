@@ -2852,3 +2852,164 @@
   bottom: auto;
   margin-top: 15px;
 }
+
+/* Negotiation revisions keep evidence and decisions tied to each version. */
+.revision-panel {
+  background: white;
+  border: 1px solid #e1e6ef;
+  border-radius: 12px;
+  padding: 28px;
+}
+.revision-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  color: #315bea;
+}
+.revision-heading h2 {
+  color: #17243b;
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+.revision-panel p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #53627a;
+}
+.revision-baseline {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+  font-size: 14px;
+}
+.revision-counts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+}
+.revision-counts > div {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.revision-counts strong {
+  font-size: 30px;
+  color: #17243b;
+}
+.revision-counts span {
+  font-size: 12px;
+  color: #53627a;
+}
+.revision-notice {
+  background: #fff8e8;
+  padding: 14px 18px;
+  border-radius: 8px;
+}
+.revision-change {
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+  margin: 18px 0;
+  overflow: hidden;
+}
+.revision-change header {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  background: #f6f8fc;
+  padding: 16px;
+}
+.revision-change h3,
+.revision-input h3 {
+  font-size: 16px;
+  margin: 0;
+  color: #17243b;
+}
+.revision-change header > span {
+  font-size: 12px;
+  color: #315bea;
+}
+.revision-evidence {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.revision-evidence section {
+  padding: 18px;
+  min-width: 0;
+}
+.revision-evidence h4 {
+  margin: 0;
+  font-size: 12px;
+  color: #53627a;
+}
+.revision-evidence blockquote {
+  margin: 14px 0;
+  border-left: 2px solid #bbc9f7;
+  padding-left: 14px;
+}
+.revision-evidence small {
+  color: #64748b;
+  font-size: 11px;
+}
+.revision-source summary {
+  cursor: pointer;
+  padding: 16px;
+  background: #f6f8fc;
+  font-size: 14px;
+}
+.revision-source pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 450px;
+  overflow: auto;
+  font:
+    15px/1.8 Georgia,
+    serif;
+  padding: 20px;
+}
+.revision-input {
+  margin-top: 28px;
+  border-top: 1px solid #e1e6ef;
+  padding-top: 24px;
+}
+.revision-input label {
+  display: block;
+  font-size: 13px;
+  margin: 14px 0 8px;
+}
+.revision-input textarea {
+  width: 100%;
+  border: 1px solid #ced7e5;
+  padding: 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 760px) {
+  .revision-panel {
+    padding: 18px;
+  }
+  .revision-heading h2 {
+    font-size: 21px;
+  }
+  .revision-counts {
+    grid-template-columns: 1fr 1fr;
+  }
+  .revision-evidence {
+    grid-template-columns: 1fr;
+  }
+  .revision-baseline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .enterprise .ciq-tabs {
+    overflow-x: auto;
+  }
+  .enterprise .ciq-tabs button {
+    white-space: nowrap;
+  }
+}

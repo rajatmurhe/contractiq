@@ -31,6 +31,7 @@ import {
 import "./review.css";
 import "./enterprise.css";
 import { ProductLanding } from "./ProductLanding";
+import { RevisionPanel, type Comparison } from "./RevisionPanel";
 
 type Session = { token: string; name: string; demo: boolean };
 type Finding = {
@@ -57,11 +58,13 @@ type Review = {
   elapsed_ms: number;
   trace: string[];
   decision_reason?: string;
+  comparison?: Comparison;
 };
 type Config = {
   google_client_id: string;
   live_enabled: boolean;
   sample: string;
+  revised_sample?: string;
   playbook: string;
 };
 type History = { id: string; title: string; status: string };
@@ -117,7 +120,9 @@ export default function ReviewExperience() {
   const [error, setError] = useState("");
   const [reason, setReason] = useState("");
   const [audit, setAudit] = useState<Audit>();
-  const [tab, setTab] = useState<"findings" | "audit" | "playbook">("findings");
+  const [tab, setTab] = useState<
+    "findings" | "audit" | "playbook" | "revision"
+  >("findings");
   const [chatOpen, setChatOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -248,6 +253,46 @@ export default function ReviewExperience() {
       setError((e as Error).message);
     } finally {
       setBusy("");
+    }
+  }
+  async function compareRevision(revisedText: string) {
+    if (!session || !review) return;
+    setBusy("Reviewing the revised agreement");
+    setError("");
+    try {
+      const next = await api<Review>("/contracts", session.token, {
+        title: `${review.title.slice(0, 138)} · Revision`,
+        text: revisedText,
+        baseline_id: review.id,
+      });
+      setReview(next);
+      setSelected(0);
+      setFindingSearch("");
+      setSeverity("all");
+      setReason("");
+      setAudit(undefined);
+      setAnswer("");
+      setCitations([]);
+      setTab("revision");
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy("");
+    }
+  }
+  async function openBaseline(id: string) {
+    try {
+      setReview(await api<Review>(`/contracts/${id}`, session!.token));
+      setSelected(0);
+      setReason("");
+      setAnswer("");
+      setCitations([]);
+      setAudit(undefined);
+      setFindingSearch("");
+      setSeverity("all");
+      setTab("findings");
+    } catch (e) {
+      setError((e as Error).message);
     }
   }
   async function decide(decision: string) {
@@ -1010,6 +1055,12 @@ export default function ReviewExperience() {
                   >
                     Execution & audit
                   </button>
+                  <button
+                    className={tab === "revision" ? "active" : ""}
+                    onClick={() => setTab("revision")}
+                  >
+                    Compare revision
+                  </button>
                 </div>
                 {tab === "findings" && (
                   <>
@@ -1238,6 +1289,18 @@ export default function ReviewExperience() {
                       )}
                     </section>
                   </>
+                )}
+                {tab === "revision" && (
+                  <RevisionPanel
+                    key={review.id}
+                    demo={session.demo}
+                    sample={config?.revised_sample || ""}
+                    busy={!!busy}
+                    comparison={review.comparison}
+                    source={review.text}
+                    onCompare={compareRevision}
+                    onOpenBaseline={openBaseline}
+                  />
                 )}
                 {tab === "playbook" && (
                   <section className="ciq-panel">
