@@ -44,3 +44,7 @@ yarn-error.log*
 **/rabbitmq-data/
 **/qdrant-data/
 **/azurite-data/
+
+# Local verification artifacts
+review-preview.jpg
+**/coverage/

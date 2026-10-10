@@ -4,7 +4,7 @@ The pilot replaces the default SPA with a focused procurement review experience.
 
 ## Run locally
 
-From the repository root, using Python 3.11+ and Node 22+:
+From the repository root, using Python 3.11+ and Node 22.12+:
 
 ```sh
 python3 -m venv .venv
@@ -78,3 +78,11 @@ The suite checks exact evidence, fabricated citations, demo restrictions, cross-
 - **2:20–3:00 — Business.** Initial buyer: procurement leads at growing software companies. Proposed Starter $49/50 reviews and Team $199/300 reviews. Validate willingness to pay and actual review cost during pilots; no measured ROI or customer traction is claimed.
 
 The strongest next differentiator is a small labeled evaluation corpus that measures citation accuracy, risk recall and unsupported-answer rate across adversarial contracts. Automated plumbing tests are not model-quality evaluation.
+
+## Additional validation
+
+The review module passes Ruff and strict mypy checks. Frontend lint, type checking, build and five user-flow tests pass (the three older placeholder tests are still present). The five new tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. UI coverage is approximately 52% of lines; Google popup and real inference are not covered by these tests.
+
+The repository-wide legacy CI is still separate from this pilot’s focused checks. Its evaluation job references the absent `app.eval.runner`; legacy Python lint and .NET service validation require additional work. Do not report the entire repository as green based on the pilot workflow.
+
+The deployment image was built and smoke-tested locally: frontend serving, readiness, sample review, human decision, isolation and a saved review surviving full container recreation using a named persistent volume all passed. Temporary test containers and volumes were removed afterward.
