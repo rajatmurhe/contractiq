@@ -453,7 +453,9 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
         "t prove the interpretation is correct. "
         "Humans approve or reject reviews; no contract is signed and no ER"
         "P write is performed. "
-        "The public demo uses one synthetic agreement with curated findings. "
+        "The public demo uses two synthetic agreement versions with curated findings. "
+        "Revision comparison shows exact text changes and findings grouped by playbook rule. "
+        "No longer flagged does not prove resolution; each version needs its own human decision. "
         "Google login and a configured model are required to review your own text. "
         "Proposed launch pricing: Starter $49/month for 50 reviews; Team $"
         "199/month for 300 reviews; Enterprise custom. "
@@ -469,6 +471,14 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
                 "Proposed launch plans: Starter $49/month for 50 reviews, Team $19"
                 "9/month for 300 reviews, and custom Enterprise pricing. Billing i"
                 "s not enabled in this pilot."
+            )
+        elif any(w in q for w in ["revision", "compare", "negotiat"]):
+            answer = (
+                "Open Compare revision from a review to inspect a revised agreement. "
+                "You can see exact text changes, remaining and newly flagged rules, "
+                "and rules no longer flagged. Absence of a finding is not proof of resolution. "
+                "Each version keeps its own human decision. "
+                "The demo uses curated synthetic versions."
             )
         elif any(w in q for w in ["secure", "data", "privacy", "login"]):
             answer = (
