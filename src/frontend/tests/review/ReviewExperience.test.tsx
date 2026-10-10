@@ -88,6 +88,15 @@ beforeEach(() => {
                 baseline_title: review.title,
                 notice: "No longer flagged does not prove resolution.",
                 counts: { no_longer_flagged: 1 },
+                changed_passages: [
+                  {
+                    operation: "replace",
+                    before_line: 2,
+                    after_line: 2,
+                    before: "Original commercial text",
+                    after: "Revised capped liability text",
+                  },
+                ],
                 changes: [
                   {
                     rule: "P1",
@@ -270,4 +279,13 @@ it("compares a revision without transferring the baseline decision", async () =>
   expect(
     await screen.findByRole("heading", { name: review.title }),
   ).toBeVisible();
+});
+
+it("labels sample processing and model cost honestly in the audit view", async () => {
+  await openSample();
+  fireEvent.click(screen.getByRole("button", { name: "Execution & audit" }));
+  expect(
+    await screen.findByText("Sample processing · no inference"),
+  ).toBeVisible();
+  expect(screen.getByText("No model call")).toBeVisible();
 });

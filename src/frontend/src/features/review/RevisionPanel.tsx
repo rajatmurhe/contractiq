@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { ArrowRight, GitCompareArrows } from "lucide-react";
 
 export type Comparison = {
+  changed_passages?: {
+    operation: string;
+    before_line: number;
+    after_line: number;
+    before: string;
+    after: string;
+  }[];
   baseline_id: string;
   baseline_title: string;
   notice: string;
@@ -77,6 +84,29 @@ export function RevisionPanel({
             ))}
           </div>
           <p className="revision-notice">{comparison.notice}</p>
+          {!!comparison.changed_passages?.length && (
+            <details className="revision-source" open>
+              <summary>
+                What changed in the text · {comparison.changed_passages.length}{" "}
+                passages
+              </summary>
+              {comparison.changed_passages.map((passage, index) => (
+                <div
+                  className="revision-evidence revision-text-diff"
+                  key={index}
+                >
+                  <section>
+                    <h4>Before · line {passage.before_line}</h4>
+                    <pre>{passage.before || "No text here in baseline"}</pre>
+                  </section>
+                  <section>
+                    <h4>After · line {passage.after_line}</h4>
+                    <pre>{passage.after || "Text removed in revision"}</pre>
+                  </section>
+                </div>
+              ))}
+            </details>
+          )}
           {comparison.changes.map((change) => (
             <article className="revision-change" key={change.rule}>
               <header>

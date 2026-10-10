@@ -1,5 +1,6 @@
 """Compare verified findings by playbook rule, without declaring legal resolution."""
 
+from difflib import SequenceMatcher
 from typing import Any
 
 
@@ -15,7 +16,23 @@ def compare_reviews(before: dict[str, Any], after: dict[str, Any]) -> dict[str, 
         if old and not new and after.get("missing_topics"):
             state = "needs_verification"
         changes.append({"rule": rule, "state": state, "before": old, "after": new})
+    old_lines, new_lines = before.get("text", "").splitlines(), after.get("text", "").splitlines()
+    passages = []
+    for operation, start, end, revised_start, revised_end in SequenceMatcher(
+        None, old_lines, new_lines
+    ).get_opcodes():
+        if operation != "equal":
+            passages.append(
+                {
+                    "operation": operation,
+                    "before_line": start + 1,
+                    "after_line": revised_start + 1,
+                    "before": "\n".join(old_lines[start:end]),
+                    "after": "\n".join(new_lines[revised_start:revised_end]),
+                }
+            )
     return {
+        "changed_passages": passages,
         "baseline_id": before["id"],
         "baseline_title": before["title"],
         "changes": changes,

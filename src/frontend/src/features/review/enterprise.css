@@ -3013,3 +3013,45 @@
     white-space: nowrap;
   }
 }
+.review-run-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+  margin: 24px 0;
+}
+.review-run-metrics > div {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-run-metrics strong {
+  font-size: 19px;
+  color: #17243b;
+}
+.review-run-metrics span {
+  font-size: 12px;
+  color: #64748b;
+}
+@media (max-width: 760px) {
+  .review-run-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+.revision-text-diff {
+  border-bottom: 1px solid #e1e6ef;
+}
+.revision-text-diff section:first-child {
+  background: #fff7f6;
+}
+.revision-text-diff section:last-child {
+  background: #f2faf7;
+}
+.revision-text-diff pre {
+  font:
+    14px/1.8 Georgia,
+    serif;
+  padding: 0;
+  margin-bottom: 0;
+}

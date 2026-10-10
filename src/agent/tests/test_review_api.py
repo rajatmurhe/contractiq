@@ -166,3 +166,10 @@ def test_comparison_never_calls_missing_coverage_resolved():
     assert result['counts']['needs_verification'] == 1
     assert result['counts']['newly_flagged'] == 1
     assert result['counts']['no_longer_flagged'] == 0
+
+
+def test_comparison_text_changes_preserve_exact_before_and_after_passages():
+    from app.review.comparison import compare_reviews
+    old = {'id': 'a', 'title': 'A', 'text': 'Heading\nUnlimited liability.\nFooter', 'findings': []}
+    new = {'text': 'Heading\nLiability capped at annual fees.\nFooter', 'findings': []}
+    assert compare_reviews(old, new)['changed_passages'] == [{'operation': 'replace', 'before_line': 2, 'after_line': 2, 'before': 'Unlimited liability.', 'after': 'Liability capped at annual fees.'}]

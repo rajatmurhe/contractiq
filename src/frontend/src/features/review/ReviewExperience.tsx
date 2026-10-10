@@ -56,6 +56,11 @@ type Review = {
   mode: string;
   model: string;
   elapsed_ms: number;
+  usage?: {
+    input_tokens: number | null;
+    output_tokens: number | null;
+    estimated_cost_usd: number | null;
+  } | null;
   trace: string[];
   decision_reason?: string;
   comparison?: Comparison;
@@ -1315,6 +1320,38 @@ export default function ReviewExperience() {
                 {tab === "audit" && (
                   <section className="ciq-panel">
                     <h2>Inspect the review trail</h2>
+                    <div className="review-run-metrics">
+                      <div>
+                        <strong>{review.elapsed_ms.toLocaleString()} ms</strong>
+                        <span>
+                          {review.mode === "sample"
+                            ? "Sample processing · no inference"
+                            : "Model review and validation"}
+                        </span>
+                      </div>
+                      <div>
+                        <strong>
+                          {review.usage?.input_tokens == null
+                            ? "—"
+                            : review.usage.input_tokens.toLocaleString()}{" "}
+                          /{" "}
+                          {review.usage?.output_tokens == null
+                            ? "—"
+                            : review.usage.output_tokens.toLocaleString()}
+                        </strong>
+                        <span>Input / output tokens</span>
+                      </div>
+                      <div>
+                        <strong>
+                          {review.mode === "sample"
+                            ? "No model call"
+                            : review.usage?.estimated_cost_usd == null
+                              ? "Unknown"
+                              : `$${review.usage.estimated_cost_usd.toFixed(5)}`}
+                        </strong>
+                        <span>Estimated model cost · excludes hosting</span>
+                      </div>
+                    </div>
                     <div className="ciq-trace">
                       {review.trace.map((t, i) => (
                         <div key={t}>
