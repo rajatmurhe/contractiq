@@ -19,6 +19,8 @@ type Props = {
   ready: boolean;
   busy: boolean;
   start: () => void;
+  evaluate: () => void;
+  liveEnabled: boolean;
   googleRef: RefObject<HTMLDivElement>;
   googleConfigured: boolean;
 };
@@ -26,6 +28,8 @@ export function ProductLanding({
   ready,
   busy,
   start,
+  evaluate,
+  liveEnabled,
   googleRef,
   googleConfigured,
 }: Props) {
@@ -51,6 +55,25 @@ export function ProductLanding({
               risks, trace every finding to its source, and move negotiations
               forward with confidence.
             </p>
+            <div className="evaluation-callout" id="evaluation">
+              <strong>Free hackathon evaluation · no credit card</strong>
+              <p>
+                Test contract review, evidence chat, revision comparison,
+                decisions, and export. No paid feature gates.
+              </p>
+              <button
+                className="ciq-button ciq-dark"
+                onClick={evaluate}
+                disabled={!ready || busy}
+              >
+                Start free evaluation <ArrowRight size={16} />
+              </button>
+              <small>
+                {liveEnabled
+                  ? "No account needed. Try your own text or the prefilled sample with live AI. One-hour guest session; export before signing out."
+                  : "This server currently offers the complete curated walkthrough. Live analysis of your own text becomes available when the host configures AI—no purchase needed."}
+              </small>
+            </div>
             <div className="product-actions">
               <button
                 className="ciq-button ciq-dark ciq-large"
@@ -74,8 +97,8 @@ export function ProductLanding({
             <div ref={googleRef} className="google-signin" />
             {ready && !googleConfigured && (
               <small className="product-config">
-                Private reviews become available when Google sign-in is
-                configured.
+                Google sign-in for returning to saved reviews is not configured.
+                Guest testing requires no account.
               </small>
             )}
           </div>
@@ -152,7 +175,7 @@ export function ProductLanding({
                   <p>Negotiate a cap at twelve months of fees.</p>
                 </div>
                 <button
-                  onClick={start}
+                  onClick={evaluate}
                   disabled={!ready || busy}
                   className="hero-open"
                 >
@@ -285,7 +308,7 @@ export function ProductLanding({
           <div className="product-section-heading">
             <div>
               <span className="product-kicker">
-                A PLAN FOR YOUR REVIEW PRACTICE
+                FUTURE BUSINESS MODEL · NOT REQUIRED TO TEST
               </span>
               <h2>
                 Start focused.
@@ -294,11 +317,11 @@ export function ProductLanding({
               </h2>
             </div>
             <p>
-              Proposed launch pricing.
+              Testing is free for recruiters and judges.
               <br />
-              Explore the pilot before committing.
+              These are future commercial plans, not a checkout.
               <br />
-              Billing is not enabled.
+              No payment or subscription is needed.
             </p>
           </div>
           <div className="product-plans">
@@ -308,21 +331,21 @@ export function ProductLanding({
                 price: "$49",
                 description: "For independent procurement leads.",
                 volume: "50 reviews / month",
-                label: "Start exploring",
+                label: "Test for free",
               },
               {
                 name: "Team",
                 price: "$199",
                 description: "For a growing review practice.",
                 volume: "300 reviews / month",
-                label: "Explore the team pilot",
+                label: "Test for free",
               },
               {
                 name: "Enterprise",
                 price: "Custom",
                 description: "For a scoped enterprise pilot.",
                 volume: "Custom review volume",
-                label: "Explore the workflow",
+                label: "Test for free",
               },
             ].map((p, i) => (
               <article className={i === 1 ? "featured" : ""} key={p.name}>
@@ -337,7 +360,7 @@ export function ProductLanding({
                 <p>{p.description}</p>
                 <button
                   className={`ciq-button ${i === 1 ? "ciq-dark" : ""}`}
-                  onClick={start}
+                  onClick={evaluate}
                   disabled={!ready || busy}
                 >
                   {p.label}

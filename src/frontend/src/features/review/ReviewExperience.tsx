@@ -33,7 +33,7 @@ import "./enterprise.css";
 import { ProductLanding } from "./ProductLanding";
 import { RevisionPanel, type Comparison } from "./RevisionPanel";
 
-type Session = { token: string; name: string; demo: boolean };
+type Session = { token: string; name: string; demo: boolean; guest?: boolean };
 type Finding = {
   id: string;
   title: string;
@@ -213,6 +213,28 @@ export default function ReviewExperience() {
     }
   }, [selected, review?.id]);
 
+  async function startEvaluation() {
+    if (!config?.live_enabled) {
+      await startDemo();
+      return;
+    }
+    setBusy("Opening free evaluation");
+    setError("");
+    try {
+      setSession(await api<Session>("/auth/guest", undefined, {}));
+      setReview(undefined);
+      setOverview(false);
+      setText(config.sample);
+      setTitle("Sample agreement · live AI evaluation");
+      setAnswer("");
+      setCitations([]);
+      setTab("findings");
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy("");
+    }
+  }
   async function startDemo() {
     setOverview(false);
     setMobileNav(false);
@@ -494,20 +516,24 @@ export default function ReviewExperience() {
           {!session ? (
             <>
               <a href="#workflow">How it works</a>
-              <a href="#pricing">Pricing</a>
+              <a href="#evaluation">Free evaluation</a>
               <button
                 className="ciq-button ciq-dark"
-                onClick={startDemo}
+                onClick={startEvaluation}
                 disabled={!config || !!busy}
               >
-                Try the demo <ArrowUpRight size={15} />
+                Test for free <ArrowUpRight size={15} />
               </button>
             </>
           ) : (
             <>
               <span className="workspace-live-label">
                 <span />
-                {session.demo ? "Sample workspace" : "Private workspace"}
+                {session.demo
+                  ? "Sample workspace"
+                  : session.guest
+                    ? "Free evaluation"
+                    : "Private workspace"}
               </span>
               <span className="user-avatar">{session.name.slice(0, 1)}</span>
               <span className="ciq-user">{session.name}</span>
@@ -532,6 +558,8 @@ export default function ReviewExperience() {
       )}
       {!session ? (
         <ProductLanding
+          evaluate={startEvaluation}
+          liveEnabled={!!config?.live_enabled}
           ready={!!config}
           busy={!!busy}
           start={startDemo}
@@ -561,7 +589,11 @@ export default function ReviewExperience() {
               </span>
               <div>
                 <strong>
-                  {session.demo ? "Demo workspace" : "My workspace"}
+                  {session.demo
+                    ? "Demo workspace"
+                    : session.guest
+                      ? "Free evaluation"
+                      : "My workspace"}
                 </strong>
                 <small>
                   {session.demo
@@ -691,7 +723,9 @@ export default function ReviewExperience() {
               <p>
                 {session.demo
                   ? "Curated findings. No model calls. Sign out to access Google login."
-                  : "Your reviews are scoped to your verified Google identity."}
+                  : session.guest
+                    ? "One-hour isolated guest session. Export before signing out; guest access cannot be recovered. No payment required."
+                    : "Your reviews are scoped to your verified Google identity."}
               </p>
             </div>
           </aside>

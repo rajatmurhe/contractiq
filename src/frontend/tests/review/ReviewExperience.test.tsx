@@ -289,3 +289,21 @@ it("labels sample processing and model cost honestly in the audit view", async (
   ).toBeVisible();
   expect(screen.getByText("No model call")).toBeVisible();
 });
+
+it("offers free evaluation with an honest sample fallback when AI is unavailable", async () => {
+  render(<ReviewExperience />);
+  const start = screen.getByRole("button", { name: "Start free evaluation" });
+  await waitFor(() => expect(start).toBeEnabled());
+  expect(
+    screen.getByText("Free hackathon evaluation · no credit card"),
+  ).toBeVisible();
+  expect(
+    screen.getByText(
+      /This server currently offers the complete curated walkthrough/,
+    ),
+  ).toBeVisible();
+  fireEvent.click(start);
+  expect(
+    await screen.findByRole("heading", { name: review.title }),
+  ).toBeVisible();
+});

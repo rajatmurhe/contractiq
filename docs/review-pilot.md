@@ -98,3 +98,9 @@ Open **Compare revision** from any review. Live users can paste a revised agreem
 - `docs/judging/october-15-release.md`: dated release checklist and outstanding access needs.
 
 Execution & audit displays measured review latency and provider token usage. Optional server-side per-million token prices produce an estimate; missing pricing or usage is shown as unknown. Sample processing is explicitly not live inference latency.
+
+## Free recruiter and judge evaluation
+
+Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest access cannot be recovered after sign-out or reload; export before leaving. Google login remains available for stable identity and reopening saved reviews.
+
+Guest creation is limited to five sessions per client IP per hour. Existing per-session review/chat limits and the global model-call cap still apply; free access is not unlimited provider spending. The host funds inference. Without a configured model, the free entry point offers the clearly labeled curated walkthrough, not fabricated live results. Future pricing is informational and no payment is collected.

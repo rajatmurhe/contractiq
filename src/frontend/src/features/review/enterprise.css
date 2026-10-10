@@ -3055,3 +3055,26 @@
   padding: 0;
   margin-bottom: 0;
 }
+.evaluation-callout {
+  margin: 24px 0;
+  border: 1px solid #cbd8fa;
+  background: #f4f7ff;
+  border-radius: 12px;
+  padding: 20px;
+}
+.evaluation-callout strong {
+  color: #234abe;
+  font-size: 16px;
+}
+.evaluation-callout p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #53627a;
+}
+.evaluation-callout small {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #53627a;
+}
