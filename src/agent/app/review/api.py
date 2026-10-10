@@ -17,7 +17,8 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, field_validator
 
-from .engine import PLAYBOOK, SAMPLE, completion, review
+from .comparison import compare_reviews
+from .engine import PLAYBOOK, REVISED_SAMPLE, SAMPLE, completion, review
 
 Json = dict[str, Any]
 
@@ -98,6 +99,7 @@ def config() -> Json:
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
         "live_enabled": bool(os.getenv("REVIEW_LLM_API_KEY")),
         "sample": SAMPLE,
+        "revised_sample": REVISED_SAMPLE,
         "playbook": PLAYBOOK,
     }
 
@@ -152,6 +154,7 @@ def logout(user: Annotated[Json, Depends(session)]) -> Json:
 class ReviewInput(BaseModel):
     title: str = Field(default="Untitled agreement", min_length=1, max_length=150)
     text: str = Field(min_length=50, max_length=60000)
+    baseline_id: str | None = Field(default=None, max_length=100)
 
 
 def event(db: sqlite3.Connection, review_id: str, action: str, actor: str, data: Json) -> None:
@@ -179,7 +182,11 @@ def owned(db: sqlite3.Connection, review_id: str, owner: str) -> Json:
 
 @app.post("/api/review/contracts")
 async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(session)]) -> Json:
-    if user["demo"] and payload.text != SAMPLE:
+    baseline = None
+    if payload.baseline_id:
+        with database() as db:
+            baseline = owned(db, payload.baseline_id, user["owner"])
+    if user["demo"] and payload.text not in (SAMPLE, REVISED_SAMPLE):
         raise HTTPException(
             403,
             "Demo sessions can review only the supplied sample. Sign in for your own documents.",
@@ -205,6 +212,8 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
         "created_at": time.time(),
         **result,
     }
+    if baseline:
+        body["comparison"] = compare_reviews(baseline, body)
     with database() as db:
         db.execute("BEGIN IMMEDIATE")
         db.execute(
@@ -219,6 +228,7 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
                 "source_sha256": digest(payload.text),
                 "result_sha256": digest(json.dumps(result, sort_keys=True)),
                 "mode": result["mode"],
+                "baseline_id": payload.baseline_id,
             },
         )
     return body

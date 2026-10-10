@@ -134,3 +134,35 @@ def test_offsets_use_unicode_codepoints():
     findings = verify_findings(source, sample_review())
     for finding in findings:
         assert source[finding['start']:finding['end']] == finding['quote']
+
+
+def test_revision_comparison_preserves_original_and_requires_new_decision(client):
+    from app.review.engine import REVISED_SAMPLE
+    headers = auth(client)
+    baseline = create(client, headers)
+    path = '/api/review/contracts/' + baseline['id']
+    client.post(path + '/decision', headers=headers, json={'decision': 'rejected', 'reason': 'Negotiate liability and data handling.'})
+    revised = client.post('/api/review/contracts', headers=headers, json={'title': 'Negotiated draft', 'text': REVISED_SAMPLE, 'baseline_id': baseline['id']})
+    assert revised.status_code == 200
+    body = revised.json()
+    assert body['status'] == 'awaiting_review'
+    assert body['comparison']['counts'] == {'remains': 2, 'newly_flagged': 0, 'no_longer_flagged': 3, 'needs_verification': 0}
+    assert client.get(path, headers=headers).json()['status'] == 'rejected'
+    assert client.get('/api/review/contracts/' + body['id'], headers=headers).json()['comparison'] == body['comparison']
+    assert client.get('/api/review/contracts/' + body['id'] + '/audit', headers=headers).json()['events'][0]['data']['baseline_id'] == baseline['id']
+
+
+def test_revision_cannot_reference_another_users_baseline(client):
+    baseline = create(client, auth(client))
+    result = client.post('/api/review/contracts', headers=auth(client), json={'text': SAMPLE, 'baseline_id': baseline['id']})
+    assert result.status_code == 404
+
+
+def test_comparison_never_calls_missing_coverage_resolved():
+    from app.review.comparison import compare_reviews
+    old = {'id': 'a', 'title': 'A', 'findings': [{'rule': 'P1', 'quote': 'old'}]}
+    new = {'findings': [{'rule': 'P2', 'quote': 'new'}], 'missing_topics': ['liability']}
+    result = compare_reviews(old, new)
+    assert result['counts']['needs_verification'] == 1
+    assert result['counts']['newly_flagged'] == 1
+    assert result['counts']['no_longer_flagged'] == 0

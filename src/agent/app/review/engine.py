@@ -10,7 +10,9 @@ import httpx
 from pydantic import BaseModel, Field
 
 _SAMPLE_DATA = json.loads(Path(__file__).with_name("sample.json").read_text())
+_REVISED_DATA = json.loads(Path(__file__).with_name("revised_sample.json").read_text())
 SAMPLE = str(_SAMPLE_DATA["source"])
+REVISED_SAMPLE = str(_REVISED_DATA["source"])
 PLAYBOOK = str(_SAMPLE_DATA["playbook"])
 
 
@@ -88,7 +90,12 @@ def sample_review() -> ModelReview:
 async def review(source: str, demo: bool) -> dict[str, Any]:
     started = time.monotonic()
     if demo:
-        result = sample_review()
+        if source == SAMPLE:
+            result = sample_review()
+        elif source == REVISED_SAMPLE:
+            result = ModelReview.model_validate(_REVISED_DATA["review"])
+        else:
+            raise ValueError("Only curated sample agreements are supported in demo mode.")
     else:
         schema = ModelReview.model_json_schema()
         raw = await completion(
