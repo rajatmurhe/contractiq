@@ -1,5 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  LayoutDashboard,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Menu,
+  Copy,
+  SlidersHorizontal,
+  ListChecks,
+  BookOpen,
+  GitBranch,
+  CircleHelp,
   ArrowRight,
   ArrowUpRight,
   Check,
@@ -19,6 +29,8 @@ import {
   X,
 } from "lucide-react";
 import "./review.css";
+import "./enterprise.css";
+import { ProductLanding } from "./ProductLanding";
 
 type Session = { token: string; name: string; demo: boolean };
 type Finding = {
@@ -112,6 +124,14 @@ export default function ReviewExperience() {
   const [chatBusy, setChatBusy] = useState(false);
   const [chatMode, setChatMode] = useState("");
   const [citations, setCitations] = useState<string[]>([]);
+  const [overview, setOverview] = useState(false);
+  const [mobileNav, setMobileNav] = useState(false);
+  const [contractSearch, setContractSearch] = useState("");
+  const [findingSearch, setFindingSearch] = useState("");
+  const [severity, setSeverity] = useState("all");
+  const [sourceFocus, setSourceFocus] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const decisionRef = useRef<HTMLElement>(null);
   const googleButton = useRef<HTMLDivElement>(null);
   const evidence = useRef<HTMLElement>(null);
 
@@ -184,6 +204,10 @@ export default function ReviewExperience() {
   }, [selected, review?.id]);
 
   async function startDemo() {
+    setOverview(false);
+    setMobileNav(false);
+    setFindingSearch("");
+    setSeverity("all");
     setBusy("Preparing sample");
     setError("");
     try {
@@ -205,6 +229,9 @@ export default function ReviewExperience() {
     }
   }
   async function analyze() {
+    setOverview(false);
+    setFindingSearch("");
+    setSeverity("all");
     setBusy("Reviewing against your playbook");
     setError("");
     try {
@@ -304,24 +331,114 @@ export default function ReviewExperience() {
       setText("");
       setAnswer("");
       setReason("");
+      setOverview(false);
+      setMobileNav(false);
+      setSeverity("all");
+      setFindingSearch("");
+      setSourceFocus(false);
     } catch (e) {
       setError((e as Error).message);
     }
   }
   const finding = review?.findings[selected];
+  const visibleFindings =
+    review?.findings
+      .map((f, index) => ({ ...f, index }))
+      .filter(
+        (f) =>
+          (severity === "all" || f.severity === severity) &&
+          `${f.title} ${f.quote} ${f.rule}`
+            .toLowerCase()
+            .includes(findingSearch.toLowerCase()),
+      ) || [];
+  useEffect(() => {
+    const matches =
+      review?.findings
+        .map((f, index) => ({ ...f, index }))
+        .filter(
+          (f) =>
+            (severity === "all" || f.severity === severity) &&
+            `${f.title} ${f.quote} ${f.rule}`
+              .toLowerCase()
+              .includes(findingSearch.toLowerCase()),
+        ) || [];
+    setSelected((current) =>
+      matches.some((f) => f.index === current)
+        ? current
+        : (matches[0]?.index ?? -1),
+    );
+  }, [review?.id, severity, findingSearch]);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileNav(false);
+        setChatOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  const criticalCount =
+    review?.findings.filter((f) => f.severity === "critical").length || 0;
+  const highCount =
+    review?.findings.filter((f) => f.severity === "high").length || 0;
+  function navigateWorkspace(
+    destination: "overview" | "findings" | "playbook" | "audit" | "decision",
+  ) {
+    setMobileNav(false);
+    setOverview(destination === "overview");
+    if (destination === "audit") void showAudit();
+    else if (destination !== "overview")
+      setTab(destination === "playbook" ? "playbook" : "findings");
+    if (destination === "decision")
+      setTimeout(
+        () =>
+          decisionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          }),
+        0,
+      );
+  }
+  async function copyProposal() {
+    try {
+      await navigator.clipboard.writeText(finding!.proposed_language);
+      setCopied(true);
+    } catch {
+      setError(
+        "Copy is unavailable in this browser. Select and copy the proposed text directly.",
+      );
+    }
+  }
+  useEffect(() => {
+    setCopied(false);
+  }, [selected, review?.id]);
   const sourceChars = useMemo(
     () => Array.from(review?.text || ""),
     [review?.text],
   );
   return (
-    <div className="ciq">
+    <div
+      className={`ciq enterprise ${session ? "is-workspace" : "is-landing"}`}
+    >
       <header className="ciq-header">
+        {session && (
+          <button
+            className="mobile-nav-toggle"
+            aria-label="Open workspace navigation"
+            aria-expanded={mobileNav}
+            aria-controls="workspace-navigation"
+            onClick={() => setMobileNav(!mobileNav)}
+          >
+            <Menu size={20} />
+          </button>
+        )}
         <a href="/" className="ciq-brand">
           <span>
             <Scale size={21} />
           </span>
           contract<span className="ciq-brand-iq">iq</span>
-          <small> / INTELLIGENCE, WITH EVIDENCE</small>
+          <small>CONTRACT INTELLIGENCE</small>
         </a>
         <nav>
           {!session ? (
@@ -338,6 +455,11 @@ export default function ReviewExperience() {
             </>
           ) : (
             <>
+              <span className="workspace-live-label">
+                <span />
+                {session.demo ? "Sample workspace" : "Private workspace"}
+              </span>
+              <span className="user-avatar">{session.name.slice(0, 1)}</span>
               <span className="ciq-user">{session.name}</span>
               <button
                 className="ciq-button ciq-plain"
@@ -359,244 +481,103 @@ export default function ReviewExperience() {
         </div>
       )}
       {!session ? (
-        <>
-          <main className="ciq-landing">
-            <section className="ciq-hero">
-              <div className="ciq-hero-copy">
-                <div className="ciq-eyebrow">
-                  <span /> BUILT FOR THE OTHER SIDE OF THE SIGNATURE
-                </div>
-                <h1>
-                  Before you sign,
-                  <br />
-                  see the <em>whole risk.</em>
-                </h1>
-                <p>
-                  Turn supplier agreements into a clear decision. Find the
-                  clause, understand the exposure, and negotiate with evidence
-                  on your side.
-                </p>
-                <div className="ciq-hero-actions">
-                  <button
-                    className="ciq-button ciq-dark ciq-large"
-                    disabled={!config || !!busy}
-                    onClick={startDemo}
-                  >
-                    Review a sample agreement <ArrowRight size={18} />
-                  </button>
-                  <div ref={googleButton} />
-                </div>
-                <div className="ciq-hero-note">
-                  <ShieldCheck size={15} /> Synthetic sample. No signup
-                  required.
-                </div>
-                {!config?.google_client_id && config && (
-                  <p className="ciq-config-note">
-                    Google sign-in and private reviews are not configured on
-                    this instance.
-                  </p>
-                )}
-              </div>
-              <div className="ciq-preview">
-                <div className="ciq-preview-top">
-                  <span>
-                    <FileText size={17} /> Meridian Cloud / MSA
-                  </span>
-                  <span className="ciq-pill">SAMPLE REVIEW</span>
-                </div>
-                <div className="ciq-preview-body">
-                  <div className="ciq-overline">
-                    YOUR ATTENTION, WHERE IT MATTERS
-                  </div>
-                  <div className="ciq-preview-score">
-                    <strong>5</strong>
-                    <span>
-                      playbook deviations
-                      <br />
-                      <small>Every finding linked to source text</small>
-                    </span>
-                    <div className="ciq-spark">
-                      <Sparkles />
-                    </div>
-                  </div>
-                  <div className="ciq-preview-clause">
-                    <span className="ciq-severity critical">
-                      CRITICAL · LIABILITY
-                    </span>
-                    <h3>
-                      A small clause.
-                      <br />
-                      An unlimited exposure.
-                    </h3>
-                    <blockquote>
-                      “Customer’s liability under this Agreement is{" "}
-                      <mark>unlimited</mark>, including indirect and
-                      consequential damages.”
-                    </blockquote>
-                    <div className="ciq-evidence">
-                      <CheckCircle2 size={14} /> Exact source citation · Section
-                      1
-                    </div>
-                  </div>
-                  <div className="ciq-preview-row">
-                    <span>
-                      <span className="ciq-dot" /> One-sided indemnification
-                    </span>
-                    <span>
-                      HIGH <ChevronRight size={14} />
-                    </span>
-                  </div>
-                  <div className="ciq-preview-row">
-                    <span>
-                      <span className="ciq-dot amber" /> Early renewal lock-in
-                    </span>
-                    <span>
-                      MEDIUM <ChevronRight size={14} />
-                    </span>
-                  </div>
-                </div>
-                <div className="ciq-preview-bottom">
-                  <Fingerprint size={17} />
-                  <span>AI proposes. Your team decides.</span>
-                  <LockKeyhole size={15} />
-                </div>
-              </div>
-            </section>
-            <section id="workflow" className="ciq-workflow">
-              <div className="ciq-section-title">
-                <div>
-                  <div className="ciq-overline">FROM DOCUMENT TO DECISION</div>
-                  <h2>A review you can actually inspect.</h2>
-                </div>
-                <p>
-                  Built for procurement teams who need an answer
-                  <br />
-                  and the evidence behind it.
-                </p>
-              </div>
-              <div className="ciq-steps">
-                {[
-                  [
-                    "01",
-                    "Read against your playbook",
-                    "Five explicit commercial rules bring consistency to supplier reviews.",
-                    FileText,
-                  ],
-                  [
-                    "02",
-                    "Follow the evidence",
-                    "Jump from each finding to its exact words in the source agreement.",
-                    Search,
-                  ],
-                  [
-                    "03",
-                    "Make the human call",
-                    "Record a reasoned decision and inspect the review’s audit chain.",
-                    ShieldCheck,
-                  ],
-                ].map(([num, heading, desc, Icon]) => {
-                  const I = Icon as typeof FileText;
-                  return (
-                    <article key={String(num)}>
-                      <div>
-                        <I size={22} />
-                        <span>{String(num)}</span>
-                      </div>
-                      <h3>{String(heading)}</h3>
-                      <p>{String(desc)}</p>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-            <section id="pricing" className="ciq-pricing">
-              <div className="ciq-section-title">
-                <div>
-                  <div className="ciq-overline">
-                    A BUSINESS MODEL THAT SCALES WITH YOU
-                  </div>
-                  <h2>
-                    Start with a contract.
-                    <br />
-                    Grow into a workflow.
-                  </h2>
-                </div>
-                <p>
-                  Proposed launch pricing.
-                  <br />
-                  No billing or payment collection in this pilot.
-                </p>
-              </div>
-              <div className="ciq-plans">
-                {[
-                  [
-                    "Starter",
-                    "$49",
-                    "50 reviews / month",
-                    "For an independent procurement lead",
-                  ],
-                  [
-                    "Team",
-                    "$199",
-                    "300 reviews / month",
-                    "For a growing review practice",
-                  ],
-                  [
-                    "Enterprise",
-                    "Let’s talk",
-                    "Custom review volume",
-                    "For a scoped enterprise pilot",
-                  ],
-                ].map(([name, price, count, desc], i) => (
-                  <article
-                    className={i === 1 ? "ciq-plan-featured" : ""}
-                    key={name}
-                  >
-                    <span className="ciq-overline">{name}</span>
-                    <h3>
-                      {price}
-                      <small>{i < 2 ? "/mo" : ""}</small>
-                    </h3>
-                    <p>{desc}</p>
-                    <div>
-                      <Check size={16} />
-                      {count}
-                    </div>
-                    <div>
-                      <Check size={16} />
-                      Evidence-linked findings
-                    </div>
-                    <div>
-                      <Check size={16} />
-                      Review export & decision record
-                    </div>
-                    <button
-                      className="ciq-button"
-                      onClick={startDemo}
-                      disabled={!config || !!busy}
-                    >
-                      Explore the pilot <ArrowUpRight size={16} />
-                    </button>
-                  </article>
-                ))}
-              </div>
-            </section>
-          </main>
-          <footer className="ciq-footer">
-            <span>
-              contractiq <small> / DeepSoft AI-FDE Hackathon</small>
-            </span>
-            <span>Commercial review support. Human judgment required.</span>
-          </footer>
-        </>
+        <ProductLanding
+          ready={!!config}
+          busy={!!busy}
+          start={startDemo}
+          googleRef={googleButton}
+          googleConfigured={!!config?.google_client_id}
+        />
       ) : (
         <main className="ciq-workspace">
-          <aside className="ciq-sidebar">
-            <div className="ciq-overline">REVIEW WORKSPACE</div>
+          {mobileNav && (
+            <button
+              className="nav-scrim"
+              aria-label="Close navigation"
+              onClick={() => setMobileNav(false)}
+            />
+          )}
+          <aside className={`ciq-sidebar ${mobileNav ? "mobile-open" : ""}`}>
+            <button
+              className="mobile-close-nav"
+              aria-label="Close workspace navigation"
+              onClick={() => setMobileNav(false)}
+            >
+              <X size={19} />
+            </button>
+            <div className="workspace-switch">
+              <span className="workspace-monogram">
+                {session.demo ? "D" : session.name.slice(0, 1)}
+              </span>
+              <div>
+                <strong>
+                  {session.demo ? "Demo workspace" : "My workspace"}
+                </strong>
+                <small>
+                  {session.demo
+                    ? "Explore ContractIQ"
+                    : "Contract intelligence"}
+                </small>
+              </div>
+              <ChevronRight size={14} />
+            </div>
+            <div className="ciq-overline">WORKSPACE</div>
+            <div className="workspace-nav">
+              <button
+                className={overview ? "active" : ""}
+                onClick={() => navigateWorkspace("overview")}
+              >
+                <LayoutDashboard size={17} />
+                Overview
+              </button>
+              <button
+                className={!overview && tab === "findings" ? "active" : ""}
+                onClick={() => navigateWorkspace("findings")}
+              >
+                <FileText size={17} />
+                Contract review{review && <span>1</span>}
+              </button>
+              <button
+                disabled={!review}
+                onClick={() => navigateWorkspace("decision")}
+              >
+                <ListChecks size={17} />
+                Decisions
+                {review?.status === "awaiting_review" && (
+                  <span className="nav-count">1</span>
+                )}
+              </button>
+            </div>
+            <div className="ciq-overline">INTELLIGENCE</div>
+            <div className="workspace-nav">
+              <button
+                disabled={!review}
+                className={!overview && tab === "playbook" ? "active" : ""}
+                onClick={() => navigateWorkspace("playbook")}
+              >
+                <BookOpen size={17} />
+                Playbook
+              </button>
+              <button
+                disabled={!review}
+                className={!overview && tab === "audit" ? "active" : ""}
+                onClick={() => navigateWorkspace("audit")}
+              >
+                <GitBranch size={17} />
+                Review activity
+              </button>
+              <button onClick={() => setChatOpen(true)}>
+                <Sparkles size={17} />
+                Evidence assistant
+                <ArrowUpRight size={13} />
+              </button>
+            </div>
             <button
               className="ciq-new"
               disabled={!!busy}
               onClick={() => {
+                setOverview(false);
+                setMobileNav(false);
                 setReview(undefined);
                 setAudit(undefined);
                 setAnswer("");
@@ -606,33 +587,50 @@ export default function ReviewExperience() {
               <Plus size={16} /> New review
             </button>
             <div className="ciq-overline">RECENT AGREEMENTS</div>
-            {history.map((h) => (
-              <button
-                className={`ciq-history ${h.id === review?.id ? "active" : ""}`}
-                key={h.id}
-                disabled={!!busy}
-                onClick={async () => {
-                  try {
-                    setReview(
-                      await api<Review>(`/contracts/${h.id}`, session.token),
-                    );
-                    setSelected(0);
-                    setReason("");
-                    setAudit(undefined);
-                    setAnswer("");
-                    setTab("findings");
-                  } catch (e) {
-                    setError((e as Error).message);
-                  }
-                }}
-              >
-                <FileText size={16} />
-                <span>
-                  {h.title}
-                  <small>{h.status.replaceAll("_", " ")}</small>
-                </span>
-              </button>
-            ))}
+            <label className="sidebar-search">
+              <Search size={14} />
+              <input
+                aria-label="Search recent agreements"
+                placeholder="Find an agreement…"
+                value={contractSearch}
+                onChange={(e) => setContractSearch(e.target.value)}
+              />
+            </label>
+            {history
+              .filter((h) =>
+                h.title.toLowerCase().includes(contractSearch.toLowerCase()),
+              )
+              .map((h) => (
+                <button
+                  className={`ciq-history ${h.id === review?.id ? "active" : ""}`}
+                  key={h.id}
+                  disabled={!!busy}
+                  onClick={async () => {
+                    try {
+                      setOverview(false);
+                      setMobileNav(false);
+                      setFindingSearch("");
+                      setSeverity("all");
+                      setReview(
+                        await api<Review>(`/contracts/${h.id}`, session.token),
+                      );
+                      setSelected(0);
+                      setReason("");
+                      setAudit(undefined);
+                      setAnswer("");
+                      setTab("findings");
+                    } catch (e) {
+                      setError((e as Error).message);
+                    }
+                  }}
+                >
+                  <FileText size={16} />
+                  <span>
+                    {h.title}
+                    <small>{h.status.replaceAll("_", " ")}</small>
+                  </span>
+                </button>
+              ))}
             <div className="ciq-sidebar-foot">
               <ShieldCheck size={18} />
               <strong>
@@ -650,12 +648,186 @@ export default function ReviewExperience() {
           <section className="ciq-review-main">
             <div className="ciq-breadcrumb">
               Workspace <ChevronRight size={13} />{" "}
-              {review ? "Agreement review" : "New review"}{" "}
+              {overview
+                ? "Overview"
+                : review
+                  ? "Agreement review"
+                  : "New review"}{" "}
               <span className="ciq-pill">
                 {session.demo ? "SAMPLE MODE" : "LIVE WORKSPACE"}
               </span>
             </div>
-            {!review ? (
+            {overview ? (
+              <section className="workspace-overview">
+                <div className="overview-heading">
+                  <div>
+                    <span className="product-kicker">
+                      YOUR CONTRACT OPERATIONS, AT A GLANCE
+                    </span>
+                    <h1>Clarity before commitment.</h1>
+                    <p>
+                      Know what needs attention. Keep every decision grounded in
+                      evidence.
+                    </p>
+                  </div>
+                  <button
+                    className="ciq-button ciq-dark"
+                    onClick={() => {
+                      setOverview(false);
+                      setReview(undefined);
+                    }}
+                  >
+                    <Plus size={16} />
+                    New review
+                  </button>
+                </div>
+                <div className="overview-metrics">
+                  <article>
+                    <span>
+                      <FileText size={18} />
+                      Recent agreements
+                    </span>
+                    <strong>{history.length}</strong>
+                    <small>In this workspace · latest 50</small>
+                  </article>
+                  <article>
+                    <span>
+                      <ListChecks size={18} />
+                      Awaiting a decision
+                    </span>
+                    <strong>
+                      {
+                        history.filter((h) => h.status === "awaiting_review")
+                          .length
+                      }
+                    </strong>
+                    <small>Reviews ready for human judgment</small>
+                  </article>
+                  <article>
+                    <span>
+                      <ShieldCheck size={18} />
+                      Decisions recorded
+                    </span>
+                    <strong>
+                      {
+                        history.filter((h) => h.status !== "awaiting_review")
+                          .length
+                      }
+                    </strong>
+                    <small>Approved or changes requested</small>
+                  </article>
+                </div>
+                <div className="overview-content">
+                  <section className="overview-agreements">
+                    <header>
+                      <div>
+                        <h2>Recent agreements</h2>
+                        <p>Your reviews and their next steps.</p>
+                      </div>
+                      <span>{history.length} total</span>
+                    </header>
+                    {history.length ? (
+                      history.map((h) => (
+                        <button
+                          key={h.id}
+                          onClick={async () => {
+                            try {
+                              setReview(
+                                await api<Review>(
+                                  `/contracts/${h.id}`,
+                                  session.token,
+                                ),
+                              );
+                              setOverview(false);
+                              setSelected(0);
+                              setReason("");
+                              setTab("findings");
+                              setAudit(undefined);
+                              setFindingSearch("");
+                              setSeverity("all");
+                              setAnswer("");
+                            } catch (e) {
+                              setError((e as Error).message);
+                            }
+                          }}
+                        >
+                          <span className="agreement-file">
+                            <FileText size={20} />
+                          </span>
+                          <span>
+                            <strong>{h.title}</strong>
+                            <small>
+                              {h.status === "awaiting_review"
+                                ? "Ready for your decision"
+                                : "Decision recorded"}
+                            </small>
+                          </span>
+                          <span className={`ciq-status ${h.status}`}>
+                            {h.status === "rejected"
+                              ? "Changes requested"
+                              : h.status.replaceAll("_", " ")}
+                          </span>
+                          <ChevronRight size={16} />
+                        </button>
+                      ))
+                    ) : (
+                      <div className="overview-empty">
+                        <FileText size={30} />
+                        <h3>Your first review starts here.</h3>
+                        <p>
+                          Open the sample or create a review to see agreements
+                          in your workspace.
+                        </p>
+                        <button
+                          className="ciq-button"
+                          onClick={() => {
+                            setOverview(false);
+                            setReview(undefined);
+                          }}
+                        >
+                          Create a review
+                          <ArrowRight size={15} />
+                        </button>
+                      </div>
+                    )}
+                  </section>
+                  <aside className="overview-guide">
+                    <span className="guide-icon">
+                      <Sparkles size={23} />
+                    </span>
+                    <span className="product-kicker">
+                      A BETTER REVIEW HABIT
+                    </span>
+                    <h3>
+                      Read. Challenge.
+                      <br />
+                      Decide.
+                    </h3>
+                    <p>
+                      Start with critical findings. Inspect the quoted clause,
+                      compare the proposed language, then document your
+                      decision.
+                    </p>
+                    <button
+                      className="ciq-button"
+                      onClick={() => {
+                        setOverview(false);
+                        setTab("findings");
+                      }}
+                    >
+                      Return to review
+                      <ArrowRight size={15} />
+                    </button>
+                    <div>
+                      <ShieldCheck size={16} />
+                      AI supports your judgment.
+                      <br />
+                      It never signs the agreement.
+                    </div>
+                  </aside>
+                </div>
+              </section>
+            ) : !review ? (
               <div className="ciq-upload">
                 <div className="ciq-overline">
                   EVERY GOOD DECISION STARTS WITH THE SOURCE
@@ -766,6 +938,49 @@ export default function ReviewExperience() {
                     <Download size={15} /> Export review
                   </button>
                 </div>
+                <div className="review-summary">
+                  <div>
+                    <span className="summary-icon risk">
+                      <ShieldCheck size={20} />
+                    </span>
+                    <div>
+                      <strong>{criticalCount}</strong>
+                      <span>Critical findings</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="summary-icon warning">
+                      <SlidersHorizontal size={20} />
+                    </span>
+                    <div>
+                      <strong>{highCount}</strong>
+                      <span>High priority</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="summary-icon verified">
+                      <CheckCircle2 size={20} />
+                    </span>
+                    <div>
+                      <strong>{review.findings.length}</strong>
+                      <span>Verified citations</span>
+                    </div>
+                  </div>
+                  <button onClick={() => navigateWorkspace("decision")}>
+                    <ListChecks size={19} />
+                    <span>
+                      {review.status === "awaiting_review"
+                        ? "Ready for your decision"
+                        : "View recorded decision"}
+                      <small>
+                        {review.status === "awaiting_review"
+                          ? "Review findings before approving"
+                          : "A reasoned decision is on record"}
+                      </small>
+                    </span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
                 <div className="ciq-statusbar">
                   <span className={`ciq-status ${review.status}`}>
                     <span />
@@ -798,12 +1013,35 @@ export default function ReviewExperience() {
                 </div>
                 {tab === "findings" && (
                   <>
-                    <div className="ciq-review-grid">
+                    <div
+                      className={`ciq-review-grid ${sourceFocus ? "source-focused" : ""}`}
+                    >
                       <section className="ciq-source">
                         <header>
                           <FileText size={16} /> SOURCE AGREEMENT{" "}
-                          <span>Text view</span>
+                          <span>TEXT VIEW</span>
+                          <button
+                            className="source-focus-button"
+                            aria-label={
+                              sourceFocus
+                                ? "Restore split view"
+                                : "Expand source document"
+                            }
+                            onClick={() => setSourceFocus(!sourceFocus)}
+                          >
+                            {sourceFocus ? (
+                              <PanelLeftClose size={16} />
+                            ) : (
+                              <PanelLeftOpen size={16} />
+                            )}
+                          </button>
                         </header>
+                        <div className="document-label">
+                          <span>AGREEMENT / ORIGINAL TEXT</span>
+                          <span>
+                            {finding ? `Line ${finding.line}` : "Source"}
+                          </span>
+                        </div>
                         <pre>
                           {finding ? (
                             <>
@@ -825,12 +1063,70 @@ export default function ReviewExperience() {
                           <h2>What needs your attention</h2>
                           <span>Commercial playbook deviations</span>
                         </div>
+                        <div className="finding-controls">
+                          <label>
+                            <Search size={15} />
+                            <input
+                              aria-label="Search findings"
+                              placeholder="Search findings or clauses…"
+                              value={findingSearch}
+                              onChange={(e) => setFindingSearch(e.target.value)}
+                            />
+                          </label>
+                          <div
+                            className="severity-filters"
+                            aria-label="Filter findings by severity"
+                          >
+                            {["all", "critical", "high", "medium"].map(
+                              (level) => (
+                                <button
+                                  key={level}
+                                  aria-pressed={severity === level}
+                                  className={severity === level ? "active" : ""}
+                                  onClick={() => {
+                                    setSeverity(level);
+                                    const next = review.findings.findIndex(
+                                      (f) =>
+                                        level === "all" || f.severity === level,
+                                    );
+                                    if (next >= 0) setSelected(next);
+                                  }}
+                                >
+                                  {level === "all" ? "All findings" : level}
+                                  <span>
+                                    {level === "all"
+                                      ? review.findings.length
+                                      : review.findings.filter(
+                                          (f) => f.severity === level,
+                                        ).length}
+                                  </span>
+                                </button>
+                              ),
+                            )}
+                          </div>
+                        </div>
                         <div className="ciq-finding-list">
-                          {review.findings.map((f, i) => (
+                          {visibleFindings.length === 0 && (
+                            <div className="findings-empty">
+                              <Search size={22} />
+                              <strong>No matching findings</strong>
+                              <span>Try another phrase or severity.</span>
+                              <button
+                                onClick={() => {
+                                  setFindingSearch("");
+                                  setSeverity("all");
+                                }}
+                              >
+                                Clear filters
+                              </button>
+                            </div>
+                          )}
+                          {visibleFindings.map((f) => (
                             <button
                               key={f.id}
-                              className={selected === i ? "selected" : ""}
-                              onClick={() => setSelected(i)}
+                              className={selected === f.index ? "selected" : ""}
+                              aria-pressed={selected === f.index}
+                              onClick={() => setSelected(f.index)}
                             >
                               <span className={`ciq-severity ${f.severity}`}>
                                 {f.severity}
@@ -853,15 +1149,29 @@ export default function ReviewExperience() {
                                 LANGUAGE
                               </div>
                               <p>{finding.proposed_language}</p>
-                              <small>
-                                Draft suggestion · Requires legal review
-                              </small>
+                              <div className="proposal-footer">
+                                <small>Draft · Requires legal review</small>
+                                <button
+                                  onClick={copyProposal}
+                                  aria-label="Copy proposed language"
+                                >
+                                  {copied ? (
+                                    <Check size={14} />
+                                  ) : (
+                                    <Copy size={14} />
+                                  )}
+                                  <span aria-live="polite">
+                                    {copied ? "Copied" : "Copy language"}
+                                  </span>
+                                </button>
+                              </div>
                             </div>
                           </div>
                         ) : (
                           <p className="ciq-empty">
-                            No deviations were returned. This is not assurance
-                            that the contract is safe.
+                            No finding is selected. Clear your filters or select
+                            a finding to inspect its evidence. A review without
+                            findings does not establish safety.
                           </p>
                         )}
                       </section>
@@ -873,7 +1183,7 @@ export default function ReviewExperience() {
                         human review.
                       </div>
                     )}
-                    <section className="ciq-decision">
+                    <section className="ciq-decision" ref={decisionRef}>
                       <div>
                         <ShieldCheck size={22} />
                         <h3>Your judgment is the final step.</h3>
@@ -1043,6 +1353,10 @@ export default function ReviewExperience() {
                 onClick={() => {
                   const i = review!.findings.findIndex((f) => f.id === id);
                   if (i >= 0) {
+                    setFindingSearch("");
+                    setSeverity("all");
+                    setOverview(false);
+                    setSourceFocus(false);
                     setSelected(i);
                     setTab("findings");
                   }
