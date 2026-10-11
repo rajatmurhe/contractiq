@@ -530,6 +530,25 @@ class ProductQuestion(BaseModel):
 @app.post("/api/review/assistant")
 async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
     throttle("assistant:" + (request.client.host if request.client else "unknown"), 15)
+    q = payload.question.lower()
+    # Access and pricing are product policy, not facts for the model to reinterpret.
+    access_terms = (
+        "free", "judge", "recruiter", "pric", "cost", "pay", "credit card", "subscription"
+    )
+    if any(word in q for word in access_terms):
+        return {
+            "answer": (
+                "Judges, recruiters, and other visitors can test their own contracts for free. "
+                "No credit card or subscription is required. Upload a searchable PDF, DOCX, "
+                "or TXT (up to 5 MB), or paste text; review the extraction before analysis. "
+                "Live AI requires the host's configured model. Guest sessions last one hour; "
+                "usage limits apply and the host funds inference. Export before signing out. "
+                "Future proposed plans are Starter $49/month for 50 reviews, "
+                "Team $199/month for 300 reviews, and custom Enterprise pricing. "
+                "Billing is not enabled in this pilot."
+            ),
+            "mode": "guided",
+        }
     facts = (
         "ContractIQ helps procurement teams review supplier agreements aga"
         "inst five commercial playbook rules. "
@@ -558,15 +577,7 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
         "every contract type or jurisdiction. Do not promise certification or legal advice."
     )
     if not os.getenv("REVIEW_LLM_API_KEY"):
-        q = payload.question.lower()
-        if any(w in q for w in ["price", "pricing", "cost", "plan"]):
-            answer = (
-                "Hackathon evaluation is free, with no credit card or payment required. "
-                "Future proposed plans: Starter $49/month for 50 reviews, Team $19"
-                "9/month for 300 reviews, and custom Enterprise pricing. Billing i"
-                "s not enabled in this pilot."
-            )
-        elif any(w in q for w in ["revision", "compare", "negotiat"]):
+        if any(w in q for w in ["revision", "compare", "negotiat"]):
             answer = (
                 "Open Compare revision from a review to inspect a revised agreement. "
                 "You can see exact text changes, remaining and newly flagged rules, "

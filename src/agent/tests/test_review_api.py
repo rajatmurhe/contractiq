@@ -109,6 +109,20 @@ def test_next_export_routes_and_missing_assets(client, tmp_path, monkeypatch):
     (web / 'linked').symlink_to(outside, target_is_directory=True)
     assert client.get('/linked').status_code == 404
 
+
+def test_free_judge_access_is_grounded_even_with_live_model(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-only')
+    async def misleading_model(*args):
+        raise AssertionError('Access policy must not depend on a model response')
+    monkeypatch.setattr('app.review.api.completion', misleading_model)
+    response = client.post('/api/review/assistant', json={
+        'question': 'Can judges review their own contracts for free, and what files can they upload?'
+    })
+    assert response.status_code == 200
+    assert response.json()['mode'] == 'guided'
+    assert 'their own contracts for free' in response.json()['answer']
+    assert 'PDF, DOCX' in response.json()['answer']
+
 def test_invalid_google_token_does_not_create_session(client, monkeypatch):
     monkeypatch.setenv('GOOGLE_CLIENT_ID', 'expected-client')
     def invalid(*args):
