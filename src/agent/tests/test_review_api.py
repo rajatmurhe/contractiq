@@ -116,7 +116,7 @@ def test_invalid_google_token_does_not_create_session(client, monkeypatch):
     monkeypatch.setattr('google.oauth2.id_token.verify_oauth2_token', invalid)
     assert client.post('/api/review/auth/google', json={'credential': 'x' * 30}).status_code == 401
 
-def test_verified_google_user_can_reopen_persisted_review(client, monkeypatch):
+def test_verified_google_user_can_reopen_persisted_review(client, monkeypatch, sample_policy_json):
     monkeypatch.setenv('GOOGLE_CLIENT_ID', 'expected-client')
     monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
     def verified(token, request, audience):
@@ -124,7 +124,7 @@ def test_verified_google_user_can_reopen_persisted_review(client, monkeypatch):
         return {'sub': 'stable-user-id', 'email_verified': True, 'name': 'Reviewer'}
     monkeypatch.setattr('google.oauth2.id_token.verify_oauth2_token', verified)
     async def fake_completion(*args):
-        return sample_review().model_dump_json()
+        return sample_policy_json
     monkeypatch.setattr('app.review.engine.completion', fake_completion)
     login = lambda: {'Authorization': 'Bearer ' + client.post('/api/review/auth/google', json={'credential': 'x' * 30}).json()['token']}
     headers = login()
@@ -209,10 +209,10 @@ def test_guest_can_prepare_contract_without_model_but_never_get_fake_analysis(cl
     assert client.get('/api/review/contracts', headers=headers).json() == []
 
 
-def test_guest_can_review_arbitrary_text_without_google_and_is_isolated(client, monkeypatch):
+def test_guest_can_review_arbitrary_text_without_google_and_is_isolated(client, monkeypatch, sample_policy_json):
     monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
     async def fake_completion(*args):
-        return sample_review().model_dump_json()
+        return sample_policy_json
     monkeypatch.setattr('app.review.engine.completion', fake_completion)
     guest = client.post('/api/review/auth/guest').json()
     assert guest['guest'] is True and guest['demo'] is False
