@@ -35,6 +35,19 @@ class ModelReview(BaseModel):
     )
 
 
+def generation_schema(value: object) -> object:
+    """Keep structure/enums in the decoder; enforce size bounds after generation."""
+    if isinstance(value, dict):
+        return {
+            k: generation_schema(v)
+            for k, v in value.items()
+            if k not in {"minLength", "maxLength", "minItems", "maxItems"}
+        }
+    if isinstance(value, list):
+        return [generation_schema(v) for v in value]
+    return value
+
+
 async def completion(system: str, data: str, schema: dict[str, Any] | None = None) -> str:
     key = os.getenv("REVIEW_LLM_API_KEY")
     if not key:
@@ -52,7 +65,10 @@ async def completion(system: str, data: str, schema: dict[str, Any] | None = Non
                 "response_format": (
                     {
                         "type": "json_schema",
-                        "json_schema": {"name": "contract_review", "schema": schema},
+                        "json_schema": {
+                            "name": "contract_review",
+                            "schema": generation_schema(schema),
+                        },
                     }
                     if schema and os.getenv("REVIEW_JSON_SCHEMA") == "1"
                     else {"type": "json_object"}
