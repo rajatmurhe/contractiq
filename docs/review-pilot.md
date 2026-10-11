@@ -1,0 +1,110 @@
+# ContractIQ: evidence-first review pilot
+
+The pilot replaces the default SPA with a focused procurement review experience. The previous dashboard components and .NET services remain in the repository, but are not mounted by the new SPA. **Do not merge and redeploy the existing frontend service alone**: the new frontend requires `/api/review/*` from the standalone FastAPI app. Deploy the new full-stack service first and switch the public URL after validation.
+
+## Run locally
+
+From the repository root, using Python 3.11+ and Node 22.12+:
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-review.txt
+npm --prefix src/frontend ci
+npm --prefix src/frontend run build
+PYTHONPATH=src/agent .venv/bin/uvicorn app.review.api:app --host 127.0.0.1 --port 8017
+```
+
+Open http://127.0.0.1:8017. Sample review works without accounts or model keys. The Vite development proxy targets the same backend port, 8017. Use `scripts/start-review.sh` to start the API.
+
+## What is real, what is sample
+
+| Capability | Implementation and limits |
+| --- | --- |
+| Sample review | Fixed synthetic baseline (five findings) and revision (two findings). Explicitly labeled; no model call. |
+| Private review | Google ID-token verification on the server, opaque one-hour bearer session kept in tab-scoped sessionStorage for refresh recovery, hashed session tokens in SQLite. |
+| Live analysis | Configured OpenAI-compatible chat provider returns schema-validated commercial findings and draft changes. Exact source quotation checks reject a whole response if any citation is fabricated. No invented offsets: the server computes them. |
+| Evidence assistant | Retrieves up to three verified findings using lexical overlap, then answers from that evidence. Live answers are model-generated; sample answers are deterministic. Citation IDs are allow-listed. Not semantic search. |
+| Landing assistant | Model-generated product Q&A when configured; clearly labeled guided answers otherwise. Global hourly model-call budget and per-client/session limits apply. |
+| Human decision | All reviews wait for a human, even zero-finding results. Reason required, one final decision per review, atomic transaction. Approval does not sign anything or call an ERP. |
+| Persistence | SQLite reviews survive restarts only with persistent storage; Google subject scopes access. No organization roles yet. Demo workspaces use isolated random identities and are not recoverable after sign-out. |
+| Audit | Hash chain detects edits to individual events. It is not externally anchored, deletion-proof, or resistant to an administrator rewriting the chain. |
+| Business model | Proposed per-workspace subscription pricing; billing and usage entitlements are not implemented. |
+
+Input supports pasted text, searchable PDF, Word `.docx`, or UTF-8 `.txt`, up to 5 MB and 60,000 extracted characters (PDF: at most 100 pages). Authenticated uploads are extracted in a separate bounded worker with a 20-second timeout and Linux resource limits; DOCX archive expansion is bounded. Extraction does not save a review or call AI. Users inspect and edit the result before analysis; scanned/locked PDFs are rejected. OCR, jurisdiction-specific compliance, customer SSO, organization roles, retention controls and production incident handling are not implemented in this path. Existing microservice mocks are not evidence of these capabilities. Exact quotation proves provenance, not correct legal interpretation or full recall.
+
+## Configure live AI and Google login
+
+Set the variables in `.env.review.example` in the hosting environment. Local uvicorn does not automatically load that file; set the variables in the shell or use a process manager. Never put model keys in `VITE_` variables.
+
+- `GOOGLE_CLIENT_ID`: Google OAuth web client with the exact app origin in Authorized JavaScript origins. The browser uses Google Identity Services; the server verifies audience/signature/expiry with `google-auth` and requires a verified email. [Google verification documentation](https://developers.google.com/identity/gsi/web/guides/verify-google-id-token).
+- `REVIEW_LLM_API_KEY`: secret for the configured inference provider.
+- `REVIEW_LLM_BASE_URL`: OpenAI-compatible base URL ending in `/v1` (default `https://api.openai.com/v1`). The service appends `/chat/completions`.
+- `REVIEW_LLM_MODEL`: a model supporting JSON-object responses (default `gpt-4o-mini`). Validate compatibility with your provider before judging.
+- `REVIEW_DB`: persistent SQLite path.
+- `REVIEW_HOURLY_MODEL_LIMIT`: global live model-call limit, default 60. Per-user live reviews are also limited to 10/hour and chat to 20/hour. Requests count even when a provider fails.
+
+Contract text and selected evidence are transmitted to the configured provider. Review that provider’s data policy before using real customer agreements. The public demo accepts only the two supplied synthetic agreement versions.
+
+## Render deployment
+
+`Dockerfile.review` builds the SPA and serves it on the same origin as FastAPI. `render.review.yaml` describes a **new** service with a persistent disk. A disk may incur hosting charges; no service was created automatically. Existing `render.yaml` now points the frontend service at this same full-stack image and retains the old resources to avoid implicit deletion. Its free instance is ephemeral; do not treat it as durable storage.
+
+1. Create a Docker web service from the review branch, using the repository root as context and `Dockerfile.review`.
+2. Mount persistent storage at `/data`; configure the environment variables above.
+3. Use `/health/ready` as the health check. It verifies database access and reports whether live AI is configured; it does not make an inference call.
+4. Add the new HTTPS origin to the Google OAuth client.
+5. Confirm sample flow, real Google login, real model review, logout, re-login persistence and two-account isolation on the deployed service.
+6. Only then replace the submission URL. Do not claim live AI merely because the sample works.
+
+If trying a free ephemeral service, explicitly treat all stored reviews as disposable and do not use real contracts. For a production rollout, add a managed database, backups, deletion/retention workflows, operational monitoring, request-body limits at the edge and external audit anchoring. IP rate limits depend on correctly configured trusted proxy handling; they are abuse friction, not a complete perimeter.
+
+## Validation
+
+```sh
+.venv/bin/pip install pytest pytest-asyncio
+PYTHONPATH=src/agent .venv/bin/pytest src/agent/tests/test_review_api.py -q
+npm --prefix src/frontend run type-check
+npm --prefix src/frontend run build
+```
+
+The suite checks exact evidence, fabricated citations, demo restrictions, cross-user access for read/chat/audit/decision, atomic decision locking, audit tamper detection, token revocation, rejected Google verification, stable identity persistence and provider failure. Google and model integrations are mocked in tests; these checks do not establish live provider correctness.
+
+## Three-minute judging walkthrough
+
+- **0:00–0:25 — Customer problem.** “Procurement needs to know what to negotiate before a supplier agreement is signed. A generic summary does not show whether a finding is grounded.”
+- **0:25–1:15 — Evidence.** Open the synthetic Meridian sample. Select unlimited liability and show the highlighted source. Select renewal and explain that the 90-day cancellation cutoff exceeds this customer’s 60-day maximum preference. Show draft negotiation language.
+- **1:15–1:45 — Meaningful AI.** With live credentials configured, sign in and submit a different agreement. Explain schema validation, computed offsets, rejection of fabricated quotes, and evidence retrieval for follow-up questions. Do not present sample findings as generated output.
+- **1:45–2:20 — Human control.** Request changes with a reason. Show the persistent decision and verified audit chain. Explain that the application does not sign the document or silently write to external tools.
+- **2:20–3:00 — Business.** Initial buyer: procurement leads at growing software companies. Proposed Starter $49/50 reviews and Team $199/300 reviews. Validate willingness to pay and actual review cost during pilots; no measured ROI or customer traction is claimed.
+
+Revision comparison and a 20-case synthetic evaluation corpus are now included. See `evals/review/README.md` for the live evaluation command and metric definitions. The checked-in report validates the corpus only; live model quality remains unmeasured. Automated plumbing tests are not model-quality evaluation.
+
+## Additional validation
+
+The review module passes Ruff and strict mypy checks. Frontend lint, type checking, build and review-flow tests pass (the three older placeholder tests are still present). The review tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. UI coverage is approximately 52% of lines; Google popup and real inference are not covered by these tests.
+
+The repository-wide legacy CI is still separate from this pilot’s focused checks. Its evaluation job references the absent `app.eval.runner`; legacy Python lint and .NET service validation require additional work. Do not report the entire repository as green based on the pilot workflow.
+
+The deployment image was built and smoke-tested locally: frontend serving, readiness, sample review, human decision, isolation and a saved review surviving full container recreation using a named persistent volume all passed. Temporary test containers and volumes were removed afterward.
+
+## Revision comparison and submission preparation
+
+Open **Compare revision** from any review. Live users can paste a revised agreement; sample users can load the curated revised version. Each revision is a separate record with its own pending human decision. Comparisons group findings by P1–P5, show exact changed text passages, and identify remaining, newly flagged, no-longer-flagged, or uncertain coverage. Disappearance of a finding is not proof of legal resolution.
+
+- `evals/review/README.md`: reproducible live model evaluation and honest metrics.
+- `scripts/verify_review_deployment.py`: same-origin API smoke test with synthetic data.
+- `docs/judging/demo-script.md`: three-minute presentation and fallback.
+- `docs/judging/practitioner-validation.md`: neutral test protocol and economics worksheet.
+- `docs/judging/october-15-release.md`: dated release checklist and outstanding access needs.
+
+Execution & audit displays measured review latency and provider token usage. Optional server-side per-million token prices produce an estimate; missing pricing or usage is shown as unknown. Sample processing is explicitly not live inference latency.
+
+## Free recruiter and judge evaluation
+
+Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest sessions survive refresh in the same tab. Guest access cannot be recovered after sign-out, session expiry, or closing the tab; export before leaving. Google login remains available for stable identity and reopening saved reviews.
+
+Guest creation is limited to five sessions per client IP per hour. Existing per-session review/chat limits and the global model-call cap still apply; free access is not unlimited provider spending. The host funds inference. Without a configured model, the free entry point offers the clearly labeled curated walkthrough, not fabricated live results. Future pricing is informational and no payment is collected.
+
+### Local inference verification
+
+An installed Ollama 3B model was tried on independent synthetic text. Responses included findings without supporting quotes and one timeout. The app rejected these results, saved no review, and local inference was disabled afterward. The optional local startup script is configuration support, not evidence that this model is suitable for contract review. A working, sufficiently capable model remains required for own-document AI analysis.

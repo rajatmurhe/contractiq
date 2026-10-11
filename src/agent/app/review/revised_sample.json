@@ -1,0 +1,24 @@
+{
+  "source": "MASTER SERVICES AGREEMENT\nBetween Northstar Labs (Customer) and Meridian Cloud (Supplier).\nEffective date: 1 October 2026. Annual fees: USD 120,000.\n\n1. Limitation of liability\nEach party's aggregate liability is capped at fees paid in the preceding twelve months. Neither party is liable for indirect or consequential damages.\n\n2. Indemnification\nCustomer shall indemnify Supplier against all claims arising from use of the Services. Supplier has no reciprocal indemnification obligation.\n\n3. Renewal\nThis Agreement automatically renews for twelve months unless either party gives written notice at least thirty days before renewal.\n\n4. Termination\nSupplier may terminate this Agreement for convenience on seven days' notice. Prepaid fees are non-refundable.\n\n5. Data protection\nSupplier shall delete Customer Data within thirty days of termination and provide prior notice of all new subprocessors.\n\n6. Governing law\nThis Agreement is governed by the laws of England and Wales.\n",
+  "review": {
+    "findings": [
+      {
+        "title": "One-sided indemnification",
+        "severity": "high",
+        "rule": "P2",
+        "quote": "Customer shall indemnify Supplier against all claims arising from use of the Services. Supplier has no reciprocal indemnification obligation.",
+        "rationale": "The customer indemnifies the supplier without a reciprocal obligation.",
+        "proposed_language": "Each party shall indemnify the other for third-party claims arising from its negligence, wilful misconduct, or breach of the agreed obligations, subject to the agreed liability framework."
+      },
+      {
+        "title": "Seven-day supplier exit",
+        "severity": "critical",
+        "rule": "P4",
+        "quote": "Supplier may terminate this Agreement for convenience on seven days' notice. Prepaid fees are non-refundable.",
+        "rationale": "Short notice and non-refundable prepayments create continuity and financial risk.",
+        "proposed_language": "Supplier may terminate for convenience on at least thirty days\u2019 written notice and shall refund prepaid fees for the unused service period."
+      }
+    ],
+    "missing_topics": []
+  }
+}

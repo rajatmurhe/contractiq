@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+**/node_modules
+**/.venv
+**/__pycache__
+**/dist
+**/bin
+**/obj
+**/data
+contractiq photos

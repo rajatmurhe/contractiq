@@ -1,0 +1,18 @@
+SYNTHETIC SOFTWARE SERVICES AGREEMENT
+Customer: Cedar Grove Analytics. Supplier: Atlas Platform Services.
+Annual subscription: USD 72,000. This document is synthetic demonstration data.
+
+1. Liability
+Customer's liability for losses arising from this agreement is unlimited, including indirect and consequential damages.
+
+2. Indemnification
+Customer shall indemnify Supplier against all claims arising from use of the services. Supplier provides no reciprocal indemnity to Customer.
+
+3. Renewal
+The subscription renews annually unless either party gives written cancellation notice at least thirty days before renewal.
+
+4. Termination
+Supplier may terminate for convenience on at least forty-five days' written notice and shall refund fees prepaid for the unused service period.
+
+5. Data handling
+Supplier shall delete customer data within twenty days after termination and give prior written notice of new subprocessors.

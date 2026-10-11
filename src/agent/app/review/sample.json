@@ -1,0 +1,48 @@
+{
+  "source": "MASTER SERVICES AGREEMENT\nBetween Northstar Labs (Customer) and Meridian Cloud (Supplier).\nEffective date: 1 October 2026. Annual fees: USD 120,000.\n\n1. Limitation of liability\nCustomer's liability under this Agreement is unlimited, including indirect and consequential damages.\n\n2. Indemnification\nCustomer shall indemnify Supplier against all claims arising from use of the Services. Supplier has no reciprocal indemnification obligation.\n\n3. Renewal\nThis Agreement automatically renews for twelve months unless Customer provides written notice at least ninety days before the renewal date.\n\n4. Termination\nSupplier may terminate this Agreement for convenience on seven days' notice. Prepaid fees are non-refundable.\n\n5. Data protection\nSupplier may retain Customer Data indefinitely after termination and may transfer it to any subcontractor without prior notice.\n\n6. Governing law\nThis Agreement is governed by the laws of England and Wales.\n",
+  "playbook": "Review from the Customer's procurement perspective, using these commercial preferences (not legal requirements):\nP1: cap aggregate liability at fees paid in the preceding 12 months; exclude indirect damages.\nP2: require reciprocal, appropriately scoped indemnities.\nP3: avoid an automatic-renewal cancellation deadline more than 60 days before renewal.\nP4: require at least 30 days' notice for supplier convenience termination and refund unused prepaid fees.\nP5: require data deletion within 30 days of termination and notice of subprocessors.\nFlag deviations with exact source evidence. Draft negotiation language, never claim enforceability.\n",
+  "review": {
+    "findings": [
+      {
+        "title": "Unlimited customer liability",
+        "severity": "critical",
+        "rule": "P1",
+        "quote": "Customer's liability under this Agreement is unlimited, including indirect and consequential damages.",
+        "rationale": "The customer bears unlimited exposure, including consequential loss.",
+        "proposed_language": "Each party’s aggregate liability shall not exceed fees paid in the preceding twelve months. Neither party is liable for indirect or consequential damages, subject to agreed exceptions."
+      },
+      {
+        "title": "One-sided indemnification",
+        "severity": "high",
+        "rule": "P2",
+        "quote": "Customer shall indemnify Supplier against all claims arising from use of the Services. Supplier has no reciprocal indemnification obligation.",
+        "rationale": "The customer indemnifies the supplier without a reciprocal obligation.",
+        "proposed_language": "Each party shall indemnify the other for third-party claims arising from its negligence, wilful misconduct, or breach of the agreed obligations, subject to the agreed liability framework."
+      },
+      {
+        "title": "Early renewal lock-in",
+        "severity": "medium",
+        "rule": "P3",
+        "quote": "This Agreement automatically renews for twelve months unless Customer provides written notice at least ninety days before the renewal date.",
+        "rationale": "A ninety-day deadline exceeds the playbook’s sixty-day maximum, making cancellation easier to miss.",
+        "proposed_language": "Either party may prevent renewal by written notice at least thirty days before the current term ends."
+      },
+      {
+        "title": "Seven-day supplier exit",
+        "severity": "critical",
+        "rule": "P4",
+        "quote": "Supplier may terminate this Agreement for convenience on seven days' notice. Prepaid fees are non-refundable.",
+        "rationale": "Short notice and non-refundable prepayments create continuity and financial risk.",
+        "proposed_language": "Supplier may terminate for convenience on at least thirty days’ written notice and shall refund prepaid fees for the unused service period."
+      },
+      {
+        "title": "Indefinite data retention",
+        "severity": "high",
+        "rule": "P5",
+        "quote": "Supplier may retain Customer Data indefinitely after termination and may transfer it to any subcontractor without prior notice.",
+        "rationale": "Indefinite retention and unrestricted subcontracting depart from the customer’s data-handling preferences.",
+        "proposed_language": "Supplier shall delete Customer Data within thirty days of termination, except legally required retention, and provide prior notice of new subprocessors."
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+name: Review pilot
+on:
+  push:
+    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review*.py', 'evals/review/**', 'scripts/verify_review_deployment.py', 'requirements-review.txt', 'Dockerfile.review', 'Makefile', '.env.example', 'compose.yaml', 'render*.yaml', 'scripts/start-review.sh', 'scripts/start-review-local.sh', 'scripts/demo.sh', '.github/workflows/review.yml']
+  pull_request:
+    paths: ['src/frontend/**', 'src/agent/app/review/**', 'src/agent/tests/test_review*.py', 'evals/review/**', 'scripts/verify_review_deployment.py', 'requirements-review.txt', 'Dockerfile.review', 'Makefile', '.env.example', 'compose.yaml', 'render*.yaml', 'scripts/start-review.sh', 'scripts/start-review-local.sh', 'scripts/demo.sh', '.github/workflows/review.yml']
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+      - run: pip install -r requirements-review.txt pytest pytest-asyncio ruff mypy
+      - run: ruff check src/agent/app/review
+      - run: mypy src/agent/app/review --strict --ignore-missing-imports
+      - run: PYTHONPATH=src/agent pytest src/agent/tests/test_review*.py -q
+      - run: PYTHONPATH=src/agent python -m app.review.evaluate --output /tmp/corpus-validation.json
+      - run: npm ci && npm run lint && npm run type-check && npm run test:unit -- --coverage && npm run build && npm audit --audit-level=high
+        working-directory: src/frontend
+      - name: Validate runtime entry points
+        run: docker compose config --quiet && bash -n scripts/start-review.sh scripts/start-review-local.sh scripts/demo.sh
+      - name: Exercise built SPA and review API
+        run: |
+          PYTHONPATH=src/agent REVIEW_DB=/tmp/review-ci.sqlite3 uvicorn app.review.api:app --host 127.0.0.1 --port 8017 > /tmp/review-server.log 2>&1 &
+          review_server_pid=$!
+          trap 'kill "$review_server_pid"' EXIT
+          python - <<'PYTHON'
+          import time
+          import httpx
+          for attempt in range(30):
+              try:
+                  response = httpx.get('http://127.0.0.1:8017/health/ready')
+                  if response.status_code == 200:
+                      break
+              except httpx.HTTPError:
+                  pass
+              time.sleep(1)
+          else:
+              raise SystemExit('Review service did not become ready')
+          page = httpx.get('http://127.0.0.1:8017/')
+          assert page.status_code == 200 and '<html' in page.text.lower()
+          PYTHON
+          python scripts/verify_review_deployment.py http://127.0.0.1:8017 --output /tmp/deployment-smoke.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-verification
+          path: |
+            /tmp/corpus-validation.json
+            /tmp/deployment-smoke.json
