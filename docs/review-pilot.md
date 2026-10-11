@@ -30,7 +30,7 @@ Open http://127.0.0.1:8017. Sample review works without accounts or model keys. 
 | Audit | Hash chain detects edits to individual events. It is not externally anchored, deletion-proof, or resistant to an administrator rewriting the chain. |
 | Business model | Proposed per-workspace subscription pricing; billing and usage entitlements are not implemented. |
 
-Input supports pasted text or UTF-8 `.txt`, up to 60,000 characters. PDF/DOCX extraction, OCR, jurisdiction-specific compliance, customer SSO, organization roles, retention controls and production incident handling are not implemented in this path. Existing microservice mocks are not evidence of these capabilities. Exact quotation proves provenance, not correct legal interpretation or full recall.
+Input supports pasted text, searchable PDF, Word `.docx`, or UTF-8 `.txt`, up to 5 MB and 60,000 extracted characters (PDF: at most 100 pages). Authenticated uploads are extracted in a separate bounded worker with a 20-second timeout and Linux resource limits; DOCX archive expansion is bounded. Extraction does not save a review or call AI. Users inspect and edit the result before analysis; scanned/locked PDFs are rejected. OCR, jurisdiction-specific compliance, customer SSO, organization roles, retention controls and production incident handling are not implemented in this path. Existing microservice mocks are not evidence of these capabilities. Exact quotation proves provenance, not correct legal interpretation or full recall.
 
 ## Configure live AI and Google login
 

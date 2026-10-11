@@ -100,6 +100,7 @@ def config() -> Json:
     return {
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
         "live_enabled": bool(os.getenv("REVIEW_LLM_API_KEY")),
+        "input_byte_limit": int(os.getenv("REVIEW_INPUT_BYTE_LIMIT", "240000")),
         "sample": SAMPLE,
         "revised_sample": REVISED_SAMPLE,
         "playbook": PLAYBOOK,
@@ -236,6 +237,14 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
             503,
             "AI review is not connected yet. Your text has not been analyzed. "
             "The host must configure the model.",
+        )
+    if not user["demo"] and len(payload.text.encode("utf-8")) > int(
+        os.getenv("REVIEW_INPUT_BYTE_LIMIT", "240000")
+    ):
+        raise HTTPException(
+            422,
+            "This contract exceeds the connected model's input limit. "
+            "Use a shorter document or connect a model with a larger context.",
         )
     throttle("review:" + user["owner"], 10)
     if not user["demo"]:

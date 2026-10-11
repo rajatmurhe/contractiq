@@ -230,3 +230,13 @@ def test_evidence_export_contains_source_comparison_and_audit_and_is_owned(clien
     assert bundle['audit']['valid']
     assert 'P1:' in bundle['playbook']
     assert client.get(path, headers=auth(client)).status_code == 404
+
+
+def test_configured_context_limit_rejects_oversized_contract_before_inference(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
+    monkeypatch.setenv('REVIEW_INPUT_BYTE_LIMIT', '100')
+    guest = client.post('/api/review/auth/guest').json()['token']
+    response = client.post('/api/review/contracts', headers={'Authorization': 'Bearer ' + guest}, json={'text': 'Long contract text. ' * 20})
+    assert response.status_code == 422
+    assert 'input limit' in response.json()['detail']
+    assert client.get('/api/review/config').json()['input_byte_limit'] == 100

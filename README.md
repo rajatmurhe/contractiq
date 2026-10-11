@@ -4,8 +4,8 @@ ContractIQ helps procurement reviewers find commercial risks, inspect exact sour
 
 ## Try it
 
-- **Free guest evaluation:** with a host-configured model, enter without an account, paste your own agreement or use the prefilled sample, then analyze, ask questions, compare revisions, decide and export.
-- **Curated walkthrough:** without a model key, the app explicitly offers synthetic agreements and prepared findings. It does not pretend to analyze arbitrary text.
+- **Free guest evaluation:** enter without an account, upload your own PDF/DOCX/TXT or paste a contract, and inspect the extracted text. With a host-configured model, analyze, ask questions, compare revisions, decide and export.
+- **Curated walkthrough:** a separate sample entry offers synthetic agreements and prepared findings, including when no model key is configured. It does not pretend to analyze arbitrary text.
 - **Google sign-in:** optional for stable identity and returning to persisted reviews. Guest sessions last one hour, survive refresh in the same tab, and cannot be recovered after sign-out or closing the tab.
 
 The host funds model usage. Guest session creation, review/chat calls and global hourly model calls are bounded. Future pricing on the landing page is a business-model proposal, not a feature gate.
@@ -35,10 +35,15 @@ docker compose up --build
 
 Docker Compose reads its environment from `.env` or exported variables. Source runs do not automatically read `.env`. Default UI/API port is 8017. `docker compose down` stops the service without deleting its named volume; `down -v` deletes stored review data.
 
+### Review with a local model
+
+With Ollama running and `llama3.2:3b` already installed, run `make start-local`. The command creates a local model variant with a 16,384-token context, enables schema-constrained responses, and limits review input to 8,000 UTF-8 bytes to leave room for instructions and output. Set `REVIEW_LOCAL_MODEL` to use another installed instruction model with at least that context. This sends inference to localhost and requires no paid API key. Local responses may take up to three minutes. Model quality and latency depend on the model and hardware; citation validation still applies. This enables only the local app: a public deployment must have its own reachable inference service.
+
 ## What is implemented
 
 | Workflow | Behavior |
 | --- | --- |
+| Import | PDF, DOCX, UTF-8 TXT, or pasted text; extraction preview before analysis; bounded parser worker |
 | Review | Five explicit procurement preferences: liability, indemnity, renewal, termination, data handling |
 | Evidence | Schema-validated findings, exact source matching, server-computed Unicode offsets; fabricated citations reject the result |
 | Questions | Retrieval over the current review's findings and allow-listed citation IDs; clear insufficient-evidence responses |
@@ -75,6 +80,6 @@ Live provider and Google verification, public deployment and practitioner valida
 
 ## Scope and legacy code
 
-Supported input is pasted text or UTF-8 `.txt`. PDF/OCR, organization roles, SSO, billing, jurisdictional legal compliance, retention automation and SAP/Salesforce execution are not implemented in the active product. The audit checks local hash-chain consistency; it is not externally anchored.
+Supported input is pasted text, searchable PDF, Word `.docx`, or UTF-8 `.txt` (5 MB, 60,000 extracted characters, at most 100 PDF pages). Extraction is transient and does not call AI. Scanned or locked PDFs are rejected; OCR, organization roles, SSO, billing, jurisdictional legal compliance, retention automation and SAP/Salesforce execution are not implemented in the active product. The audit checks local hash-chain consistency; it is not externally anchored.
 
 The earlier .NET/Keycloak/LangGraph prototype remains under its original directories for reference. Its architecture and mock demo are [archived here](docs/legacy/prototype-architecture.md). They are not part of the current runtime, and their separate legacy CI failures are not hidden by the review workflow. Use `Review pilot` CI to assess the active product.

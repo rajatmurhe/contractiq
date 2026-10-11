@@ -68,6 +68,7 @@ type Review = {
 type Config = {
   google_client_id: string;
   live_enabled: boolean;
+  input_byte_limit?: number;
   sample: string;
   revised_sample?: string;
   playbook: string;
@@ -1101,6 +1102,15 @@ export default function ReviewExperience() {
                         Analyze agreement <Sparkles size={16} />
                       </button>
                     </div>
+                    {config?.input_byte_limit &&
+                      config.input_byte_limit < 240000 && (
+                        <p>
+                          The connected local model accepts up to{" "}
+                          {config.input_byte_limit.toLocaleString()} UTF-8 bytes
+                          per review. Larger contracts need a model with a
+                          larger context.
+                        </p>
+                      )}
                     {uploadInfo && <p role="status">{uploadInfo}</p>}
                     <p>
                       PDF, DOCX, TXT · up to 5 MB and 60,000 extracted
