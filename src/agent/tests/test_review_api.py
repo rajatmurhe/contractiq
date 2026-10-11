@@ -86,6 +86,29 @@ def test_unconfigured_google_and_assistant_are_honest(client):
     assert response.json()['mode'] == 'guided'
     assert 'not enabled' in response.json()['answer']
 
+def test_next_export_routes_and_missing_assets(client, tmp_path, monkeypatch):
+    web = tmp_path / 'web'
+    (web / 'dashboard').mkdir(parents=True)
+    (web / '_next' / 'static').mkdir(parents=True)
+    (web / 'index.html').write_text('<html>Landing</html>')
+    (web / 'dashboard' / 'index.html').write_text('<html>Dashboard</html>')
+    (web / '404.html').write_text('<html>Not found</html>')
+    (web / '_next' / 'static' / 'app.js').write_text('window.loaded = true;')
+    monkeypatch.setattr('app.review.api.DIST', web)
+    assert 'Landing' in client.get('/').text
+    for path in ['/dashboard', '/dashboard/']:
+        assert 'Dashboard' in client.get(path).text
+    asset = client.get('/_next/static/app.js')
+    assert asset.status_code == 200 and 'javascript' in asset.headers['content-type']
+    for path in ['/missing-page', '/_next/static/missing.js']:
+        assert client.get(path).status_code == 404
+    assert client.get('/api/unknown').json() == {'detail': 'Not Found'}
+    outside = tmp_path / 'outside'
+    outside.mkdir()
+    (outside / 'index.html').write_text('private')
+    (web / 'linked').symlink_to(outside, target_is_directory=True)
+    assert client.get('/linked').status_code == 404
+
 def test_invalid_google_token_does_not_create_session(client, monkeypatch):
     monkeypatch.setenv('GOOGLE_CLIENT_ID', 'expected-client')
     def invalid(*args):

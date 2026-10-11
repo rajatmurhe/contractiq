@@ -15,9 +15,9 @@ help:
 	@echo 'make eval-live  Run billable inference benchmark with configured provider'
 	@echo 'make demo       Smoke-test a running app; no fabricated successes'
 	@echo 'make legacy-help  Inspect the archived prototype commands'
-setstart-local:
+start-local:
 	./scripts/start-review-local.sh
-up:
+setup:
 	python3 -m venv .venv
 	$(PYTHON) -m pip install -r requirements-review.txt pytest pytest-asyncio ruff mypy
 	npm --prefix src/frontend ci

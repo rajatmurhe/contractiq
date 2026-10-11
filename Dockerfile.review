@@ -10,7 +10,7 @@ WORKDIR /app
 COPY requirements-review.txt ./
 RUN pip install --no-cache-dir -r requirements-review.txt
 COPY src/agent/app/review/ ./app/review/
-COPY --from=frontend /web/dist ./web/
+COPY --from=frontend /web/out ./web/
 RUN useradd --create-home appuser && mkdir -p /data && chown appuser:appuser /data
 USER appuser
 ENV REVIEW_FRONTEND_DIST=/app/web REVIEW_DB=/data/reviews.sqlite3
