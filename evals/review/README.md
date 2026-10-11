@@ -16,7 +16,7 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate --live --output eva
 
 Set `REVIEW_LLM_API_KEY`, `REVIEW_LLM_BASE_URL`, and `REVIEW_LLM_MODEL` in the process environment. Set current provider prices in `REVIEW_INPUT_PRICE_PER_MILLION` and `REVIEW_OUTPUT_PRICE_PER_MILLION` for cost estimates. A missing price or missing usage yields unknown cost, never zero. Estimates do not include hosting, retries, human review, cached-token discounts or provider-specific fees. Do not put secrets in a report or commit them.
 
-The CLI runs outside the API's hourly throttle and makes one request per case, sequentially. The checked-in corpus-validation report has **no AI quality metrics**. No live benchmark has been run yet.
+The CLI runs outside the API's hourly throttle and makes one request per case, sequentially. The checked-in corpus-validation report has **no AI quality metrics**. Live runs from October 11, 2026 are recorded below. These are development/regression results on this same author-labeled corpus, not a held-out quality estimate.
 
 ## Metric definitions
 
@@ -33,3 +33,21 @@ Reports include model, timestamp, corpus SHA-256, per-case results and errors by
 ## Proposed pilot targets (not achieved results)
 
 Before the final presentation, aim for at least 90% rule recall and precision, zero failed cases, and manually inspect every false positive/negative, missing-topic mismatch, and suggested revision. Include cost and latency measured on the actual deployed configuration. These are engineering targets for this narrow synthetic set, not a legal safety certification or guarantee. Human review remains mandatory even if targets are met.
+
+
+## October 11 development runs
+
+All runs use `openai/gpt-4o-mini` through OpenRouter on the same 20 synthetic cases. The first run exposed compliant clauses being flagged as risks. Two prompt revisions reduced false positives but did not consistently solve missing-topic and boundary-value errors. The final implementation requires a structured assessment of every playbook rule and validates evidence/status consistency before accepting findings.
+
+- `baseline-2026-10-11.json`: original deployed review prompt; 95.24% recall, 36.36% precision, 18/20 successful calls, 90% missing-topic exact match.
+- `regression-01-2026-10-11.json`: explicit deviation and numeric-threshold instructions; 95.24% recall, 100% precision, 19/20 successful calls, 85% missing-topic exact match.
+- `regression-02-2026-10-11.json`: additional coverage and verbatim-quote instructions; 85.71% recall, 100% precision, 19/20 successful calls, 80% missing-topic exact match.
+
+The source validator rejected altered quotations instead of accepting plausible-looking evidence. Earlier reports are retained rather than overwritten. Three additional diagnostic calls inspected the missing-topic and quote failures between the first two regression runs. None of these runs measures legal interpretation quality, suggested-language suitability, or independent practitioner value. Cost remains unknown because provider prices were not configured.
+
+
+### Final structured-assessment regression
+
+[`live-report.json`](live-report.json) was generated with the engine at commit `5458a51`: 20/20 successful cases, 100% rule recall, 91.30% rule precision, 100% missing-topic exact match, and 100% exact quotations among accepted findings. Median latency was 4.078 seconds; p95 was 6.635 seconds. These results meet the narrow recall/precision/completion targets above, but are **not held-out results** because failures in this corpus informed the implementation.
+
+Two false positives remain: P3 on `termination-no-refund` (a compliant thirty-day renewal deadline) and P3 on `renewal-exact-boundary` (the allowed sixty-day boundary). The model's rationale incorrectly treats these values as exceeding sixty days. Their quotations are real, illustrating why source validation does not establish interpretation accuracy. Reviewers must check numeric thresholds and proposed changes. No missed expected rules or provider/validation failures occurred in this run; future calls can differ.

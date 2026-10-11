@@ -38,7 +38,7 @@ Judges pay nothing and need no credit card. The host funds model calls; per-sess
 
 ## Meaningful AI beyond a chat completion
 
-The model proposes structured findings against an explicit customer playbook. Application code validates the schema, checks that every quoted passage occurs in the source, computes source offsets, and rejects unsupported citations before saving a review. Missing clauses are tracked separately; an absent clause cannot have fabricated evidence.
+The model must assess all five playbook rules as compliant, deviating, or missing. Present topics require exact source evidence; only deviations can contain findings, and missing topics cannot invent evidence. Application validation rejects inconsistent assessments. Application code validates the schema, checks that every quoted passage occurs in the source, computes source offsets, and rejects unsupported citations before saving a review. Missing clauses are tracked separately; an absent clause cannot have fabricated evidence.
 
 For follow-up questions, the API first authorizes access to the review, ranks verified findings by lexical overlap, and selects up to three as context. It checks the answer's citation IDs against the selected findings. This is a limited retrieval-augmented workflow; it does not search a company-wide knowledge base.
 
@@ -87,11 +87,11 @@ Run the active product tests using the README commands. `Review pilot` CI covers
 
 ## Evidence recorded so far
 
-The [saved deployment check](deployment-check.json) records 13 passing checks against the public service on October 11, including curated revision comparison, decision locking, export, cross-session isolation, and logout. It used sample mode and reports Google configuration as absent; it is not a live-inference or Google-login benchmark. The Next.js migration passed 40 review-backend tests, Ruff, strict mypy, 14 frontend tests with coverage, frontend lint/type checking, a production export build, and npm audit (zero known vulnerabilities). A local browser walkthrough verified sample review, revision comparison, session restoration at `/dashboard/`, and a 390px layout without page overflow. The sample API smoke test passed all 13 checks. These checks do not measure model quality.
+The [saved deployment check](deployment-check.json) records 13 passing checks against the public service on October 11, including curated revision comparison, decision locking, export, cross-session isolation, and logout. It used sample mode and reports Google configuration as absent; it is not a live-inference or Google-login benchmark. The Next.js migration passed 46 review-backend tests, Ruff, strict mypy, 14 frontend tests with coverage, frontend lint/type checking, a production export build, and npm audit (zero known vulnerabilities). A local browser walkthrough verified sample review, revision comparison, session restoration at `/dashboard/`, and a 390px layout without page overflow. The sample API smoke test passed all 13 checks. These checks do not measure model quality.
 
 On October 11, 2026, a guest submitted an independent synthetic supplier agreement through the public API and received a saved live review containing five findings with source quotes. This establishes one working inference path; it does not establish legal accuracy, full clause recall, uptime, or throughput. The response's quote-presence check did not independently measure interpretation quality.
 
-The evaluation corpus contains 20 synthetic cases and has a live evaluation CLI. A completed live quality benchmark and independent practitioner study are still outstanding. Do not substitute curated-demo results or mocked provider tests for either.
+The [live regression report](../../evals/review/README.md#final-structured-assessment-regression) records 20/20 successful synthetic cases, 100% rule recall, 91.3% precision, 100% missing-topic exact match, 4.078-second median latency, and 6.635-second p95 latency. Two renewal-threshold false positives remain. Earlier failed runs are retained. This is a development corpus used to improve the implementation, not a held-out evaluation or an independent legal-quality benchmark. Provider cost is unknown because prices were not configured. Independent practitioner validation remains outstanding.
 
 ## Demo and business model
 

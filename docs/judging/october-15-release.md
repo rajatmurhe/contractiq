@@ -4,7 +4,7 @@
 
 Implemented: source-grounded reviews, revision linkage, exact text changes, comparison outcomes, isolated access, independent human decisions, a 20-case synthetic evaluation corpus, live evaluation CLI, latency/token/cost reporting, and a deployment smoke script.
 
-Updated October 11, 2026: PR #1 is merged to main and the full-stack app is live on Render. A live guest review through OpenRouter succeeded on independent synthetic text, returning five findings with source quotes. The account owner subsequently confirmed working Google sign-in. The full live corpus benchmark, durable production storage, and practitioner results remain outstanding. The original repository has separate legacy CI failures; do not describe every check as passing. See [submission evidence and gaps](submission.md).
+Updated October 11, 2026: PR #1 is merged to main and the full-stack app is live on Render. A live guest review through OpenRouter succeeded on independent synthetic text, returning five findings with source quotes. The account owner subsequently confirmed working Google sign-in. The live 20-case regression is complete (100% rule recall, 91.3% precision, no failed cases); two renewal-threshold false positives remain. This corpus informed development. Durable production storage, unseen-case evaluation, and practitioner results remain outstanding. The original repository has separate legacy CI failures; do not describe every check as passing. See [submission evidence and gaps](submission.md).
 
 ## October 11–12: real integrations and deployment
 

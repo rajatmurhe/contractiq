@@ -78,7 +78,7 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
 - [Three-minute demonstration](docs/judging/demo-script.md)
 - [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. Practitioner validation and a live corpus benchmark remain outstanding; no real customer ROI is claimed.
+On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. The [live synthetic regression](evals/review/README.md#final-structured-assessment-regression) completed 20/20 cases with 100% rule recall, 91.3% precision, and 100% missing-topic exact match. Two renewal-threshold false positives remain. This corpus informed development and is not held out. Practitioner validation remains outstanding; no real customer ROI is claimed.
 
 ## Scope and legacy code
 
