@@ -13,11 +13,13 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, cast
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, field_validator
+from starlette.concurrency import run_in_threadpool
 
 from .comparison import compare_reviews
+from .documents import MAX_BYTES, extract_document
 from .engine import PLAYBOOK, REVISED_SAMPLE, SAMPLE, completion, review
 
 Json = dict[str, Any]
@@ -118,10 +120,6 @@ def ready() -> Json:
 
 @app.post("/api/review/auth/guest")
 def guest_session(request: Request) -> Json:
-    if not os.getenv("REVIEW_LLM_API_KEY"):
-        raise HTTPException(
-            503, "Live AI is not configured. The free sample walkthrough is available."
-        )
     throttle("guests:" + (request.client.host if request.client else "unknown"), 5)
     return new_session("guest:" + str(uuid4()), "Guest reviewer", False)
 
@@ -171,6 +169,27 @@ def logout(user: Annotated[Json, Depends(session)]) -> Json:
     return {"status": "signed_out"}
 
 
+@app.post("/api/review/documents/extract")
+async def extract_upload(
+    request: Request,
+    user: Annotated[Json, Depends(session)],
+    filename: Annotated[str, Query(min_length=1, max_length=200)],
+) -> Json:
+    if user["demo"]:
+        raise HTTPException(403, "Open your own contract workspace to upload a document.")
+    throttle("uploads:" + user["owner"], 20)
+    throttle("uploads-global", 120)
+    data = bytearray()
+    async for chunk in request.stream():
+        data.extend(chunk)
+        if len(data) > MAX_BYTES:
+            raise HTTPException(413, "Choose a file up to 5 MB.")
+    try:
+        return await run_in_threadpool(extract_document, bytes(data), filename)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+
+
 class ReviewInput(BaseModel):
     title: str = Field(default="Untitled agreement", min_length=1, max_length=150)
     text: str = Field(min_length=50, max_length=60000)
@@ -209,7 +228,14 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
     if user["demo"] and payload.text not in (SAMPLE, REVISED_SAMPLE):
         raise HTTPException(
             403,
-            "Demo sessions can review only the supplied sample. Sign in for your own documents.",
+            "Demo sessions can review only the supplied sample. "
+            "Open a free workspace for your own documents.",
+        )
+    if not user["demo"] and not os.getenv("REVIEW_LLM_API_KEY"):
+        raise HTTPException(
+            503,
+            "AI review is not connected yet. Your text has not been analyzed. "
+            "The host must configure the model.",
         )
     throttle("review:" + user["owner"], 10)
     if not user["demo"]:

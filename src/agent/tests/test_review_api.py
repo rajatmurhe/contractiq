@@ -95,6 +95,7 @@ def test_invalid_google_token_does_not_create_session(client, monkeypatch):
 
 def test_verified_google_user_can_reopen_persisted_review(client, monkeypatch):
     monkeypatch.setenv('GOOGLE_CLIENT_ID', 'expected-client')
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
     def verified(token, request, audience):
         assert audience == 'expected-client'
         return {'sub': 'stable-user-id', 'email_verified': True, 'name': 'Reviewer'}
@@ -175,10 +176,14 @@ def test_comparison_text_changes_preserve_exact_before_and_after_passages():
     assert compare_reviews(old, new)['changed_passages'] == [{'operation': 'replace', 'before_line': 2, 'after_line': 2, 'before': 'Unlimited liability.', 'after': 'Liability capped at annual fees.'}]
 
 
-def test_free_guest_evaluation_requires_host_model_not_payment(client):
+def test_guest_can_prepare_contract_without_model_but_never_get_fake_analysis(client):
     response = client.post('/api/review/auth/guest')
-    assert response.status_code == 503
-    assert 'not configured' in response.json()['detail']
+    assert response.status_code == 200
+    headers = {'Authorization': 'Bearer ' + response.json()['token']}
+    result = client.post('/api/review/contracts', headers=headers, json={'text': SAMPLE})
+    assert result.status_code == 503
+    assert 'not been analyzed' in result.json()['detail']
+    assert client.get('/api/review/contracts', headers=headers).json() == []
 
 
 def test_guest_can_review_arbitrary_text_without_google_and_is_isolated(client, monkeypatch):
