@@ -21,7 +21,7 @@ type Props = {
   start: () => void;
   evaluate: () => void;
   liveEnabled: boolean;
-  googleRef: RefObject<HTMLDivElement>;
+  googleRef: RefObject<HTMLDivElement | null>;
   googleConfigured: boolean;
 };
 export function ProductLanding({

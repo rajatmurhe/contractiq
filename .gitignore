@@ -10,6 +10,9 @@
 # Build outputs & dependencies - Node.js / React
 **/node_modules/
 **/dist/
+**/.next/
+**/out/
+**/tsconfig.tsbuildinfo
 **/build/
 .output/
 npm-debug.log*
