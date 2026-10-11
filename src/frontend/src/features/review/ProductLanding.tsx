@@ -69,7 +69,9 @@ export function ProductLanding({
                 Review your own contract <ArrowRight size={16} />
               </button>
               <small>
-                {liveEnabled
+                {!ready
+                  ? "Checking review availability…"
+                  : liveEnabled
                   ? "No account needed. Upload a PDF, DOCX, or TXT, or paste your contract for live AI review. One-hour guest session; refresh is supported. Export before signing out or closing the tab."
                   : "Import and inspect your own contract for free. AI analysis is currently unavailable until the host connects a model. The sample walkthrough is also available."}
               </small>
