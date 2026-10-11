@@ -1,6 +1,6 @@
 # ContractIQ: evidence-first review pilot
 
-The pilot replaces the default SPA with a focused procurement review experience. The previous dashboard components and .NET services remain in the repository, but are not mounted by the new SPA. **Do not merge and redeploy the existing frontend service alone**: the new frontend requires `/api/review/*` from the standalone FastAPI app. Deploy the new full-stack service first and switch the public URL after validation.
+The active app provides a focused procurement review experience. The previous dashboard components and .NET services remain in the repository, but are not mounted by the new SPA. The existing Render service `contractiq-frontend` now runs the full-stack `Dockerfile.review` image, serving both the frontend and `/api/review/*` from FastAPI. Its public URL is https://contractiq-frontend-2e3u.onrender.com/. A frontend-only image cannot serve the current application.
 
 ## Run locally
 
@@ -44,6 +44,18 @@ Set the variables in `.env.review.example` in the hosting environment. Local uvi
 - `REVIEW_HOURLY_MODEL_LIMIT`: global live model-call limit, default 60. Per-user live reviews are also limited to 10/hour and chat to 20/hour. Requests count even when a provider fails.
 
 Contract text and selected evidence are transmitted to the configured provider. Review that provider’s data policy before using real customer agreements. The public demo accepts only the two supplied synthetic agreement versions.
+
+### OpenRouter configuration used by the public deployment
+
+In Render, open **contractiq-frontend → Environment**. Set these together, then save and deploy:
+
+| Variable | Value |
+| --- | --- |
+| `REVIEW_LLM_API_KEY` | Your OpenRouter secret, entered privately |
+| `REVIEW_LLM_BASE_URL` | `https://openrouter.ai/api/v1` |
+| `REVIEW_LLM_MODEL` | `openai/gpt-4o-mini` |
+
+An OpenRouter key cannot authenticate against the default OpenAI endpoint. The model field takes a provider model ID, never a secret. `live_enabled: true` reports only that a key is present; a successful synthetic review verifies inference. See [OpenRouter integration](https://openrouter.ai/developers) and the [model identifier](https://openrouter.ai/openai/gpt-4o-mini/overview). For Google, follow the separate [account setup guide](google-login-setup.md).
 
 ## Render deployment
 

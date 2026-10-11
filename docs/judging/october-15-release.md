@@ -4,15 +4,15 @@
 
 Implemented: source-grounded reviews, revision linkage, exact text changes, comparison outcomes, isolated access, independent human decisions, a 20-case synthetic evaluation corpus, live evaluation CLI, latency/token/cost reporting, and a deployment smoke script.
 
-Verification so far is local and uses curated sample data or mocked providers. Real Google login, live inference, public deployment, and practitioner results are outstanding. The original repository has separate legacy CI failures; do not describe every check as passing.
+Updated October 11, 2026: PR #1 is merged to main and the full-stack app is live on Render. A live guest review through OpenRouter succeeded on independent synthetic text, returning five findings with source quotes. Google configuration/browser login, the full live corpus benchmark, durable production storage, and practitioner results remain outstanding. The original repository has separate legacy CI failures; do not describe every check as passing. See [submission evidence and gaps](submission.md).
 
 ## October 11–12: real integrations and deployment
 
 Required from the account owner:
 
-- Configure `GOOGLE_CLIENT_ID` for a web client with localhost and the final HTTPS app origin.
-- Configure `REVIEW_LLM_API_KEY`, model and provider base URL in the server environment. Add current token prices if cost estimates are needed.
-- Sign in to Render or provide access through an approved deployment mechanism. The current browser is at Render sign-in. No service has been created and no paid plan purchased.
+- Configure `GOOGLE_CLIENT_ID` using the [Google setup guide](../google-login-setup.md), then verify actual browser login.
+- Keep the working OpenRouter key, base URL, and model settings together. Add current provider prices only if cost estimates are needed.
+- Use the existing Render service `contractiq-frontend`, now serving the complete app. The public URL is https://contractiq-frontend-2e3u.onrender.com/.
 - Choose persistent hosting and approve any associated spending. `render.review.yaml` requests a disk; that is not a free hosting commitment.
 
 Deploy the same-origin Docker service using `Dockerfile.review`, not the old frontend service by itself. Follow `docs/review-pilot.md`. Run:

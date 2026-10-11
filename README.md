@@ -4,6 +4,8 @@ ContractIQ helps procurement reviewers find commercial risks, inspect exact sour
 
 ## Try it
 
+**[Open the live app](https://contractiq-frontend-2e3u.onrender.com/)** · **[Submission guide](docs/judging/submission.md)** · **[Architecture](docs/judging/submission.md#architecture)** · **[Google login setup](docs/google-login-setup.md)**
+
 - **Free guest evaluation:** enter without an account, upload your own PDF/DOCX/TXT or paste a contract, and inspect the extracted text. With a host-configured model, analyze, ask questions, compare revisions, decide and export.
 - **Curated walkthrough:** a separate sample entry offers synthetic agreements and prepared findings, including when no model key is configured. It does not pretend to analyze arbitrary text.
 - **Google sign-in:** optional for stable identity and returning to persisted reviews. Guest sessions last one hour, survive refresh in the same tab, and cannot be recovered after sign-out or closing the tab.
@@ -76,7 +78,7 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
 - [Three-minute demonstration](docs/judging/demo-script.md)
 - [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-Live provider and Google verification, public deployment and practitioner validation require actual credentials/accounts/participants. Do not claim completion from a sample run. No real customer ROI or live model benchmark is currently claimed.
+On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is implemented but still awaits account configuration and real browser verification. Practitioner validation and a live corpus benchmark remain outstanding; no real customer ROI is claimed.
 
 ## Scope and legacy code
 

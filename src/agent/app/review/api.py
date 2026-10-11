@@ -542,13 +542,17 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
         "Guest evaluation is free with no signup or credit card when a model is configured. "
         "Guests can review their own text, compare revisions, ask questions, and export. "
         "Guest sessions expire after one hour and cannot be recovered after sign-out. "
-        "Google login enables returning to reviews under a verified identity. "
+        "Google login, when configured by the host, enables returning to reviews under a "
+        "verified identity while those reviews remain in storage. "
         "Proposed launch pricing: Starter $49/month for 50 reviews; Team $"
         "199/month for 300 reviews; Enterprise custom. "
         "Pricing is a proposal, billing is not implemented. This pilot use"
         "s per-user isolation, not organization roles. "
-        "Only text input and UTF-8 text files are supported. Do not promis"
-        "e PDF parsing, certification or legal advice."
+        "Inputs: pasted text, searchable PDF, Word DOCX, and UTF-8 TXT; files up to 5 MB, "
+        "60,000 extracted characters, and at most 100 PDF pages. Users preview and edit "
+        "extracted text before sending it for AI analysis. Scanned or locked PDFs are "
+        "rejected; OCR is not available. Reviews apply procurement preferences, not "
+        "every contract type or jurisdiction. Do not promise certification or legal advice."
     )
     if not os.getenv("REVIEW_LLM_API_KEY"):
         q = payload.question.lower()
@@ -578,7 +582,7 @@ async def product_assistant(payload: ProductQuestion, request: Request) -> Json:
             answer = (
                 "Try the sample to inspect five playbook deviations, jump to their"
                 " exact source text, draft negotiation changes, and record a human"
-                " decision. Sign in with Google to review your own text when live "
+                " decision. Start free evaluation to review your own document when live "
                 "AI is configured."
             )
         return {"answer": answer, "mode": "guided"}
