@@ -64,13 +64,13 @@ def test_gold_findings_score_full_rule_recall():
     assert result['missing_topics_correct']
 
 
-def test_live_usage_cost_and_context_cleanup(monkeypatch):
+def test_live_usage_cost_and_context_cleanup(monkeypatch, sample_policy_json):
     import httpx
     from app.review.engine import SAMPLE, _USAGE, review, sample_review
     monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-only')
     monkeypatch.setenv('REVIEW_INPUT_PRICE_PER_MILLION', '2')
     monkeypatch.setenv('REVIEW_OUTPUT_PRICE_PER_MILLION', '8')
-    transport = httpx.MockTransport(lambda request: httpx.Response(200, json={'choices': [{'message': {'content': sample_review().model_dump_json()}}], 'usage': {'prompt_tokens': 1000, 'completion_tokens': 500}}))
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, json={'choices': [{'message': {'content': sample_policy_json}}], 'usage': {'prompt_tokens': 1000, 'completion_tokens': 500}}))
     original = httpx.AsyncClient
     monkeypatch.setattr(httpx, 'AsyncClient', lambda **kw: original(transport=transport, **kw))
     async def run():

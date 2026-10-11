@@ -14,7 +14,7 @@ npm --prefix src/frontend run build
 PYTHONPATH=src/agent .venv/bin/uvicorn app.review.api:app --host 127.0.0.1 --port 8017
 ```
 
-Open http://127.0.0.1:8017. Sample review works without accounts or model keys. The Vite development proxy targets the same backend port, 8017. Use `scripts/start-review.sh` to start the API.
+Open http://127.0.0.1:8017. Sample review works without accounts or model keys. The Next.js development proxy targets the same backend port, 8017. Use `scripts/start-review.sh` to start the API.
 
 ## What is real, what is sample
 
@@ -59,7 +59,15 @@ An OpenRouter key cannot authenticate against the default OpenAI endpoint. The m
 
 ## Render deployment
 
-`Dockerfile.review` builds the SPA and serves it on the same origin as FastAPI. `render.review.yaml` describes a **new** service with a persistent disk. A disk may incur hosting charges; no service was created automatically. Existing `render.yaml` now points the frontend service at this same full-stack image and retains the old resources to avoid implicit deletion. Its free instance is ephemeral; do not treat it as durable storage.
+### Next.js frontend
+
+The frontend now uses Next.js App Router, React 19, and TypeScript. `next build` prerenders the landing page and the original `/dashboard/` entry point into `src/frontend/out`. FastAPI serves that export and all review endpoints on the existing origin. No Node server, Server Actions, or Next.js API routes run in production; Python owns authentication, uploads, inference, and storage. Static export is an official [Next.js deployment mode](https://nextjs.org/docs/app/guides/static-exports).
+
+For development, run FastAPI on port 8017 and `npm --prefix src/frontend run dev` in another terminal. Next.js proxies `/api/*` and `/health/*` to that backend during development. For a production-like local preview, run `make build` and `make start`. API keys are only read by Python at runtime. Never add them to `NEXT_PUBLIC_*` variables.
+
+The Render service still builds `Dockerfile.review`; it now copies Next.js's `out` directory. Its URL and Google authorized origin stay the same. Recheck login and refresh recovery after deployment. If the migration fails, Render can redeploy main's previous commit `2521a5a` while the change is investigated.
+
+`Dockerfile.review` builds the Next.js static export and serves it on the same origin as FastAPI. `render.review.yaml` describes a **new** service with a persistent disk. A disk may incur hosting charges; no service was created automatically. Existing `render.yaml` now points the frontend service at this same full-stack image and retains the old resources to avoid implicit deletion. Its free instance is ephemeral; do not treat it as durable storage.
 
 1. Create a Docker web service from the review branch, using the repository root as context and `Dockerfile.review`.
 2. Mount persistent storage at `/data`; configure the environment variables above.
@@ -93,9 +101,9 @@ Revision comparison and a 20-case synthetic evaluation corpus are now included. 
 
 ## Additional validation
 
-The review module passes Ruff and strict mypy checks. Frontend lint, type checking, build and review-flow tests pass (the three older placeholder tests are still present). The review tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. UI coverage is approximately 52% of lines; Google popup and real inference are not covered by these tests.
+The review module passes Ruff and strict mypy checks. The Next.js migration runs frontend lint, type checking, build and review-flow tests. The three older placeholder tests are archived with the unused prototype UI and excluded from current test counts. The review tests cover Unicode source highlighting, reason-gated decisions, API rejection, evidence citations and logout. npm audit reported zero known vulnerabilities after upgrading the build/test stack. The 14 review-flow tests report 68.38% line coverage after the migration; Google popup and real inference are not covered by these tests.
 
-The repository-wide legacy CI is still separate from this pilot’s focused checks. Its evaluation job references the absent `app.eval.runner`; legacy Python lint and .NET service validation require additional work. Do not report the entire repository as green based on the pilot workflow.
+The main CI now validates the active Next.js/FastAPI product. The old .NET and legacy Python checks remain available in the manual `Legacy prototype validation` workflow with known unresolved failures. The broken evaluation command targeting absent `app.eval.runner` has been replaced with the real review corpus validator; it does not claim model accuracy.
 
 The deployment image was built and smoke-tested locally: frontend serving, readiness, sample review, human decision, isolation and a saved review surviving full container recreation using a named persistent volume all passed. Temporary test containers and volumes were removed afterward.
 

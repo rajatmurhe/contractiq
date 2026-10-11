@@ -28,17 +28,17 @@ Judges pay nothing and need no credit card. The host funds model calls; per-sess
 
 | Criterion | Implementation | Verification or remaining gap |
 | --- | --- | --- |
-| Modern stack | TypeScript/React/Vite frontend; Python/FastAPI backend | FastAPI matches the preferred backend. The current frontend is **not Next.js**; disclose this rather than claiming an exact stack match. |
+| Modern stack | Next.js App Router / TypeScript frontend; Python/FastAPI backend | Next.js generates static HTML and client assets; FastAPI serves the export and API together. Authentication and inference remain server-side in Python. |
 | Meaningful AI | Schema-validated extraction, exact source validation, retrieval-grounded follow-up answers, review-to-revision comparison | Live inference verified on synthetic text. Retrieval uses lexical overlap over verified findings, not embeddings or semantic search. No autonomous multi-agent execution is claimed. |
-| Secure authentication | Google ID-token verification; opaque expiring sessions stored hashed; ownership checks and logout revocation | Google code exists, but the public client ID and actual browser flow still need setup and verification. Free guest access does not fulfill this Google criterion by itself. |
+| Secure authentication | Google ID-token verification; opaque expiring sessions stored hashed; ownership checks and logout revocation | Client ID is configured. The account owner confirmed successful browser Google sign-in on October 11. Repeat the flow after this migration; external-account isolation and durable-storage checks remain separate. |
 | Landing-page AI assistant | Product Q&A using the configured provider; labeled guided fallback without a provider | Implemented; rehearse a live landing-page question before submission. |
 | Live deployment | Same-origin UI and API on Render using `Dockerfile.review` | Public API and a live guest review verified October 11, 2026. |
 | Pricing and business model | Free evaluation; proposed Starter $49/month for 50 reviews, Team $199/month for 300; custom enterprise plan | Displayed pricing is a hypothesis. No checkout, paid subscribers, or validated willingness to pay is claimed. |
-| Professional documentation | Problem, architecture, setup, demo, deployment, evaluation, and limitations | Linked below. Final recording and real Google-login evidence remain to be added. |
+| Professional documentation | Problem, architecture, setup, demo, deployment, evaluation, and limitations | Linked below. The account owner confirmed Google login; a final recording remains to be added. |
 
 ## Meaningful AI beyond a chat completion
 
-The model proposes structured findings against an explicit customer playbook. Application code validates the schema, checks that every quoted passage occurs in the source, computes source offsets, and rejects unsupported citations before saving a review. Missing clauses are tracked separately; an absent clause cannot have fabricated evidence.
+The model must assess all five playbook rules as compliant, deviating, or missing. Present topics require exact source evidence; only deviations can contain findings, and missing topics cannot invent evidence. Application validation rejects inconsistent assessments. Application code validates the schema, checks that every quoted passage occurs in the source, computes source offsets, and rejects unsupported citations before saving a review. Missing clauses are tracked separately; an absent clause cannot have fabricated evidence.
 
 For follow-up questions, the API first authorizes access to the review, ranks verified findings by lexical overlap, and selects up to three as context. It checks the answer's citation IDs against the selected findings. This is a limited retrieval-augmented workflow; it does not search a company-wide knowledge base.
 
@@ -48,7 +48,7 @@ Revision comparison and human decision records complete the business workflow. E
 
 ```mermaid
 flowchart TD
-    User[Reviewer or judge] --> UI[React / TypeScript UI]
+    User[Reviewer or judge] --> UI[Next.js App Router / TypeScript UI]
     UI --> API[FastAPI: same origin]
     UI --> Google[Google Identity Services]
     Google -->|ID token via browser callback| API
@@ -83,15 +83,15 @@ SQLite storage on the current free Render instance is ephemeral. Guest sessions 
 - [Evaluation corpus and metric definitions](../../evals/review/README.md)
 - [Release checklist](october-15-release.md)
 
-Run the active product tests using the README commands. `Review pilot` CI covers the active runtime. Separate legacy CI failures remain and must not be represented as passing.
+Run the active product tests using the README commands. `Review pilot` CI covers the active runtime. Legacy prototype checks are manually runnable and retain known failures; their code was not silently declared fixed.
 
 ## Evidence recorded so far
 
-The [saved deployment check](deployment-check.json) records 13 passing checks against the public service on October 11, including curated revision comparison, decision locking, export, cross-session isolation, and logout. It used sample mode and reports Google configuration as absent; it is not a live-inference or Google-login benchmark. The submission-preparation change also passed all 39 review-backend tests, Ruff, and strict mypy locally.
+The [saved deployment check](deployment-check.json) records 13 passing checks against the public service on October 11, including curated revision comparison, decision locking, export, cross-session isolation, and logout. It used sample mode and reports Google configuration as absent; it is not a live-inference or Google-login benchmark. The Next.js migration passed 46 review-backend tests, Ruff, strict mypy, 14 frontend tests with coverage, frontend lint/type checking, a production export build, and npm audit (zero known vulnerabilities). A local browser walkthrough verified sample review, revision comparison, session restoration at `/dashboard/`, and a 390px layout without page overflow. The sample API smoke test passed all 13 checks. These checks do not measure model quality.
 
 On October 11, 2026, a guest submitted an independent synthetic supplier agreement through the public API and received a saved live review containing five findings with source quotes. This establishes one working inference path; it does not establish legal accuracy, full clause recall, uptime, or throughput. The response's quote-presence check did not independently measure interpretation quality.
 
-The evaluation corpus contains 20 synthetic cases and has a live evaluation CLI. A completed live quality benchmark and independent practitioner study are still outstanding. Do not substitute curated-demo results or mocked provider tests for either.
+The [live regression report](../../evals/review/README.md#final-structured-assessment-regression) records 20/20 successful synthetic cases, 100% rule recall, 91.3% precision, 100% missing-topic exact match, 4.078-second median latency, and 6.635-second p95 latency. Two renewal-threshold false positives remain. Earlier failed runs are retained. This is a development corpus used to improve the implementation, not a held-out evaluation or an independent legal-quality benchmark. Provider cost is unknown because prices were not configured. Independent practitioner validation remains outstanding.
 
 ## Demo and business model
 
@@ -111,4 +111,4 @@ Codex assisted with implementation, debugging, testing, deployment configuration
 - A completed live evaluation report with model, corpus version, and limitations, if available before submission.
 - Actual practitioner feedback, if collected; otherwise disclose that validation is pending.
 
-Before submission, finish real Google sign-in, rehearse the full workflow on the final deployment, and confirm the organizer's deadline time and submission format. Next.js is preferred in the supplied brief; if an exact stack match is mandatory, migration remains separate work. OTP, Microsoft login, and enterprise SSO are unimplemented extra-credit items.
+Before submission, repeat Google sign-in after the Next.js deployment, rehearse the full workflow, and confirm the organizer's deadline time and submission format. OTP, Microsoft login, and enterprise SSO are unimplemented extra-credit items.

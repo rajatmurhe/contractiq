@@ -87,6 +87,7 @@ async def evaluate(corpus: dict[str, Any], output: Path, live: bool) -> dict[str
                 **score_case(case, result),
                 "usage": result.get("usage"),
                 "findings": result["findings"],
+                "missing_topics": result.get("missing_topics", []),
             }
         except Exception as exc:
             # Do not publish provider exception messages, URLs, or credentials.

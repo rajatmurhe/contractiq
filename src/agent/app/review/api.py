@@ -498,26 +498,29 @@ async def ask(review_id: str, payload: Question, user: Annotated[Json, Depends(s
         ) from None
 
 
-# Build the SPA first. Serving from this origin avoids cross-site auth and CORS configuration.
+# Serve Next.js's static export alongside the API on the same authenticated origin.
 DIST = Path(
     os.getenv(
-        "REVIEW_FRONTEND_DIST", str(Path(__file__).resolve().parents[3] / "frontend" / "dist")
+        "REVIEW_FRONTEND_DIST", str(Path(__file__).resolve().parents[3] / "frontend" / "out")
     )
 ).resolve()
 
 
 @app.get("/{path:path}", include_in_schema=False)
 def frontend(path: str) -> FileResponse:
-    if path.startswith(("api/", "health/")):
+    if path in ("api", "health") or path.startswith(("api/", "health/")):
         raise HTTPException(404)
     target = (DIST / path).resolve()
     if not target.is_relative_to(DIST):
         raise HTTPException(404)
     if target.is_file():
         return FileResponse(target)
-    if (DIST / "index.html").is_file():
-        return FileResponse(DIST / "index.html")
-    raise HTTPException(404, "Build the frontend or run the Vite development server.")
+    page = (target / "index.html").resolve()
+    if page.is_relative_to(DIST) and page.is_file():
+        return FileResponse(page)
+    if (DIST / "404.html").is_file():
+        return FileResponse(DIST / "404.html", status_code=404)
+    raise HTTPException(404, "Build the frontend or run the Next.js development server.")
 
 
 class ProductQuestion(BaseModel):

@@ -1,6 +1,6 @@
 # ContractIQ — evidence-first supplier contract review
 
-ContractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a React/Vite frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required for evaluation.
+ContractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a Next.js App Router frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required for evaluation.
 
 ## Try it
 
@@ -78,10 +78,10 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
 - [Three-minute demonstration](docs/judging/demo-script.md)
 - [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is implemented but still awaits account configuration and real browser verification. Practitioner validation and a live corpus benchmark remain outstanding; no real customer ROI is claimed.
+On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. The [live synthetic regression](evals/review/README.md#final-structured-assessment-regression) completed 20/20 cases with 100% rule recall, 91.3% precision, and 100% missing-topic exact match. Two renewal-threshold false positives remain. This corpus informed development and is not held out. Practitioner validation remains outstanding; no real customer ROI is claimed.
 
 ## Scope and legacy code
 
 Supported input is pasted text, searchable PDF, Word `.docx`, or UTF-8 `.txt` (5 MB, 60,000 extracted characters, at most 100 PDF pages). Extraction is transient and does not call AI. Scanned or locked PDFs are rejected; OCR, organization roles, SSO, billing, jurisdictional legal compliance, retention automation and SAP/Salesforce execution are not implemented in the active product. The audit checks local hash-chain consistency; it is not externally anchored.
 
-The earlier .NET/Keycloak/LangGraph prototype remains under its original directories for reference. Its architecture and mock demo are [archived here](docs/legacy/prototype-architecture.md). They are not part of the current runtime, and their separate legacy CI failures are not hidden by the review workflow. Use `Review pilot` CI to assess the active product.
+The earlier .NET/Keycloak/LangGraph prototype remains under its original directories for reference. Its architecture and mock demo are [archived here](docs/legacy/prototype-architecture.md). They are not part of the current runtime. Unused prototype frontend screens and their historical dependency manifest are retained in `docs/legacy/frontend`. The `Legacy prototype validation` workflow is manually runnable and has known unresolved failures; it is not a passing validation claim. `Review pilot` CI now checks the active product on every PR and main/develop push.
