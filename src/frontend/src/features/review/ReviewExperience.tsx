@@ -98,10 +98,13 @@ async function api<T>(
   const response = await fetch(`/api/review${path}`, {
     method: body === undefined ? "GET" : "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type":
+        body instanceof Blob ? "application/octet-stream" : "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    ...(body === undefined
+      ? {}
+      : { body: body instanceof Blob ? body : JSON.stringify(body) }),
   });
   const data = await response.json();
   if (response.status === 401 && token)
@@ -128,6 +131,7 @@ export default function ReviewExperience() {
   const [title, setTitle] = useState("Supplier agreement");
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [uploadInfo, setUploadInfo] = useState("");
   const [reason, setReason] = useState("");
   const [audit, setAudit] = useState<Audit>();
   const [tab, setTab] = useState<
@@ -292,18 +296,15 @@ export default function ReviewExperience() {
   }, [selected, review?.id]);
 
   async function startEvaluation() {
-    if (!config?.live_enabled) {
-      await startDemo();
-      return;
-    }
     setBusy("Opening free evaluation");
     setError("");
     try {
       setSession(await api<Session>("/auth/guest", undefined, {}));
       setReview(undefined);
       setOverview(false);
-      setText(config.sample);
-      setTitle("Sample agreement · live AI evaluation");
+      setText("");
+      setTitle("My contract");
+      setUploadInfo("");
       setAnswer("");
       setCitations([]);
       setTab("findings");
@@ -820,7 +821,11 @@ export default function ReviewExperience() {
                   ? "Agreement review"
                   : "New review"}{" "}
               <span className="ciq-pill">
-                {session.demo ? "SAMPLE MODE" : "LIVE WORKSPACE"}
+                {session.demo
+                  ? "SAMPLE MODE"
+                  : config?.live_enabled
+                    ? "AI CONNECTED"
+                    : "AI NOT CONNECTED"}
               </span>
             </div>
             {overview ? (
@@ -1002,7 +1007,7 @@ export default function ReviewExperience() {
                 <p>
                   {session.demo
                     ? "Explore a synthetic supplier agreement with five curated deviations."
-                    : "Paste your agreement or upload a UTF-8 text file. Contract text is sent to the configured AI provider."}
+                    : "Paste any contract or upload a PDF, Word (.docx), or text file. Check the extracted text before analysis. Clicking Analyze sends that text to the configured AI provider."}
                 </p>
                 {session.demo ? (
                   <button
@@ -1014,6 +1019,11 @@ export default function ReviewExperience() {
                   </button>
                 ) : (
                   <>
+                    <p>
+                      Reviews currently check five commercial topics: liability,
+                      indemnity, renewal, termination, and data handling. Other
+                      contract terms may need specialist review.
+                    </p>
                     <label>
                       Agreement name
                       <input
@@ -1034,29 +1044,43 @@ export default function ReviewExperience() {
                     </label>
                     <div className="ciq-upload-actions">
                       <label className="ciq-button ciq-file">
-                        Choose .txt file
+                        Upload your contract
                         <input
                           type="file"
-                          accept=".txt,text/plain"
+                          aria-label="Upload your contract"
+                          disabled={!!busy}
+                          accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
                           onChange={async (e) => {
                             const f = e.target.files?.[0];
                             if (!f) return;
-                            if (f.size > 240000) {
-                              setError(
-                                "Choose a text file smaller than 240 KB.",
-                              );
+                            e.target.value = "";
+                            setError("");
+                            setUploadInfo("");
+                            if (f.size > 5 * 1024 * 1024) {
+                              setError("Choose a file up to 5 MB.");
                               return;
                             }
+                            setBusy("Reading your contract");
                             try {
-                              const value = await f.text();
-                              if (value.length > 60000)
-                                throw new Error(
-                                  "The limit is 60,000 characters.",
-                                );
-                              setText(value);
-                              setTitle(f.name);
+                              const result = await api<{
+                                text: string;
+                                format: string;
+                              }>(
+                                `/documents/extract?filename=${encodeURIComponent(f.name)}`,
+                                session.token,
+                                f,
+                              );
+                              setText(result.text);
+                              setTitle(
+                                f.name.replace(/\.[^.]+$/, "").slice(0, 150),
+                              );
+                              setUploadInfo(
+                                `${f.name} imported. Check the text for missing content, table order, and formatting before analysis. No AI review has run yet.`,
+                              );
                             } catch (err) {
                               setError((err as Error).message);
+                            } finally {
+                              setBusy("");
                             }
                           }}
                         />
@@ -1077,10 +1101,23 @@ export default function ReviewExperience() {
                         Analyze agreement <Sparkles size={16} />
                       </button>
                     </div>
+                    {uploadInfo && <p role="status">{uploadInfo}</p>}
+                    <p>
+                      PDF, DOCX, TXT · up to 5 MB and 60,000 extracted
+                      characters. Scanned PDFs need OCR first.
+                    </p>
+                    <button
+                      className="ciq-link"
+                      onClick={startDemo}
+                      disabled={!!busy}
+                    >
+                      Try the sample walkthrough instead
+                    </button>
                     {!config?.live_enabled && (
                       <p>
-                        Live analysis requires model configuration on the
-                        server.
+                        You can import and inspect your contract now. AI
+                        analysis is unavailable until the host connects a model.
+                        Your text has not been analyzed.
                       </p>
                     )}
                   </>

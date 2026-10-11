@@ -66,12 +66,12 @@ export function ProductLanding({
                 onClick={evaluate}
                 disabled={!ready || busy}
               >
-                Start free evaluation <ArrowRight size={16} />
+                Review your own contract <ArrowRight size={16} />
               </button>
               <small>
                 {liveEnabled
-                  ? "No account needed. Try your own text or the prefilled sample with live AI. One-hour guest session; refresh is supported. Export before signing out or closing the tab."
-                  : "This server currently offers the complete curated walkthrough. Live analysis of your own text becomes available when the host configures AI—no purchase needed."}
+                  ? "No account needed. Upload a PDF, DOCX, or TXT, or paste your contract for live AI review. One-hour guest session; refresh is supported. Export before signing out or closing the tab."
+                  : "Import and inspect your own contract for free. AI analysis is currently unavailable until the host connects a model. The sample walkthrough is also available."}
               </small>
             </div>
             <div className="product-actions">
@@ -233,7 +233,7 @@ export function ProductLanding({
                 n: "01",
                 Icon: FileText,
                 title: "Bring the agreement",
-                body: "Start with contract text or a text file. Review against five explicit commercial playbook rules.",
+                body: "Upload a PDF, DOCX, or TXT, or paste contract text. Review against five explicit commercial playbook rules.",
                 label: "One focused workspace",
               },
               {

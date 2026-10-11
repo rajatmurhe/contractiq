@@ -58,7 +58,10 @@ beforeEach(() => {
     "fetch",
     vi.fn(async (input: string, init?: RequestInit) => {
       const path = String(input).replace("/api/review", "");
-      const body = init?.body ? JSON.parse(String(init.body)) : undefined;
+      const body =
+        init?.body && !(init.body instanceof Blob)
+          ? JSON.parse(String(init.body))
+          : undefined;
       const authorization = (
         init?.headers as Record<string, string> | undefined
       )?.Authorization;
@@ -73,6 +76,8 @@ beforeEach(() => {
           google_client_id: "",
           live_enabled: liveEvaluation,
         };
+      else if (path.startsWith("/documents/extract?"))
+        data = { text: source, format: "pdf", pages: 1 };
       else if (path === "/auth/guest")
         data = {
           token: "guest-session",
@@ -302,34 +307,47 @@ it("labels sample processing and model cost honestly in the audit view", async (
   expect(screen.getByText("No model call")).toBeVisible();
 });
 
-it("offers free evaluation with an honest sample fallback when AI is unavailable", async () => {
+it("opens a blank own-contract workspace and explains unavailable AI", async () => {
   render(<ReviewExperience />);
-  const start = screen.getByRole("button", { name: "Start free evaluation" });
+  const start = screen.getByRole("button", {
+    name: "Review your own contract",
+  });
   await waitFor(() => expect(start).toBeEnabled());
   expect(
     screen.getByText("Free hackathon evaluation · no credit card"),
   ).toBeVisible();
   expect(
-    screen.getByText(
-      /This server currently offers the complete curated walkthrough/,
-    ),
+    screen.getByText(/Import and inspect your own contract for free/),
   ).toBeVisible();
   fireEvent.click(start);
   expect(
-    await screen.findByRole("heading", { name: review.title }),
+    await screen.findByRole("heading", { name: "What are we reviewing?" }),
   ).toBeVisible();
+  expect(screen.getByLabelText("Contract text")).toHaveValue("");
+  expect(
+    screen.getByRole("button", { name: "Analyze agreement" }),
+  ).toBeDisabled();
+  expect(requests.some((r) => r.path === "/auth/demo")).toBe(false);
 });
 
 it("opens an editable guest evaluation without Google when live AI is configured", async () => {
   liveEvaluation = true;
   render(<ReviewExperience />);
-  const start = screen.getByRole("button", { name: "Start free evaluation" });
+  const start = screen.getByRole("button", {
+    name: "Review your own contract",
+  });
   await waitFor(() => expect(start).toBeEnabled());
   fireEvent.click(start);
   expect(
     await screen.findByRole("heading", { name: "What are we reviewing?" }),
   ).toBeVisible();
-  expect(screen.getByLabelText("Contract text")).toHaveValue(source);
+  expect(screen.getByLabelText("Contract text")).toHaveValue("");
+  fireEvent.change(screen.getByLabelText("Contract text"), {
+    target: { value: source },
+  });
+  expect(
+    screen.getByRole("button", { name: "Analyze agreement" }),
+  ).toBeEnabled();
   expect(requests.some((r) => r.path === "/auth/guest")).toBe(true);
   expect(requests.some((r) => r.path === "/auth/google")).toBe(false);
 });
@@ -347,4 +365,35 @@ it("restores a validated guest session and selected review after refresh", async
     "Bearer guest-session",
   );
   expect(requests.some((r) => r.path === "/auth/guest")).toBe(false);
+});
+
+it("previews extracted uploads before sending contract text for review", async () => {
+  liveEvaluation = true;
+  render(<ReviewExperience />);
+  const start = screen.getByRole("button", {
+    name: "Review your own contract",
+  });
+  await waitFor(() => expect(start).toBeEnabled());
+  fireEvent.click(start);
+  const upload = await screen.findByLabelText("Upload your contract");
+  fireEvent.change(upload, {
+    target: {
+      files: [
+        new File(["synthetic PDF fixture"], "my-contract.pdf", {
+          type: "application/pdf",
+        }),
+      ],
+    },
+  });
+  await waitFor(() =>
+    expect(screen.getByLabelText("Contract text")).toHaveValue(source),
+  );
+  expect(screen.getByLabelText("Agreement name")).toHaveValue("my-contract");
+  expect(screen.getByText(/No AI review has run yet/)).toBeVisible();
+  expect(requests.some((r) => r.path === "/contracts" && r.body)).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "Analyze agreement" }));
+  await screen.findByRole("heading", { name: review.title });
+  expect(
+    requests.find((r) => r.path === "/contracts" && r.body)?.body?.text,
+  ).toBe(source);
 });
