@@ -1,168 +1,80 @@
-> **Hackathon review pilot:** A new evidence-first frontend and standalone FastAPI service are available. See [setup, deployment, limits, and demo script](docs/review-pilot.md). The new frontend requires the new review API; deploy them together. The architecture and screenshots below describe the earlier prototype, including mock integrations, and are not a claim that every listed capability is production-ready.
+# ContractIQ — evidence-first supplier contract review
 
-# ContractIQ — Multi-Tenant Agentic Contract Intelligence Platform
+ContractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a React/Vite frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required for evaluation.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
-[![React 18](https://img.shields.io/badge/React-18-cyan.svg)](https://react.dev/)
-[![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
+## Try it
 
-> **Core Enterprise Guardrail**: *AI proposes → policy and rules validate → a human approves high-risk actions → the application executes controlled changes in SAP / Salesforce → everything is cryptographically auditable.*
+- **Free guest evaluation:** with a host-configured model, enter without an account, paste your own agreement or use the prefilled sample, then analyze, ask questions, compare revisions, decide and export.
+- **Curated walkthrough:** without a model key, the app explicitly offers synthetic agreements and prepared findings. It does not pretend to analyze arbitrary text.
+- **Google sign-in:** optional for stable identity and returning to persisted reviews. Guest sessions last one hour, survive refresh in the same tab, and cannot be recovered after sign-out or closing the tab.
 
----
+The host funds model usage. Guest session creation, review/chat calls and global hourly model calls are bounded. Future pricing on the landing page is a business-model proposal, not a feature gate.
 
-## 🖼 Application Screenshots
+## Run the complete app
 
-### Executive Governance Dashboard
-![Executive Governance Dashboard](docs/assets/screenshots/dashboard_overview.png)
-*Real-time executive dashboard featuring KPI metrics, active tenant switcher, Recharts volume trend analytics, and portfolio risk breakdown.*
+Python 3.11+ and Node 22.12+ are required for a source run:
 
----
-
-### Contract Ingestion & Risk Analytics
-![Contract Ingestion & Risk Profile](docs/assets/screenshots/dashboard_charts.png)
-*Interactive volume ingestion trend curve vs high-risk clause detection rate.*
-
----
-
-### Multi-Tenant Contract Repository (Light & Dark Mode)
-
-<div align="center">
-  <img src="docs/assets/screenshots/contract_repository_grid.png" width="49%" alt="Contract Repository Light Mode" />
-  <img src="docs/assets/screenshots/contract_repository_dark.png" width="49%" alt="Contract Repository Dark Mode" />
-</div>
-
-*Multi-tenant contract repository with real-time risk classification filters, counterparty metadata, and instant search.*
-
----
-
-### Human-in-the-Loop Approval Inbox
-![Human-in-the-Loop Inbox](docs/assets/screenshots/human_approvals_inbox.png)
-*SLA countdown timers and policy validation gates requiring human authorization before SAP & Salesforce ERP execution.*
-
----
-
-### Cryptographic Audit Chain Ledger & SQL Tamper Detector
-![Cryptographic Audit Chain](docs/assets/screenshots/audit_chain_ledger.png)
-*SHA-256 hash-chained event ledger visualizer with real-time SQL record tampering detection.*
-
----
-
-### LangGraph Supervisor Agent Execution Trace
-![LangGraph Agent Trace Graph](docs/assets/screenshots/agent_trace_graph.png)
-*Real-time state execution pipeline across multi-agent nodes (`ingestion`, `extraction`, `risk`, `compliance`, `critic`, `approval_gate`, `integration`, `audit`).*
-
----
-
-## 🏗 System Architecture
-
-```
-                       ┌────────────────────────┐
-                       │  React 18 Frontend     │ (Port 3000)
-                       └───────────┬────────────┘
-                                   │
-                       ┌───────────▼────────────┐
-                       │   YARP API Gateway     │ (Port 5001)
-                       └───────────┬────────────┘
-                                   │
-      ┌────────────────────────────┼────────────────────────────┐
-      │                            │                            │
-┌─────▼──────────┐         ┌───────▼────────┐          ┌────────▼───────┐
-│ Contracts API  │         │  Workflow API  │          │   Audit API    │ (MediatR / EF Core)
-└─────┬──────────┘         └───────┬────────┘          └────────┬───────┘
-      │                            │                            │
-┌─────▼──────────┐         ┌───────▼────────┐          ┌────────▼───────┐
-│ Qdrant Vector  │         │ Python Agent   │          │ SHA-256 Ledger │
-│ (Tenant-Bound) │         │ (LangGraph)    │          │ Hash-Chaining  │
-└────────────────┘         └───────┬────────┘          └────────────────┘
-                                   │
-                           ┌───────▼────────┐
-                           │ Integrations   │ ──► SAP OData Mock (:4004)
-                           │ Adapter API    │ ──► Salesforce Mock (:9090)
-                           └────────────────┘
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-review.txt
+npm --prefix src/frontend ci
+npm --prefix src/frontend run build
+./scripts/start-review.sh
 ```
 
----
+The root `Makefile` also provides `make setup`, `make build`, `make start`, `make test`, `make eval`, and `make demo` for this application.
 
-## 🚀 Microservices & Tech Stack
+Open http://127.0.0.1:8017. No model credentials are needed for the curated walkthrough. To enable real guest reviews, set `REVIEW_LLM_API_KEY`, `REVIEW_LLM_BASE_URL`, and `REVIEW_LLM_MODEL` in the server environment. See [.env.review.example](.env.review.example) for variable names. Never put secrets in frontend `VITE_` variables. The source-run script uses exported environment variables, not automatic `.env` loading.
 
-| Component | Framework / Tech | Description |
-|---|---|---|
-| **Gateway** | ASP.NET Core / YARP | Security perimeter, JWT validation, rate limiting |
-| **Contracts API** | .NET 8 / EF Core | Document ingestion, metadata tracking, Qdrant search |
-| **Tenants API** | .NET 8 / EF Core | Tenant settings, risk threshold rules, SLA configuration |
-| **Workflow API** | .NET 8 / MediatR | State machine, human approval triggers, SignalR hub |
-| **Audit API** | .NET 8 / EF Core | SHA-256 hash-chain ledger, tamper-evident verification |
-| **Integrations API** | .NET 8 / EF Core | Idempotent SAP OData & Salesforce REST adapters |
-| **Agent Service** | Python 3.12 / LangGraph | Supervisor workflow, PII tagging, extraction & risk nodes |
-| **MCP Server** | Python 3.12 / MCP SDK | Standardized AI agent tool interface with JWT authorization |
-| **Frontend UI** | React 18 / Vite / Tailwind | Executive Dashboard, Repository, Copilot, Audit Ledger |
+Docker runs the same app with a persistent local volume:
 
----
+```sh
+# Optional: copy .env.review.example to .env and configure values privately.
+docker compose up --build
+```
 
-## ⚡ Quick Start
+Docker Compose reads its environment from `.env` or exported variables. Source runs do not automatically read `.env`. Default UI/API port is 8017. `docker compose down` stops the service without deleting its named volume; `down -v` deletes stored review data.
 
-### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS / Linux / Windows)
-- Git
+## What is implemented
 
-### Running the Project
+| Workflow | Behavior |
+| --- | --- |
+| Review | Five explicit procurement preferences: liability, indemnity, renewal, termination, data handling |
+| Evidence | Schema-validated findings, exact source matching, server-computed Unicode offsets; fabricated citations reject the result |
+| Questions | Retrieval over the current review's findings and allow-listed citation IDs; clear insufficient-evidence responses |
+| Revision comparison | New review linked to owned baseline; exact text changes and rule-level risk changes; independent decision per version |
+| Decision | Required rationale, atomic final decision, no automatic signing or external actions |
+| Export | Authenticated JSON bundle with complete source, findings, comparison, playbook, decision and audit snapshot |
+| Access | Isolated expiring guest/demo sessions, verified Google identity option, session revocation |
+| Measurement | Review latency, provider token usage and optional cost estimates; synthetic evaluation runner |
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/rajatmurhe/contractiq.git
-   cd contractiq
-   ```
+An exact quotation proves provenance, not correct interpretation. No-longer-flagged findings do not prove that a risk is resolved. Every result requires a human decision.
 
-2. **Boot all 15 microservices**:
-   ```bash
-   cd infra/docker
-   docker compose up -d --build
-   ```
+## Verify
 
-3. **Seed DB & Tenants** (creates tenants, users, and 40+ synthetic contracts):
-   ```bash
-   bash scripts/seed.sh
-   ```
+```sh
+.venv/bin/pip install pytest pytest-asyncio ruff mypy
+PYTHONPATH=src/agent .venv/bin/pytest src/agent/tests/test_review*.py -q
+npm --prefix src/frontend run test:unit
+./scripts/demo.sh
+PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
+```
 
-4. **Run End-to-End Demo** (verifies approval gates, SAP writes, and SQL tampering):
-   ```bash
-   bash scripts/demo.sh
-   ```
+`demo.sh` checks the running service; it fails if the API fails. It never prints fabricated workflow success. The evaluation command above validates the corpus only. Add `--live` to run actual billable model inference against the 20 synthetic cases. Read [metric definitions and limitations](evals/review/README.md).
 
-5. **Open Frontend**:
-   Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser.
+## Deploy and submit
 
----
+- New full-stack deployment: [render.review.yaml](render.review.yaml) and [Dockerfile.review](Dockerfile.review). Persistent hosting may cost money; the recruiter still pays nothing to evaluate.
+- Existing Render blueprint: [render.yaml](render.yaml) migrates the existing frontend to the same-origin app. It retains legacy resources to avoid implicit deletion; they are not dependencies of the active product. Its free service uses ephemeral storage unless you explicitly configure persistence.
+- [Configuration and deployment guide](docs/review-pilot.md)
+- [October 15 release checklist](docs/judging/october-15-release.md)
+- [Three-minute demonstration](docs/judging/demo-script.md)
+- [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-## 🛡 Security & Governance Features
+Live provider and Google verification, public deployment and practitioner validation require actual credentials/accounts/participants. Do not claim completion from a sample run. No real customer ROI or live model benchmark is currently claimed.
 
-- **SQL Row-Level Security (RLS)**: Enforced via `SESSION_CONTEXT(N'TenantId')` predicate filters.
-- **Prompt Injection Defense**: Multi-tier regex + delimiter wrapping classifier blocks attack footnotes.
-- **Cryptographic Audit Chain**: Every AI decision and ERP write is chained via `hash = SHA256(prev_hash + event_type + timestamp + payload)`.
-- **Human-in-the-Loop Approval**: Contracts exceeding tenant risk threshold pause workflow execution until a human explicitly authorizes or edits the action.
+## Scope and legacy code
 
----
+Supported input is pasted text or UTF-8 `.txt`. PDF/OCR, organization roles, SSO, billing, jurisdictional legal compliance, retention automation and SAP/Salesforce execution are not implemented in the active product. The audit checks local hash-chain consistency; it is not externally anchored.
 
-## 📄 Architecture Decision Records (ADRs)
-
-Detailed architectural choices are documented under `docs/adr/`:
-- `ADR-001`: Microservices vs Modular Monolith
-- `ADR-002`: LangGraph as Workflow Orchestrator
-- `ADR-003`: AutoGen Scope — Negotiation Sub-team
-- `ADR-004`: MCP vs REST Standards
-- `ADR-005`: A2A Interoperability Scope
-- `ADR-006`: SQL Server Row-Level Security
-- `ADR-007`: Service Bus & Async Architecture
-- `ADR-008`: Marketplace Architecture & Signed Packages
-- `ADR-009`: AI Action Boundary — AI Proposes, Application Authorizes
-- `ADR-010`: Tenant Isolation Across All Data Planes
-- `ADR-011`: Saga Compensation for Partial Failures (SAP & Salesforce)
-- `ADR-012`: Technology Justification Table
-
----
-
-## 📜 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+The earlier .NET/Keycloak/LangGraph prototype remains under its original directories for reference. Its architecture and mock demo are [archived here](docs/legacy/prototype-architecture.md). They are not part of the current runtime, and their separate legacy CI failures are not hidden by the review workflow. Use `Review pilot` CI to assess the active product.

@@ -14,14 +14,14 @@ npm --prefix src/frontend run build
 PYTHONPATH=src/agent .venv/bin/uvicorn app.review.api:app --host 127.0.0.1 --port 8017
 ```
 
-Open http://127.0.0.1:8017. Sample review works without accounts or model keys. The Vite development proxy targets port 8000; use that backend port for Vite development, or change the proxy when occupied.
+Open http://127.0.0.1:8017. Sample review works without accounts or model keys. The Vite development proxy targets the same backend port, 8017. Use `scripts/start-review.sh` to start the API.
 
 ## What is real, what is sample
 
 | Capability | Implementation and limits |
 | --- | --- |
 | Sample review | Fixed synthetic baseline (five findings) and revision (two findings). Explicitly labeled; no model call. |
-| Private review | Google ID-token verification on the server, opaque one-hour bearer session stored only in browser memory, hashed session tokens in SQLite. |
+| Private review | Google ID-token verification on the server, opaque one-hour bearer session kept in tab-scoped sessionStorage for refresh recovery, hashed session tokens in SQLite. |
 | Live analysis | Configured OpenAI-compatible chat provider returns schema-validated commercial findings and draft changes. Exact source quotation checks reject a whole response if any citation is fabricated. No invented offsets: the server computes them. |
 | Evidence assistant | Retrieves up to three verified findings using lexical overlap, then answers from that evidence. Live answers are model-generated; sample answers are deterministic. Citation IDs are allow-listed. Not semantic search. |
 | Landing assistant | Model-generated product Q&A when configured; clearly labeled guided answers otherwise. Global hourly model-call budget and per-client/session limits apply. |
@@ -47,7 +47,7 @@ Contract text and selected evidence are transmitted to the configured provider. 
 
 ## Render deployment
 
-`Dockerfile.review` builds the SPA and serves it on the same origin as FastAPI. `render.review.yaml` describes a **new** service with a persistent disk. A disk may incur hosting charges; no service was created automatically. Existing `render.yaml` remains unchanged.
+`Dockerfile.review` builds the SPA and serves it on the same origin as FastAPI. `render.review.yaml` describes a **new** service with a persistent disk. A disk may incur hosting charges; no service was created automatically. Existing `render.yaml` now points the frontend service at this same full-stack image and retains the old resources to avoid implicit deletion. Its free instance is ephemeral; do not treat it as durable storage.
 
 1. Create a Docker web service from the review branch, using the repository root as context and `Dockerfile.review`.
 2. Mount persistent storage at `/data`; configure the environment variables above.
@@ -101,6 +101,6 @@ Execution & audit displays measured review latency and provider token usage. Opt
 
 ## Free recruiter and judge evaluation
 
-Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest access cannot be recovered after sign-out or reload; export before leaving. Google login remains available for stable identity and reopening saved reviews.
+Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest sessions survive refresh in the same tab. Guest access cannot be recovered after sign-out, session expiry, or closing the tab; export before leaving. Google login remains available for stable identity and reopening saved reviews.
 
 Guest creation is limited to five sessions per client IP per hour. Existing per-session review/chat limits and the global model-call cap still apply; free access is not unlimited provider spending. The host funds inference. Without a configured model, the free entry point offers the clearly labeled curated walkthrough, not fabricated live results. Future pricing is informational and no payment is collected.
