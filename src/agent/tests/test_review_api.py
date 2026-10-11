@@ -240,3 +240,17 @@ def test_configured_context_limit_rejects_oversized_contract_before_inference(cl
     assert response.status_code == 422
     assert 'input limit' in response.json()['detail']
     assert client.get('/api/review/config').json()['input_byte_limit'] == 100
+
+
+def test_incomplete_model_review_is_not_saved_and_has_actionable_error(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-key')
+    async def incomplete(*args):
+        return '{"findings":[{"quote":""}]}'
+    monkeypatch.setattr('app.review.engine.completion', incomplete)
+    token = client.post('/api/review/auth/guest').json()['token']
+    headers = {'Authorization': 'Bearer ' + token}
+    result = client.post('/api/review/contracts', headers=headers, json={'text': SAMPLE})
+    assert result.status_code == 422
+    assert 'incomplete review' in result.json()['detail']
+    assert 'input_value' not in result.text
+    assert client.get('/api/review/contracts', headers=headers).json() == []

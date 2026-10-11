@@ -15,7 +15,7 @@ from uuid import uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from starlette.concurrency import run_in_threadpool
 
 from .comparison import compare_reviews
@@ -251,6 +251,12 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
         throttle("live-global", int(os.getenv("REVIEW_HOURLY_MODEL_LIMIT", "60")))
     try:
         result = await review(payload.text, bool(user["demo"]))
+    except ValidationError:
+        raise HTTPException(
+            422,
+            "The model returned an incomplete review. Please retry or ask the host "
+            "to use a more capable model. No review was saved.",
+        ) from None
     except ValueError as exc:
         raise HTTPException(422, str(exc)[:250]) from None
     except Exception:

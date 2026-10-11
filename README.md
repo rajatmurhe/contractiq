@@ -35,9 +35,9 @@ docker compose up --build
 
 Docker Compose reads its environment from `.env` or exported variables. Source runs do not automatically read `.env`. Default UI/API port is 8017. `docker compose down` stops the service without deleting its named volume; `down -v` deletes stored review data.
 
-### Review with a local model
+### Optional local model configuration
 
-With Ollama running and `llama3.2:3b` already installed, run `make start-local`. The command creates a local model variant with a 16,384-token context, enables schema-constrained responses, and limits review input to 8,000 UTF-8 bytes to leave room for instructions and output. Set `REVIEW_LOCAL_MODEL` to use another installed instruction model with at least that context. This sends inference to localhost and requires no paid API key. Local responses may take up to three minutes. Model quality and latency depend on the model and hardware; citation validation still applies. This enables only the local app: a public deployment must have its own reachable inference service.
+With Ollama running and `llama3.2:3b` already installed, run `make start-local`. The command creates a local model variant with a 16,384-token context, enables schema-constrained responses, and limits review input to 8,000 UTF-8 bytes to leave room for instructions and output. Set `REVIEW_LOCAL_MODEL` to use another installed instruction model with at least that context. This sends inference to localhost and requires no paid API key. Local responses may take up to three minutes. Model quality and latency depend on the model and hardware; citation validation still applies. **The installed 3B model failed validation on an independent synthetic review during verification; it is not enabled as the default or claimed ready. Use a stronger model and validate results before relying on this option.** This enables only the local app: a public deployment must have its own reachable inference service.
 
 ## What is implemented
 

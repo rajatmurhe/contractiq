@@ -104,3 +104,7 @@ Execution & audit displays measured review latency and provider token usage. Opt
 Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest sessions survive refresh in the same tab. Guest access cannot be recovered after sign-out, session expiry, or closing the tab; export before leaving. Google login remains available for stable identity and reopening saved reviews.
 
 Guest creation is limited to five sessions per client IP per hour. Existing per-session review/chat limits and the global model-call cap still apply; free access is not unlimited provider spending. The host funds inference. Without a configured model, the free entry point offers the clearly labeled curated walkthrough, not fabricated live results. Future pricing is informational and no payment is collected.
+
+### Local inference verification
+
+An installed Ollama 3B model was tried on independent synthetic text. Responses included findings without supporting quotes and one timeout. The app rejected these results, saved no review, and local inference was disabled afterward. The optional local startup script is configuration support, not evidence that this model is suitable for contract review. A working, sufficiently capable model remains required for own-document AI analysis.
