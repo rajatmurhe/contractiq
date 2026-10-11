@@ -44,6 +44,8 @@ def run(base_url: str, live: bool, require_live_config: bool) -> dict:
             login = request('POST', '/api/review/auth/demo', payload={})
         token = login['token']
         try:
+            metadata = request('GET', '/api/review/auth/session', token=token)
+            check('session can be resumed', metadata['demo'] == (not live) and 'token' not in metadata)
             baseline = request('POST', '/api/review/contracts', token=token, payload={'title': 'Synthetic deployment verification', 'text': config['sample']})
             check('correct inference mode', baseline['mode'] == ('live' if live else 'sample'))
             check('human decision required', baseline['status'] == 'awaiting_review')
@@ -58,6 +60,8 @@ def run(base_url: str, live: bool, require_live_config: bool) -> dict:
             request('POST', path + '/decision', token=token, payload={'decision': 'approved', 'reason': 'A second decision must be blocked.'}, expected=409)
             check('decision immutable', True)
             check('audit consistent', request('GET', path + '/audit', token=token)['valid'])
+            bundle = request('GET', path + '/export', token=token)
+            check('complete evidence export', bundle['review']['id'] == revision['id'] and bundle['audit']['valid'] and bool(bundle['playbook']))
             other = request('POST', '/api/review/auth/demo', payload={})['token']
             try:
                 request('GET', path, token=other, expected=404)
