@@ -1,0 +1,27 @@
+name: contractiq-review
+services:
+  review:
+    build:
+      context: .
+      dockerfile: Dockerfile.review
+    ports:
+      - "127.0.0.1:${REVIEW_PORT:-8017}:8000"
+    environment:
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      REVIEW_LLM_API_KEY: ${REVIEW_LLM_API_KEY:-}
+      REVIEW_LLM_BASE_URL: ${REVIEW_LLM_BASE_URL:-https://api.openai.com/v1}
+      REVIEW_LLM_MODEL: ${REVIEW_LLM_MODEL:-gpt-4o-mini}
+      REVIEW_HOURLY_MODEL_LIMIT: ${REVIEW_HOURLY_MODEL_LIMIT:-60}
+      REVIEW_INPUT_PRICE_PER_MILLION: ${REVIEW_INPUT_PRICE_PER_MILLION:-}
+      REVIEW_OUTPUT_PRICE_PER_MILLION: ${REVIEW_OUTPUT_PRICE_PER_MILLION:-}
+      REVIEW_DB: /data/reviews.sqlite3
+    volumes:
+      - review-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready')"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+volumes:
+  review-data:

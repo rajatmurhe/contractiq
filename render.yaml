@@ -2,23 +2,27 @@
 # https://render.com/docs/blueprint-spec
 
 services:
-  # 1. React Frontend SPA
+  # Active product: same-origin frontend and review API.
+  # Existing legacy resources below are retained to prevent implicit deletion.
+  # They are NOT dependencies of the review application.
+  # Free hosting is ephemeral: configure persistence before storing real contracts.
   - type: web
     name: contractiq-frontend
     runtime: docker
-    dockerfilePath: ./src/frontend/Dockerfile
-    dockerContext: ./src/frontend
+    dockerfilePath: ./Dockerfile.review
+    dockerContext: .
     plan: free
     region: oregon
+    healthCheckPath: /health/ready
     envVars:
-      - key: VITE_API_BASE_URL
-        value: https://contractiq-gateway.onrender.com
-      - key: VITE_KEYCLOAK_URL
-        value: https://contractiq-gateway.onrender.com
-      - key: VITE_KEYCLOAK_REALM
-        value: contractiq
-      - key: VITE_KEYCLOAK_CLIENT_ID
-        value: contractiq-frontend
+      - key: REVIEW_LLM_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: REVIEW_LLM_MODEL
+        value: gpt-4o-mini
+      - key: REVIEW_HOURLY_MODEL_LIMIT
+        value: 60
 
   # 2. YARP API Gateway
   - type: web
