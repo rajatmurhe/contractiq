@@ -84,7 +84,7 @@ def test_unconfigured_google_and_assistant_are_honest(client):
     response = client.post('/api/review/assistant', json={'question': 'What is the pricing?'})
     assert response.status_code == 200
     assert response.json()['mode'] == 'guided'
-    assert 'not enabled' in response.json()['answer']
+    assert 'No paid subscription is required' in response.json()['answer']
 
 def test_next_export_routes_and_missing_assets(client, tmp_path, monkeypatch):
     web = tmp_path / 'web'
@@ -120,7 +120,7 @@ def test_free_judge_access_is_grounded_even_with_live_model(client, monkeypatch)
     })
     assert response.status_code == 200
     assert response.json()['mode'] == 'guided'
-    assert 'their own contracts for free' in response.json()['answer']
+    assert 'your own supplier agreements for free' in response.json()['answer']
     assert 'PDF, DOCX' in response.json()['answer']
 
 def test_invalid_google_token_does_not_create_session(client, monkeypatch):
@@ -290,4 +290,66 @@ def test_incomplete_model_review_is_not_saved_and_has_actionable_error(client, m
     assert result.status_code == 422
     assert 'incomplete review' in result.json()['detail']
     assert 'input_value' not in result.text
+    assert client.get('/api/review/contracts', headers=headers).json() == []
+
+
+def test_printable_report_is_owned_and_escapes_all_document_content(client):
+    from app.review.report import printable_report
+    import copy
+    token = client.post('/api/review/auth/demo').json()['token']
+    headers = {'Authorization': 'Bearer ' + token}
+    config = client.get('/api/review/config').json()
+    saved = client.post('/api/review/contracts', headers=headers,
+                        json={'title': '<img src=x onerror=alert(1)>', 'text': config['sample']}).json()
+    route = '/api/review/contracts/' + saved['id']
+    report = client.get(route + '/report', headers=headers)
+    assert report.status_code == 200
+    markup = report.json()['html']
+    assert '<img src=x' not in markup
+    assert '&lt;img src=x onerror=alert(1)&gt;' in markup
+    assert 'contractIQ' in markup and 'No decision has been recorded' in markup
+    assert 'Complete reviewed text' in markup and '@media print' in markup
+    assert client.get(route + '/report').status_code == 401
+    other = client.post('/api/review/auth/demo').json()['token']
+    assert client.get(route + '/report', headers={'Authorization': 'Bearer ' + other}).status_code == 404
+    bundle = copy.deepcopy(client.get(route + '/export', headers=headers).json())
+    bundle['review']['findings'][0]['proposed_language'] = '</div><script>alert(1)</script>'
+    bundle['review']['text'] = '<iframe src="https://attacker.test"></iframe>'
+    rendered = printable_report(bundle)
+    assert '<script>' not in rendered and '<iframe' not in rendered
+    assert '&lt;script&gt;' in rendered
+
+
+def test_private_api_responses_are_not_cacheable(client):
+    response = client.post('/api/review/auth/guest')
+    assert response.headers['cache-control'] == 'private, no-store'
+    assert response.headers['x-content-type-options'] == 'nosniff'
+    assert client.get('/api/review/contracts').headers['cache-control'] == 'private, no-store'
+
+
+def test_blank_contract_or_title_is_rejected_before_inference(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-only')
+    token = client.post('/api/review/auth/guest').json()['token']
+    async def should_not_run(*args):
+        raise AssertionError('Blank submissions must not call the provider')
+    monkeypatch.setattr('app.review.api.review', should_not_run)
+    headers = {'Authorization': 'Bearer ' + token}
+    for data in ({'title': 'Valid title', 'text': ' ' * 80},
+                 {'title': '   ', 'text': 'Synthetic commercial contract with enough text to pass the length threshold.'}):
+        assert client.post('/api/review/contracts', headers=headers, json=data).status_code == 422
+    assert client.get('/api/review/contracts', headers=headers).json() == []
+
+
+def test_validation_retry_cannot_bypass_global_model_budget(client, monkeypatch):
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-only')
+    monkeypatch.setenv('REVIEW_HOURLY_MODEL_LIMIT', '1')
+    attempts = []
+    async def invalid(*args):
+        attempts.append(1)
+        return '{}'
+    monkeypatch.setattr('app.review.engine.completion', invalid)
+    token = client.post('/api/review/auth/guest').json()['token']
+    headers = {'Authorization': 'Bearer ' + token}
+    result = client.post('/api/review/contracts', headers=headers, json={'text': SAMPLE})
+    assert result.status_code == 429 and len(attempts) == 1
     assert client.get('/api/review/contracts', headers=headers).json() == []
