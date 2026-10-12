@@ -521,11 +521,12 @@ async def ask(review_id: str, payload: Question, user: Annotated[Json, Depends(s
                 Answer.model_json_schema(),
             )
             response = checked_answer(raw, sources)
-        except Exception:
+        except Exception as exc:
+            # Return only the exception type, never provider payloads or contract text.
             raise HTTPException(
                 503,
                 "The assistant could not produce a supported answer. "
-                "Please retry or inspect the source.",
+                "Please retry or inspect the source. " + type(exc).__name__,
             ) from None
     # Retain legacy finding references for older clients; source passages are canonical.
     response.update(
