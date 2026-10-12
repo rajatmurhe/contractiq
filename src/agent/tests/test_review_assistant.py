@@ -112,3 +112,21 @@ def test_backup_restore_preserves_records_and_refuses_overwrite(tmp_path):
         assert db.execute('SELECT value FROM records').fetchone()[0] == 'synthetic evidence'
     with pytest.raises(FileExistsError):
         module.snapshot(backup, original)
+
+
+def test_live_assistant_regenerates_invalid_answer_once(client, monkeypatch):
+    headers, body = create(client)
+    with database() as db:
+        db.execute('UPDATE sessions SET demo=0')
+    calls = []
+    async def completion(system, data, schema):
+        calls.append(data)
+        if len(calls) == 1:
+            return '{"status":"supported","claims":[]}'
+        source = json.loads(data)['sources'][0]
+        return json.dumps({'status': 'supported', 'claims': [{'text': source['quote'], 'source_ids': [source['id']]}], 'limitation': '', 'draft': None})
+    monkeypatch.setattr('app.review.api.completion', completion)
+    response = client.post('/api/review/contracts/' + body['id'] + '/ask', headers=headers, json={'question': 'Explain liability.'})
+    assert response.status_code == 200
+    assert len(calls) == 2
+    assert len(client.get('/api/review/contracts/' + body['id'] + '/conversation', headers=headers).json()) == 1
