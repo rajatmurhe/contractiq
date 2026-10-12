@@ -1,0 +1,755 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-12T06:53:03.881838+00:00",
+  "corpus_sha256": "89b4573b06eb9976777e64927cd44b174640a3b16d215ee13a5ab62b553efba3",
+  "mode": "live",
+  "model": "openai/gpt-4o-mini",
+  "deployment": null,
+  "case_count": 20,
+  "limitations": [
+    "Synthetic, author-labeled corpus; no independent expert validation.",
+    "Recall is measured per playbook rule, not every possible legal issue.",
+    "Exact quotations verify provenance, not interpretation or completeness.",
+    "Provider failures count as missed expected rules; they are not discarded."
+  ],
+  "results": [
+    {
+      "id": "isolated-P1",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1497,
+        "output_tokens": 490,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Unlimited Liability",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Customer has unlimited liability for all losses, including indirect and consequential damages.",
+          "rationale": "The clause imposes unlimited liability on the Customer, which deviates from the preference to cap aggregate liability at fees paid in the preceding 12 months and exclude indirect damages.",
+          "proposed_language": "Customer's aggregate liability shall be capped at the fees paid in the preceding 12 months, and the Customer shall not be liable for any indirect or consequential damages.",
+          "id": "F1",
+          "start": 120,
+          "end": 214,
+          "line": 4
+        },
+        {
+          "title": "Renewal Notice Period",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The clause requires a notice period of thirty days before renewal, which is compliant; however, it does not specify a maximum cancellation deadline of 60 days or fewer, leading to ambiguity.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F2",
+          "start": 389,
+          "end": 488,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 7269
+    },
+    {
+      "id": "isolated-P2",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1499,
+        "output_tokens": 374,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Lack of Reciprocal Indemnity",
+          "severity": "high",
+          "rule": "P2",
+          "quote": "Customer indemnifies Supplier for all claims connected to use of the service; Supplier owes no indemnity to Customer.",
+          "rationale": "The clause only provides indemnity from Customer to Supplier without a reciprocal obligation from Supplier to Customer, which does not satisfy the requirement for appropriately scoped indemnities.",
+          "proposed_language": "Both parties shall indemnify each other for claims arising from their respective negligence, misconduct, or breach of this agreement.",
+          "id": "F1",
+          "start": 276,
+          "end": 393,
+          "line": 6
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 5846
+    },
+    {
+      "id": "isolated-P3",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1508,
+        "output_tokens": 359,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds 60 Days",
+          "severity": "high",
+          "rule": "P3",
+          "quote": "Automatic annual renewal can be cancelled only with notice at least ninety days before renewal.",
+          "rationale": "The clause requires a cancellation notice of ninety days, which exceeds the acceptable limit of sixty days.",
+          "proposed_language": "Automatic annual renewal can be cancelled only with notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 544,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 5754
+    },
+    {
+      "id": "isolated-P4",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1507,
+        "output_tokens": 483,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The cancellation notice period of thirty days is compliant, but the automatic renewal clause does not specify a cancellation deadline of 60 days or fewer, which is required for compliance.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 548,
+          "line": 8
+        },
+        {
+          "title": "Supplier Convenience Termination Notice Period Insufficient",
+          "severity": "high",
+          "rule": "P4",
+          "quote": "Supplier may terminate for convenience on seven days' notice and retain all unused prepaid fees.",
+          "rationale": "The notice period of seven days does not meet the minimum requirement of thirty days for supplier convenience termination.",
+          "proposed_language": "Supplier may terminate for convenience on at least thirty days' notice and must refund all unused prepaid fees.",
+          "id": "F2",
+          "start": 550,
+          "end": 646,
+          "line": 10
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 4845
+    },
+    {
+      "id": "isolated-P5",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1503,
+        "output_tokens": 496,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The clause requires a cancellation notice of thirty days, which does not exceed the maximum compliant period of sixty days, but it does not meet the requirement for a cancellation deadline of sixty days or fewer.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 548,
+          "line": 8
+        },
+        {
+          "title": "Data Deletion and Subprocessor Notice Requirement Not Met",
+          "severity": "high",
+          "rule": "P5",
+          "quote": "Supplier may keep customer data indefinitely and appoint subprocessors without notice.",
+          "rationale": "The clause allows the supplier to keep customer data indefinitely and does not provide for data deletion within thirty days of termination or notice of subprocessors.",
+          "proposed_language": "Upon termination, the supplier shall delete all customer data within thirty days and provide notice of any subprocessors involved in handling customer data.",
+          "id": "F2",
+          "start": 663,
+          "end": 749,
+          "line": 12
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 6316
+    },
+    {
+      "id": "all-compliant",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1509,
+        "output_tokens": 255,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [],
+      "elapsed_ms": 3124
+    },
+    {
+      "id": "all-risky",
+      "status": "ok",
+      "true_positive_rules": 5,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 5,
+      "returned_citations": 5,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1478,
+        "output_tokens": 830,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Unlimited Liability and Indirect Damages",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Customer has unlimited liability for all losses, including indirect and consequential damages.",
+          "rationale": "The clause imposes unlimited liability on the Customer, which deviates from the preference to cap aggregate liability at fees paid in the preceding 12 months and exclude indirect damages.",
+          "proposed_language": "Customer's aggregate liability shall be capped at the fees paid in the preceding 12 months, and the Customer shall not be liable for any indirect or consequential damages.",
+          "id": "F1",
+          "start": 120,
+          "end": 214,
+          "line": 4
+        },
+        {
+          "title": "Lack of Reciprocal Indemnity",
+          "severity": "high",
+          "rule": "P2",
+          "quote": "Customer indemnifies Supplier for all claims connected to use of the service; Supplier owes no indemnity to Customer.",
+          "rationale": "The clause provides indemnity only from the Customer to the Supplier, lacking the required reciprocal indemnity from Supplier to Customer.",
+          "proposed_language": "Both parties shall indemnify each other for claims arising from their respective negligence, misconduct, or breach of this Agreement.",
+          "id": "F2",
+          "start": 216,
+          "end": 333,
+          "line": 6
+        },
+        {
+          "title": "Excessive Cancellation Deadline",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "Automatic annual renewal can be cancelled only with notice at least ninety days before renewal.",
+          "rationale": "The clause requires a cancellation notice period of ninety days, which exceeds the acceptable maximum of sixty days.",
+          "proposed_language": "Automatic annual renewal can be cancelled only with notice at least sixty days before renewal.",
+          "id": "F3",
+          "start": 335,
+          "end": 430,
+          "line": 8
+        },
+        {
+          "title": "Insufficient Notice for Termination",
+          "severity": "high",
+          "rule": "P4",
+          "quote": "Supplier may terminate for convenience on seven days' notice and retain all unused prepaid fees.",
+          "rationale": "The clause allows termination on only seven days' notice and does not provide for a refund of unused prepaid fees, deviating from the requirement of at least thirty days' notice and a refund.",
+          "proposed_language": "Supplier may terminate for convenience on at least thirty days' notice and must refund any unused prepaid fees.",
+          "id": "F4",
+          "start": 432,
+          "end": 528,
+          "line": 10
+        },
+        {
+          "title": "Data Retention and Subprocessor Notice",
+          "severity": "high",
+          "rule": "P5",
+          "quote": "Supplier may keep customer data indefinitely and appoint subprocessors without notice.",
+          "rationale": "The clause allows the Supplier to retain customer data indefinitely and does not require notice of subprocessors, deviating from the requirement for data deletion within thirty days of termination and notice of subprocessors.",
+          "proposed_language": "Upon termination, Supplier shall delete all customer data within thirty days and provide notice of any subprocessors used.",
+          "id": "F5",
+          "start": 530,
+          "end": 616,
+          "line": 12
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 9445
+    },
+    {
+      "id": "mixed-terms",
+      "status": "ok",
+      "true_positive_rules": 3,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 3,
+      "returned_citations": 3,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1490,
+        "output_tokens": 589,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Unlimited Liability",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Customer has unlimited liability for all losses, including indirect and consequential damages.",
+          "rationale": "The clause imposes unlimited liability on the Customer, which deviates from the preference to cap aggregate liability at fees paid in the preceding 12 months and exclude indirect damages.",
+          "proposed_language": "Customer's aggregate liability shall be capped at the fees paid in the preceding 12 months, and the Customer shall not be liable for any indirect or consequential damages.",
+          "id": "F1",
+          "start": 120,
+          "end": 214,
+          "line": 4
+        },
+        {
+          "title": "Cancellation Notice Period",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "Automatic annual renewal can be cancelled only with notice at least ninety days before renewal.",
+          "rationale": "The clause requires a cancellation notice period of ninety days, which exceeds the preferred maximum of sixty days.",
+          "proposed_language": "Automatic annual renewal can be cancelled only with notice at least sixty days before renewal.",
+          "id": "F2",
+          "start": 389,
+          "end": 484,
+          "line": 8
+        },
+        {
+          "title": "Data Handling and Subprocessor Notice",
+          "severity": "high",
+          "rule": "P5",
+          "quote": "Supplier may keep customer data indefinitely and appoint subprocessors without notice.",
+          "rationale": "The clause allows the Supplier to keep customer data indefinitely and does not require notice of subprocessors, which deviates from the preference for data deletion within 30 days of termination and notice of subprocessors.",
+          "proposed_language": "Upon termination, Supplier shall delete all customer data within 30 days and provide notice of any subprocessors used.",
+          "id": "F3",
+          "start": 599,
+          "end": 685,
+          "line": 12
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 5243
+    },
+    {
+      "id": "renewal-61-days",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1505,
+        "output_tokens": 359,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Cancellation Notice Period Exceeds 60 Days",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "Automatic renewal requires cancellation notice at least 61 days before renewal.",
+          "rationale": "The requirement for a cancellation notice of 61 days exceeds the acceptable limit of 60 days, which is a numeric deviation from the preferred terms.",
+          "proposed_language": "Automatic renewal requires cancellation notice at least 60 days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 528,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 3898
+    },
+    {
+      "id": "termination-29-days",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1508,
+        "output_tokens": 491,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The clause allows for a cancellation notice of 30 days, which is compliant; however, it does not specify a maximum cancellation deadline of 60 days or fewer, which is required for compliance.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 548,
+          "line": 8
+        },
+        {
+          "title": "Supplier Convenience Termination Notice Period Insufficient",
+          "severity": "medium",
+          "rule": "P4",
+          "quote": "Supplier may terminate for convenience on 29 days' notice, refunding unused prepaid fees.",
+          "rationale": "The notice period of 29 days does not meet the minimum requirement of 30 days for supplier convenience termination.",
+          "proposed_language": "Supplier may terminate for convenience on at least thirty days' notice, refunding unused prepaid fees.",
+          "id": "F2",
+          "start": 550,
+          "end": 639,
+          "line": 10
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 4830
+    },
+    {
+      "id": "data-31-days",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1510,
+        "output_tokens": 486,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The notice period of thirty days before renewal is compliant, but the clause does not specify a cancellation deadline of 60 days or fewer, which is required for compliance.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 548,
+          "line": 8
+        },
+        {
+          "title": "Data Deletion Period Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P5",
+          "quote": "Supplier shall delete customer data within 31 days of termination and give prior notice of new subprocessors.",
+          "rationale": "The data deletion period of 31 days exceeds the compliant requirement of 30 days or fewer.",
+          "proposed_language": "Supplier shall delete customer data within 30 days of termination and give prior notice of new subprocessors.",
+          "id": "F2",
+          "start": 663,
+          "end": 772,
+          "line": 12
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 6900
+    },
+    {
+      "id": "liability-consequential",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1503,
+        "output_tokens": 464,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Indirect Damages Included",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Liability is capped at fees paid in the previous twelve months, but includes indirect and consequential damages.",
+          "rationale": "The clause includes indirect and consequential damages, which deviates from the preference to exclude such damages.",
+          "proposed_language": "Liability is capped at fees paid in the preceding 12 months; indirect and consequential damages are excluded.",
+          "id": "F1",
+          "start": 120,
+          "end": 232,
+          "line": 4
+        },
+        {
+          "title": "Renewal Cancellation Deadline",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The cancellation deadline of thirty days before renewal deviates from the preference for a deadline of 60 days or fewer.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F2",
+          "start": 407,
+          "end": 506,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 4792
+    },
+    {
+      "id": "termination-no-refund",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1510,
+        "output_tokens": 498,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Compliance",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The cancellation notice period of thirty days is compliant, but the automatic renewal clause does not specify a cancellation deadline of sixty days or fewer, which is required for compliance.",
+          "proposed_language": "The agreement renews annually unless either party gives notice at least sixty days before renewal.",
+          "id": "F1",
+          "start": 449,
+          "end": 548,
+          "line": 8
+        },
+        {
+          "title": "Supplier Convenience Termination Lacks Refund of Unused Fees",
+          "severity": "high",
+          "rule": "P4",
+          "quote": "Supplier may terminate for convenience on sixty days' notice. Unused prepaid fees will not be refunded.",
+          "rationale": "While the notice period of sixty days is compliant, the clause does not provide for the refund of unused prepaid fees, which is a requirement.",
+          "proposed_language": "Supplier may terminate for convenience on sixty days' notice, and unused prepaid fees will be refunded.",
+          "id": "F2",
+          "start": 550,
+          "end": 653,
+          "line": 10
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 5566
+    },
+    {
+      "id": "missing-data",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1490,
+        "output_tokens": 236,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [
+        "P5"
+      ],
+      "elapsed_ms": 4854
+    },
+    {
+      "id": "missing-three",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1441,
+        "output_tokens": 187,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "elapsed_ms": 4465
+    },
+    {
+      "id": "instruction-in-document",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 2,
+      "returned_citations": 2,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1524,
+        "output_tokens": 492,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Unlimited Liability",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Customer has unlimited liability for all losses, including indirect and consequential damages.",
+          "rationale": "The clause imposes unlimited liability on the Customer, which deviates from the preference to cap aggregate liability at fees paid in the preceding 12 months and exclude indirect damages.",
+          "proposed_language": "The Customer's aggregate liability shall be capped at the fees paid in the preceding 12 months, and the Supplier shall not be liable for any indirect, incidental, or consequential damages.",
+          "id": "F1",
+          "start": 120,
+          "end": 214,
+          "line": 4
+        },
+        {
+          "title": "Renewal Notice Period",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The agreement renews annually unless either party gives notice at least thirty days before renewal.",
+          "rationale": "The clause requires a notice period of thirty days for renewal cancellation, which deviates from the preference for a cancellation deadline of 60 days or fewer.",
+          "proposed_language": "Either party may cancel the renewal of this agreement by providing notice at least sixty days prior to the renewal date.",
+          "id": "F2",
+          "start": 389,
+          "end": 488,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 6704
+    },
+    {
+      "id": "unicode-source",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1517,
+        "output_tokens": 377,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Lack of Reciprocal Indemnity",
+          "severity": "high",
+          "rule": "P2",
+          "quote": "Customer indemnifies Supplier for all claims connected to use of the service; Supplier owes no indemnity to Customer.",
+          "rationale": "The clause only provides indemnity from Customer to Supplier, with no reciprocal indemnity from Supplier to Customer, which does not satisfy the requirement for appropriately scoped indemnities.",
+          "proposed_language": "Supplier shall indemnify Customer for all claims connected to the use of the service, in addition to Customer indemnifying Supplier.",
+          "id": "F1",
+          "start": 276,
+          "end": 393,
+          "line": 6
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 3755
+    },
+    {
+      "id": "longer-cancellation",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1519,
+        "output_tokens": 402,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Nonrenewal Notice Period Exceeds 60 Days",
+          "severity": "high",
+          "rule": "P3",
+          "quote": "The customer must deliver a nonrenewal notice no fewer than one hundred and twenty days before the anniversary; otherwise the term extends automatically.",
+          "rationale": "The requirement for a nonrenewal notice of one hundred and twenty days exceeds the acceptable limit of sixty days, which is a deviation from the preferred terms.",
+          "proposed_language": "The customer must deliver a nonrenewal notice no fewer than sixty days before the anniversary; otherwise the term extends automatically.",
+          "id": "F1",
+          "start": 449,
+          "end": 602,
+          "line": 8
+        }
+      ],
+      "missing_topics": [],
+      "elapsed_ms": 4374
+    },
+    {
+      "id": "no-automatic-renewal",
+      "status": "error",
+      "error_type": "ValueError",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": false,
+      "usage": null,
+      "elapsed_ms": 3153
+    },
+    {
+      "id": "renewal-exact-boundary",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1504,
+        "output_tokens": 250,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [],
+      "elapsed_ms": 3429
+    }
+  ],
+  "metrics": {
+    "rule_recall": 1.0,
+    "rule_precision": 0.7241379310344828,
+    "missed_rule_count": 0,
+    "unsupported_finding_count": 8,
+    "accepted_citation_exactness": 1.0,
+    "successful_cases": 19,
+    "failed_cases": 1,
+    "missing_topic_exact_match": 0.95,
+    "p50_latency_ms": 4845,
+    "p95_latency_ms": 7269,
+    "estimated_total_cost_usd": null,
+    "cost_note": "Estimate requires configured prices and usage for every call; null means unknown, not free."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "purpose": "Untouched final first-pass synthetic holdout, authored after prompt revisions and frozen before inference. No independent expert labels. Do not tune against this set and keep calling it held-out.",
+  "created_at": "2026-10-12",
+  "cases": [
+    {
+      "id": "nonrenewal-sixty-one",
+      "source": "SYNTHETIC FACILITIES SUBSCRIPTION\nQuarry Systems supplies room-booking software to Vale Labs. The agreement rolls over into another annual term unless Vale delivers notice of non-renewal at least sixty-one days before expiry. Invoices are settled within ten days.",
+      "expected_evidence": {
+        "P3": "The agreement rolls over into another annual term unless Vale delivers notice of non-renewal at least sixty-one days before expiry."
+      },
+      "expected_missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "erase-thirty-one-days",
+      "source": "SYNTHETIC ARCHIVE PROCESSING TERMS\nAlder Archive must notify the customer before appointing any subprocessor. After the contract ends, Alder Archive must erase all customer files within 31 days. This schedule governs file handling only.",
+      "expected_evidence": {
+        "P5": "After the contract ends, Alder Archive must erase all customer files within 31 days."
+      },
+      "expected_missing_topics": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "id": "notice-without-refund",
+      "source": "SYNTHETIC LAB MAINTENANCE ORDER\nBasin Engineering services Grove Labs equipment. Basin may terminate for convenience on 45 days of written notice; all prepaid fees are non-refundable even for services not delivered. Fees are invoiced in advance each quarter.",
+      "expected_evidence": {
+        "P4": "Basin may terminate for convenience on 45 days of written notice; all prepaid fees are non-refundable even for services not delivered."
+      },
+      "expected_missing_topics": [
+        "P1",
+        "P2",
+        "P3",
+        "P5"
+      ]
+    },
+    {
+      "id": "two-year-cap",
+      "source": "SYNTHETIC DESIGN ENGAGEMENT\nThe following clause allocates commercial exposure for Summit and Reed.\nEach party's total liability is capped at the fees paid over the preceding twenty-four months; neither party is liable for indirect or consequential damages.\nDeliverables consist of drawings and a design review.",
+      "expected_evidence": {
+        "P1": "Each party's total liability is capped at the fees paid over the preceding twenty-four months; neither party is liable for indirect or consequential damages."
+      },
+      "expected_missing_topics": [
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "renewal-fifty-nine",
+      "source": "SYNTHETIC LICENSE SCHEDULE\nMoss licenses reporting tools from Flint.\nTerm: 12 months. Automatic renewal: yearly.\nNon-renewal: either party must provide written notice at least 59 days before renewal.\nPayment: 120 days from invoice.\nDelivery: 90 days from order.\nThis schedule contains no other allocation of liability or obligations following termination.",
+      "expected_evidence": {},
+      "expected_missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "balanced-operating-agreement",
+      "source": "SYNTHETIC AGREEMENT: SILVER / FIELD\nField supplies Silver with laboratory scheduling tools. Annual fees are EUR 18,000.\nRisk allocation. Aggregate liability for either party is limited to fees paid in the preceding twelve months. Indirect and consequential damages are excluded.\nThird-party claims. Each party indemnifies the other for claims arising from its own negligence, wilful misconduct or breach of this agreement.\nDuration. The subscription renews annually unless either party gives forty-five days' written notice before renewal.\nExit. Field may end the service for convenience on sixty days' written notice and will refund all unused prepaid fees.\nFiles. Field must erase customer files within fourteen days after termination and provide advance notice of any new subprocessor.",
+      "expected_evidence": {},
+      "expected_missing_topics": []
+    }
+  ]
+}

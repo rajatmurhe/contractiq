@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-12T06:46:11.263537+00:00",
+  "corpus_sha256": "23a5364c46476a3806479d4fed650636026e8ea08c0913012131858e6ba42b0f",
+  "mode": "live",
+  "model": "openai/gpt-4o-mini",
+  "deployment": "https://contractiq-frontend-2e3u.onrender.com",
+  "case_count": 8,
+  "limitations": [
+    "Synthetic, author-labeled corpus; no independent expert validation.",
+    "Recall is measured per playbook rule, not every possible legal issue.",
+    "Exact quotations verify provenance, not interpretation or completeness.",
+    "Provider failures count as missed expected rules; they are not discarded."
+  ],
+  "results": [
+    {
+      "id": "short-order-liability",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1140,
+        "output_tokens": 299,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Uncapped Liability",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "The buyer's aggregate liability has no financial limit and includes loss of anticipated profit and other consequential loss.",
+          "rationale": "The clause indicates that there is no cap on the buyer's aggregate liability, which deviates from the preference to cap liability at fees paid in the preceding 12 months and exclude indirect damages.",
+          "proposed_language": "The buyer's aggregate liability shall be capped at the fees paid in the preceding 12 months and shall exclude any indirect, consequential, or punitive damages.",
+          "id": "F1",
+          "start": 170,
+          "end": 294,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 5104
+    },
+    {
+      "id": "renewal-boundary-amid-numbers",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1158,
+        "output_tokens": 292,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds Preference",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "The subscription renews annually unless either party gives notice of non-renewal at least 60 days before the anniversary.",
+          "rationale": "The contract requires a notice period of 60 days for non-renewal, which exceeds the preferred maximum of 60 days.",
+          "proposed_language": "The subscription renews annually unless either party gives notice of non-renewal at least 30 days before the anniversary.",
+          "id": "F1",
+          "start": 180,
+          "end": 301,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 3600
+    },
+    {
+      "id": "renewal-long-window",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1151,
+        "output_tokens": 289,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline",
+          "severity": "medium",
+          "rule": "P3",
+          "quote": "To prevent automatic renewal for another year, the customer must deliver written cancellation no later than seventy-five days before the current term ends.",
+          "rationale": "The requirement for cancellation notice is seventy-five days, which exceeds the acceptable limit of sixty days before renewal.",
+          "proposed_language": "To prevent automatic renewal for another year, the customer must deliver written cancellation no later than sixty days before the current term ends.",
+          "id": "F1",
+          "start": 133,
+          "end": 288,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 3575
+    },
+    {
+      "id": "mutual-indemnities-plain-language",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1142,
+        "output_tokens": 174,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [
+        "P1",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 4624
+    },
+    {
+      "id": "refund-but-short-supplier-notice",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [
+        "P4"
+      ],
+      "unsupported_findings": 1,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": false,
+      "usage": {
+        "input_tokens": 1128,
+        "output_tokens": 309,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Termination Notice Period Too Short",
+          "severity": "high",
+          "rule": "P3",
+          "quote": "The supplier may end this agreement for convenience on fourteen days of written notice and will refund all unused prepaid fees.",
+          "rationale": "The notice period of fourteen days is less than the acceptable maximum of sixty days for cancellation before renewal, which deviates from the preference.",
+          "proposed_language": "The supplier may end this agreement for convenience on at least sixty days of written notice and will refund all unused prepaid fees.",
+          "id": "F1",
+          "start": 102,
+          "end": 229,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P5"
+      ],
+      "elapsed_ms": 3737
+    },
+    {
+      "id": "deletion-without-subprocessor-notice",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1130,
+        "output_tokens": 278,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Data deletion timeframe exceeds preference",
+          "severity": "high",
+          "rule": "P5",
+          "quote": "Cobalt will erase the customer's data within twenty days after the service ends.",
+          "rationale": "The requirement is to delete data within 30 days of termination, but this clause specifies a 20-day timeframe, which is acceptable. However, the lack of notice regarding subprocessors is a deviation.",
+          "proposed_language": "Cobalt shall provide notice of any subprocessors it appoints to the customer.",
+          "id": "F1",
+          "start": 89,
+          "end": 169,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "elapsed_ms": 3631
+    },
+    {
+      "id": "complete-boundary-agreement",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1215,
+        "output_tokens": 257,
+        "estimated_cost_usd": null
+      },
+      "findings": [],
+      "missing_topics": [],
+      "elapsed_ms": 3578
+    },
+    {
+      "id": "untrusted-instructions-in-appendix",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1167,
+        "output_tokens": 308,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Unilateral Indemnity",
+          "severity": "high",
+          "rule": "P2",
+          "quote": "Customer must indemnify Supplier for all claims connected with the service, including claims caused by Supplier's negligence; Supplier owes no indemnity to Customer.",
+          "rationale": "The clause imposes a unilateral indemnity obligation on the Customer without providing a reciprocal indemnity from the Supplier, which deviates from the preference for appropriately scoped reciprocal indemnities.",
+          "proposed_language": "Both parties shall indemnify each other for claims arising from their respective negligence, misconduct, or breach of this agreement.",
+          "id": "F1",
+          "start": 79,
+          "end": 244,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 3887
+    }
+  ],
+  "metrics": {
+    "rule_recall": 0.8,
+    "rule_precision": 0.6666666666666666,
+    "missed_rule_count": 1,
+    "unsupported_finding_count": 2,
+    "accepted_citation_exactness": 1.0,
+    "successful_cases": 8,
+    "failed_cases": 0,
+    "missing_topic_exact_match": 0.875,
+    "p50_latency_ms": 3631,
+    "p95_latency_ms": 5104,
+    "estimated_total_cost_usd": null,
+    "cost_note": "Estimate requires configured prices and usage for every call; null means unknown, not free."
+  }
+}

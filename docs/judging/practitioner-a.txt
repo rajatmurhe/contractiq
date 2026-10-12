@@ -1,0 +1,9 @@
+SYNTHETIC EQUIPMENT SUPPORT AGREEMENT — NOT A REAL CONTRACT
+Customer: North Laboratory. Supplier: Juniper Maintenance.
+Juniper supplies equipment scheduling and maintenance support for an annual fee of EUR 48,000.
+
+1. Customer is liable without any financial cap for losses under this agreement, including indirect and consequential damages.
+2. Customer indemnifies Supplier against every claim connected with the services. Supplier owes Customer no corresponding indemnity.
+3. This agreement renews each year unless either party gives written non-renewal notice at least 45 days before renewal.
+4. Supplier may terminate for convenience on 60 days of written notice and must refund all unused prepaid fees.
+5. Supplier must delete customer data within 15 days after termination and give prior notice of new subprocessors.

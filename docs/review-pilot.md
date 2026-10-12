@@ -115,11 +115,11 @@ Open **Compare revision** from any review. Live users can paste a revised agreem
 - `scripts/verify_review_deployment.py`: same-origin API smoke test with synthetic data.
 - `docs/judging/demo-script.md`: three-minute presentation and fallback.
 - `docs/judging/practitioner-validation.md`: neutral test protocol and economics worksheet.
-- `docs/judging/october-15-release.md`: dated release checklist and outstanding access needs.
+- `docs/judging/october-20-release.md`: dated release checklist and outstanding access needs.
 
 Execution & audit displays measured review latency and provider token usage. Optional server-side per-million token prices produce an estimate; missing pricing or usage is shown as unknown. Sample processing is explicitly not live inference latency.
 
-## Free recruiter and judge evaluation
+## Free early-access workspace
 
 Recruiters can choose **Start free evaluation** without a credit card, subscription, or Google account. With `REVIEW_LLM_API_KEY` configured, this creates a one-hour isolated guest session supporting arbitrary text, live review, evidence chat, revisions, decisions, and JSON export. Guest sessions survive refresh in the same tab. Guest access cannot be recovered after sign-out, session expiry, or closing the tab; export before leaving. Google login remains available for stable identity and reopening saved reviews.
 

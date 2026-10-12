@@ -1,12 +1,12 @@
-# ContractIQ — evidence-first supplier contract review
+# contractIQ — evidence-first supplier contract review
 
-ContractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a Next.js App Router frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required for evaluation.
+contractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a Next.js App Router frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required during early access.
 
 ## Try it
 
 **[Open the live app](https://contractiq-frontend-2e3u.onrender.com/)** · **[Submission guide](docs/judging/submission.md)** · **[Architecture](docs/judging/submission.md#architecture)** · **[Google login setup](docs/google-login-setup.md)**
 
-- **Free guest evaluation:** enter without an account, upload your own PDF/DOCX/TXT or paste a contract, and inspect the extracted text. With a host-configured model, analyze, ask questions, compare revisions, decide and export.
+- **Free guest workspace:** enter without an account, upload your own PDF/DOCX/TXT or paste a contract, and inspect the extracted text. With a host-configured model, analyze, ask questions, compare revisions, decide and export.
 - **Curated walkthrough:** a separate sample entry offers synthetic agreements and prepared findings, including when no model key is configured. It does not pretend to analyze arbitrary text.
 - **Google sign-in:** optional for stable identity and returning to persisted reviews. Guest sessions last one hour, survive refresh in the same tab, and cannot be recovered after sign-out or closing the tab.
 
@@ -51,7 +51,7 @@ With Ollama running and `llama3.2:3b` already installed, run `make start-local`.
 | Questions | Retrieval over the current review's findings and allow-listed citation IDs; clear insufficient-evidence responses |
 | Revision comparison | New review linked to owned baseline; exact text changes and rule-level risk changes; independent decision per version |
 | Decision | Required rationale, atomic final decision, no automatic signing or external actions |
-| Export | Authenticated JSON bundle with complete source, findings, comparison, playbook, decision and audit snapshot |
+| Export | Printable HTML report (browser Print → Save as PDF) and authenticated JSON bundle with complete source, findings, comparison, playbook, decision and audit snapshot |
 | Access | Isolated expiring guest/demo sessions, verified Google identity option, session revocation |
 | Measurement | Review latency, provider token usage and optional cost estimates; synthetic evaluation runner |
 
@@ -61,7 +61,7 @@ An exact quotation proves provenance, not correct interpretation. No-longer-flag
 
 ```sh
 .venv/bin/pip install pytest pytest-asyncio ruff mypy
-PYTHONPATH=src/agent .venv/bin/pytest src/agent/tests/test_review*.py -q
+PYTHONPATH=src/agent .venv/bin/python -m pytest src/agent/tests/test_review*.py -q
 npm --prefix src/frontend run test:unit
 ./scripts/demo.sh
 PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
@@ -71,14 +71,14 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
 
 ## Deploy and submit
 
-- New full-stack deployment: [render.review.yaml](render.review.yaml) and [Dockerfile.review](Dockerfile.review). Persistent hosting may cost money; the recruiter still pays nothing to evaluate.
+- New full-stack deployment: [render.review.yaml](render.review.yaml) and [Dockerfile.review](Dockerfile.review). Persistent hosting may cost money; early-access users pay no subscription.
 - Existing Render blueprint: [render.yaml](render.yaml) migrates the existing frontend to the same-origin app. It retains legacy resources to avoid implicit deletion; they are not dependencies of the active product. Its free service uses ephemeral storage unless you explicitly configure persistence.
 - [Configuration and deployment guide](docs/review-pilot.md)
-- [October 15 release checklist](docs/judging/october-15-release.md)
+- [October 20 release checklist](docs/judging/october-20-release.md)
 - [Three-minute demonstration](docs/judging/demo-script.md)
 - [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. The [live synthetic regression](evals/review/README.md#final-structured-assessment-regression) completed 20/20 cases with 100% rule recall, 91.3% precision, and 100% missing-topic exact match. Two renewal-threshold false positives remain. This corpus informed development and is not held out. Practitioner validation remains outstanding; no real customer ROI is claimed.
+On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. The [October 12 QA report](docs/judging/qa-2026-10-12.md) records current local verification and all evaluation runs, including failures. These synthetic corpora informed development; they do not establish legal accuracy or customer ROI. Practitioner validation remains outstanding. Current branch changes are not deployed until merged and released.
 
 ## Scope and legacy code
 
