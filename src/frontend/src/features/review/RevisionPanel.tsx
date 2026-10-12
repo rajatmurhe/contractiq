@@ -42,6 +42,7 @@ export function RevisionPanel({
   source,
   onCompare,
   onOpenBaseline,
+  onExtract,
 }: {
   demo: boolean;
   sample: string;
@@ -50,8 +51,12 @@ export function RevisionPanel({
   source: string;
   onCompare: (text: string) => void;
   onOpenBaseline: (id: string) => void;
+  onExtract: (file: File) => Promise<string>;
 }) {
   const [draft, setDraft] = useState("");
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const [uploadNotice, setUploadNotice] = useState("");
+  const [uploadError, setUploadError] = useState("");
   return (
     <section className="revision-panel">
       <div className="revision-heading">
@@ -173,9 +178,44 @@ export function RevisionPanel({
         ) : (
           <>
             <p>
-              Revised text is sent to the configured model provider. Comparison
-              does not approve either version.
+              Upload or paste the revised agreement, then check the text.
+              Analysis sends it to the AI provider. Each version needs its own
+              decision.
             </p>
+            <label className="ciq-button ciq-file">
+              Upload revised agreement
+              <input
+                type="file"
+                aria-label="Upload revised agreement"
+                accept=".pdf,.docx,.txt"
+                disabled={busy || uploadBusy}
+                onChange={async (event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  if (!file) return;
+                  setUploadError("");
+                  setUploadNotice("");
+                  if (file.size > 5 * 1024 * 1024) {
+                    setUploadError("Choose a file up to 5 MB.");
+                    return;
+                  }
+                  setUploadBusy(true);
+                  try {
+                    setDraft(await onExtract(file));
+                    setUploadNotice(
+                      `${file.name} imported. Check the text before comparing.`,
+                    );
+                  } catch (error) {
+                    setUploadError((error as Error).message);
+                  } finally {
+                    setUploadBusy(false);
+                  }
+                }}
+              />
+            </label>
+            {uploadBusy && <p role="status">Reading the revised agreement…</p>}
+            {uploadNotice && <p role="status">{uploadNotice}</p>}
+            {uploadError && <p role="alert">{uploadError}</p>}
             <label htmlFor="revision-text">Revised agreement text</label>
             <textarea
               id="revision-text"
@@ -184,10 +224,11 @@ export function RevisionPanel({
               maxLength={60000}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Paste the complete revised agreement…"
+              disabled={uploadBusy || busy}
             />
             <button
               className="ciq-button ciq-dark"
-              disabled={busy || draft.trim().length < 50}
+              disabled={busy || uploadBusy || draft.trim().length < 50}
               onClick={() => onCompare(draft)}
             >
               Analyze and compare revision <ArrowRight size={16} />

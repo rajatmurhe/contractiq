@@ -37,8 +37,8 @@ test-python:
 test-frontend:
 	npm --prefix src/frontend run test:unit
 lint:
-	.venv/bin/ruff check src/agent/app/review
-	.venv/bin/mypy src/agent/app/review --strict --ignore-missing-imports
+	$(PYTHON) -m ruff check src/agent/app/review
+	$(PYTHON) -m mypy src/agent/app/review --strict --ignore-missing-imports
 	npm --prefix src/frontend run lint
 	npm --prefix src/frontend run type-check
 eval:

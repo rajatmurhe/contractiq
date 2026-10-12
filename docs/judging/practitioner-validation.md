@@ -8,13 +8,13 @@ Recruit one procurement or legal-operations practitioner for a 25-minute usabili
 
 ## Neutral invitation draft
 
-“I'm testing a procurement contract-review prototype for an October 15 hackathon. Could you spend 25 minutes reviewing synthetic supplier terms? I'd like candid feedback on whether the evidence and revision comparison help your work. This isn't a sales call, and I won't use your name or quote publicly without permission.”
+“I'm testing a procurement contract-review prototype for an October 20 product submission. Could you spend 25 minutes reviewing synthetic supplier terms? I'd like candid feedback on whether the evidence and revision comparison help your work. This isn't a sales call, and I won't use your name or quote publicly without permission.”
 
 ## Tasks
 
 1. Ask how they currently review supplier agreements: frequency, existing tools, bottleneck, handoff, and accountable approver. Do not lead with a claimed time saving.
 2. Have them review synthetic agreement A manually against P1–P5. Time the task and record flagged rules, missed rules, and false alarms.
-3. Have them review a different, similarly difficult synthetic agreement B with ContractIQ. Time the task and record the same outcomes. Do not reuse identical text and call the improvement causal: memory is a confounder.
+3. Have them review a different, similarly difficult synthetic agreement B with contractIQ. Time the task and record the same outcomes. Do not reuse identical text and call the improvement causal: memory is a confounder.
 4. Ask them to locate evidence, challenge a suggestion, compare a revised agreement, and record a decision without coaching. Record points of confusion and whether any control misled them.
 5. Ask what prevents real adoption, what their security reviewer would require, who pays, and what they'd compare this purchase against. Present proposed pricing only after learning current cost and workflow.
 6. Ask permission for any public quote separately. Capture criticism as well as positive reactions.
@@ -43,3 +43,19 @@ Measured minutes saved per review = manual minutes − assisted minutes. Keep ne
 Contribution estimate = subscription revenue − (review volume × measured model cost per review, including revisions and chat) − hosting allocation − support allocation. Use actual token usage and provider prices; do not use curated sample latency or zero sample model calls as live economics.
 
 A before/after comparison includes at least two reviews. Avoid pricing as though a negotiation consumes one inference. $49 and $199 are hypotheses, not validated demand or implemented entitlements.
+
+## Ready-to-run materials and timing
+
+No participant is available as of October 12. Do not fill the result table from AI simulation.
+
+- Minutes 0–3: consent and current workflow.
+- Minutes 3–9: manual review of [agreement A](practitioner-a.txt) using the five playbook rules in the app.
+- Minutes 9–15: assisted review of [agreement B](demo-original.txt).
+- Minutes 15–21: upload [revised B](demo-revised.txt), inspect changes, record a reasoned decision and download the report.
+- Minutes 21–25: ask about confusion, trust, adoption blockers and willingness to pay.
+
+Record task completion, elapsed time, prompts needed, missed issues, false alarms and exact comments. Have the participant state which suggestions they disagree with. Keep the answer guide hidden during tasks.
+
+### Facilitator answer guide (synthetic author labels)
+
+Agreement A: P1 unlimited liability and P2 one-sided indemnity deviate. P3 45-day non-renewal, P4 60-day convenience notice plus unused-fee refund, and P5 15-day deletion plus prior subprocessor notice comply. Agreement B has the same two intended deviations with different wording. Revised B removes P1, retains P2, and introduces P3 with 90-day non-renewal notice. These are author labels against this playbook, not independent legal opinions. Similar structure and small sample size limit any timing comparison.

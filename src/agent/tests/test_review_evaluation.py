@@ -78,4 +78,24 @@ def test_live_usage_cost_and_context_cleanup(monkeypatch, sample_policy_json):
         assert _USAGE.get() is None
         return result
     result = asyncio.run(run())
-    assert result['usage'] == {'input_tokens': 1000, 'output_tokens': 500, 'estimated_cost_usd': .006}
+    assert result['usage'] == {'input_tokens': 1000, 'output_tokens': 500, 'estimated_cost_usd': .006, 'model_calls': 1}
+
+
+def test_validation_retry_is_bounded_and_accounts_for_both_calls(monkeypatch, sample_policy_json):
+    import httpx
+    from app.review.engine import SAMPLE, review
+    monkeypatch.setenv('REVIEW_LLM_API_KEY', 'test-only')
+    monkeypatch.setenv('REVIEW_INPUT_PRICE_PER_MILLION', '2')
+    monkeypatch.setenv('REVIEW_OUTPUT_PRICE_PER_MILLION', '8')
+    calls = []
+    retries = []
+    def response(request):
+        calls.append(request)
+        return httpx.Response(200, json={'choices': [{'message': {'content': '{}' if len(calls) == 1 else sample_policy_json}}],
+                                        'usage': {'prompt_tokens': 1000, 'completion_tokens': 500}})
+    original = httpx.AsyncClient
+    monkeypatch.setattr(httpx, 'AsyncClient', lambda **kw: original(transport=httpx.MockTransport(response), **kw))
+    result = asyncio.run(review(SAMPLE, False, lambda: retries.append('budget charged')))
+    assert len(calls) == 2 and len(retries) == 1
+    assert result['usage'] == {'input_tokens': 2000, 'output_tokens': 1000, 'estimated_cost_usd': .012, 'model_calls': 2}
+    assert 'validation retry' in ' '.join(result['trace'])

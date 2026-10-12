@@ -10,6 +10,9 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
+
+import httpx
 
 from .engine import review
 
@@ -58,14 +61,33 @@ def score_case(case: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-async def evaluate(corpus: dict[str, Any], output: Path, live: bool) -> dict[str, Any]:
+async def evaluate(
+    corpus: dict[str, Any], output: Path, live: bool, base_url: str | None = None
+) -> dict[str, Any]:
     validate_corpus(corpus)
+    if base_url:
+        parsed = urlparse(base_url)
+        local = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost"}
+        if (
+            (parsed.scheme != "https" and not local)
+            or any((parsed.username, parsed.password, parsed.query, parsed.fragment))
+            or parsed.path not in {"", "/"}
+        ):
+            raise ValueError("Use a plain HTTPS deployment origin or local HTTP origin.")
+        if not live or len(corpus["cases"]) > 10:
+            raise ValueError("Deployed evaluation requires --live and at most ten cases per run.")
     report: dict[str, Any] = {
         "schema_version": 1,
+        "engine_sha256": None
+        if base_url
+        else hashlib.sha256(Path(__file__).with_name("engine.py").read_bytes()).hexdigest(),
         "created_at": datetime.now(UTC).isoformat(),
         "corpus_sha256": hashlib.sha256(json.dumps(corpus, sort_keys=True).encode()).hexdigest(),
         "mode": "live" if live else "corpus_validation_only",
-        "model": os.getenv("REVIEW_LLM_MODEL", "gpt-4o-mini") if live else None,
+        "model": (os.getenv("REVIEW_LLM_MODEL", "gpt-4o-mini") if live else None)
+        if not base_url
+        else None,
+        "deployment": base_url,
         "case_count": len(corpus["cases"]),
         "limitations": [
             "Synthetic, author-labeled corpus; no independent expert validation.",
@@ -75,12 +97,36 @@ async def evaluate(corpus: dict[str, Any], output: Path, live: bool) -> dict[str
         ],
         "results": [],
     }
-    if live and not os.getenv("REVIEW_LLM_API_KEY"):
+    if live and not base_url and not os.getenv("REVIEW_LLM_API_KEY"):
         raise ValueError("Set REVIEW_LLM_API_KEY before a live evaluation.")
+    # A single ordinary guest session exercises deployed authentication, limits,
+    # validation and storage. Never copy provider keys out of the hosting service.
+    client = httpx.AsyncClient(base_url=base_url or "https://localhost", timeout=100)
+    remote_token: str | None = None
+    if base_url:
+        try:
+            login = await client.post("/api/review/auth/guest", json={})
+            login.raise_for_status()
+            remote_token = login.json()["token"]
+        except Exception:
+            await client.aclose()
+            raise
     for case in corpus["cases"] if live else []:
         started = time.monotonic()
         try:
-            result = await review(case["source"], False)
+            if base_url:
+                response = await client.post(
+                    "/api/review/contracts",
+                    headers={"Authorization": f"Bearer {remote_token}"},
+                    json={"title": f"Synthetic QA: {case['id']}", "text": case["source"]},
+                )
+                response.raise_for_status()
+                result = response.json()
+                if result.get("mode") != "live":
+                    raise ValueError("Expected real inference, received sample output")
+                report["model"] = result.get("model")
+            else:
+                result = await review(case["source"], False)
             row = {
                 "id": case["id"],
                 "status": "ok",
@@ -105,6 +151,14 @@ async def evaluate(corpus: dict[str, Any], output: Path, live: bool) -> dict[str
             }
         row["elapsed_ms"] = round((time.monotonic() - started) * 1000)
         report["results"].append(row)
+    try:
+        if remote_token:
+            await client.post(
+                "/api/review/auth/logout",
+                headers={"Authorization": f"Bearer {remote_token}"},
+            )
+    finally:
+        await client.aclose()
     if live:
         rows = report["results"]
         tp = sum(r["true_positive_rules"] for r in rows)
@@ -143,11 +197,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cases", type=Path, default=Path("evals/review/cases.json"))
     parser.add_argument("--output", type=Path, default=Path("evals/review/report.json"))
+    parser.add_argument("--base-url", help="Evaluate the deployed API using one guest session")
     parser.add_argument(
         "--live", action="store_true", help="Make billable provider calls for each synthetic case"
     )
     args = parser.parse_args()
-    report = asyncio.run(evaluate(json.loads(args.cases.read_text()), args.output, args.live))
+    report = asyncio.run(
+        evaluate(
+            json.loads(args.cases.read_text()),
+            args.output,
+            args.live,
+            args.base_url,
+        )
+    )
     print(json.dumps({k: report[k] for k in ("mode", "case_count", "metrics")}, indent=2))
     if args.live and report["metrics"]["failed_cases"]:
         raise SystemExit(1)

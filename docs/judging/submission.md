@@ -1,4 +1,4 @@
-# ContractIQ — DeepSoft AI-FDE submission guide
+# contractIQ — DeepSoft AI-FDE submission guide
 
 **Turn supplier contracts into evidence-backed negotiation decisions.**
 
@@ -11,16 +11,16 @@
 
 A procurement reviewer must determine which supplier terms deviate from the company's buying policy, find the supporting clauses, and check what changed in the next draft. Reading a summary alone does not answer those questions.
 
-ContractIQ targets procurement leads at growing software companies handling recurring supplier agreements. Its initial playbook covers liability, indemnity, renewal, termination, and data handling. Users can upload their own documents, but the analysis remains scoped to these five commercial preferences; it is not universal legal review.
+contractIQ targets procurement leads at growing software companies handling recurring supplier agreements. Its initial playbook covers liability, indemnity, renewal, termination, and data handling. Users can upload their own documents, but the analysis remains scoped to these five commercial preferences; it is not universal legal review.
 
 ## Product workflow
 
-1. Start free evaluation or use configured Google sign-in.
+1. Open a free workspace or use configured Google sign-in.
 2. Upload a searchable PDF, DOCX, or TXT, or paste a contract. Preview and correct extracted text before AI analysis.
 3. Review findings with exact source quotations, highlighted passages, explanations, and draft negotiation language.
 4. Ask questions grounded in retrieved findings from the current review.
 5. Upload or paste a revised agreement and inspect exact text changes and changes in flagged playbook rules.
-6. Record a human decision with a reason. Export the review, source evidence, comparison, and audit information as JSON.
+6. Record a human decision with a reason. Export the review, source evidence, comparison, and audit information as a printable report or JSON.
 
 Judges pay nothing and need no credit card. The host funds model calls; per-session and global limits still apply. The separate sample walkthrough is explicitly curated and does not call a model.
 
@@ -81,11 +81,13 @@ SQLite storage on the current free Render instance is ephemeral. Guest sessions 
 - [Working OpenRouter configuration](../review-pilot.md#openrouter-configuration-used-by-the-public-deployment)
 - [Google account setup and verification](../google-login-setup.md)
 - [Evaluation corpus and metric definitions](../../evals/review/README.md)
-- [Release checklist](october-15-release.md)
+- [Release checklist](october-20-release.md)
 
 Run the active product tests using the README commands. `Review pilot` CI covers the active runtime. Legacy prototype checks are manually runnable and retain known failures; their code was not silently declared fixed.
 
 ## Evidence recorded so far
+
+Current local improvements and fresh evaluation are documented in the [October 12 QA report](qa-2026-10-12.md). The following October 11 measurements describe the earlier deployed revision; they are retained as historical evidence.
 
 The [saved deployment check](deployment-check.json) records 13 passing checks against the public service on October 11, including curated revision comparison, decision locking, export, cross-session isolation, and logout. It used sample mode and reports Google configuration as absent; it is not a live-inference or Google-login benchmark. The Next.js migration passed 46 review-backend tests, Ruff, strict mypy, 14 frontend tests with coverage, frontend lint/type checking, a production export build, and npm audit (zero known vulnerabilities). A local browser walkthrough verified sample review, revision comparison, session restoration at `/dashboard/`, and a 390px layout without page overflow. The sample API smoke test passed all 13 checks. These checks do not measure model quality.
 

@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-12T06:54:48.504181+00:00",
+  "corpus_sha256": "9855384ac1907fc7dedc61d76c51f26f5d18341f7be30c274b0f21ff0fc22cd2",
+  "mode": "live",
+  "model": "openai/gpt-4o-mini",
+  "deployment": null,
+  "case_count": 6,
+  "limitations": [
+    "Synthetic, author-labeled corpus; no independent expert validation.",
+    "Recall is measured per playbook rule, not every possible legal issue.",
+    "Exact quotations verify provenance, not interpretation or completeness.",
+    "Provider failures count as missed expected rules; they are not discarded."
+  ],
+  "results": [
+    {
+      "id": "nonrenewal-sixty-one",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1421,
+        "output_tokens": 298,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Automatic Renewal Cancellation Deadline Exceeds 60 Days",
+          "severity": "high",
+          "rule": "P3",
+          "quote": "The agreement rolls over into another annual term unless Vale delivers notice of non-renewal at least sixty-one days before expiry.",
+          "rationale": "The clause requires a notice of non-renewal at least sixty-one days before expiry, which exceeds the acceptable limit of 60 days.",
+          "proposed_language": "The agreement rolls over into another annual term unless Vale delivers notice of non-renewal at least sixty days before expiry.",
+          "id": "F1",
+          "start": 94,
+          "end": 225,
+          "line": 2
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 3425
+    },
+    {
+      "id": "erase-thirty-one-days",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1413,
+        "output_tokens": 268,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Data deletion period exceeds 30 days",
+          "severity": "medium",
+          "rule": "P5",
+          "quote": "After the contract ends, Alder Archive must erase all customer files within 31 days.",
+          "rationale": "The requirement to erase customer files within 31 days deviates from the preference of requiring deletion within 30 days.",
+          "proposed_language": "Alder Archive must erase all customer files within 30 days after the contract ends.",
+          "id": "F1",
+          "start": 110,
+          "end": 194,
+          "line": 2
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "elapsed_ms": 3775
+    },
+    {
+      "id": "notice-without-refund",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": false,
+      "usage": {
+        "input_tokens": 1418,
+        "output_tokens": 274,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Refund of unused prepaid fees not provided",
+          "severity": "high",
+          "rule": "P4",
+          "quote": "all prepaid fees are non-refundable even for services not delivered.",
+          "rationale": "The clause states that all prepaid fees are non-refundable, which deviates from the requirement to refund unused prepaid fees upon termination for convenience.",
+          "proposed_language": "All prepaid fees shall be refunded for any unused services upon termination for convenience.",
+          "id": "F1",
+          "start": 147,
+          "end": 215,
+          "line": 2
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P5"
+      ],
+      "elapsed_ms": 4755
+    },
+    {
+      "id": "two-year-cap",
+      "status": "ok",
+      "true_positive_rules": 1,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1423,
+        "output_tokens": 300,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Liability cap exceeds preferred duration",
+          "severity": "high",
+          "rule": "P1",
+          "quote": "Each party's total liability is capped at the fees paid over the preceding twenty-four months; neither party is liable for indirect or consequential damages.",
+          "rationale": "The liability cap is based on fees paid over the preceding twenty-four months, which exceeds the preferred duration of twelve months.",
+          "proposed_language": "Each party's total liability is capped at the fees paid over the preceding twelve months; neither party is liable for indirect or consequential damages.",
+          "id": "F1",
+          "start": 100,
+          "end": 257,
+          "line": 3
+        }
+      ],
+      "missing_topics": [
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 6220
+    },
+    {
+      "id": "renewal-fifty-nine",
+      "status": "ok",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 1,
+      "exact_citations": 1,
+      "returned_citations": 1,
+      "missing_topics_correct": true,
+      "usage": {
+        "input_tokens": 1440,
+        "output_tokens": 273,
+        "estimated_cost_usd": null
+      },
+      "findings": [
+        {
+          "title": "Non-compliant renewal cancellation deadline",
+          "severity": "high",
+          "rule": "P3",
+          "quote": "Non-renewal: either party must provide written notice at least 59 days before renewal.",
+          "rationale": "The requirement for written notice is 59 days, which exceeds the acceptable limit of 60 days or fewer for non-renewal notice.",
+          "proposed_language": "Either party must provide written notice at least 60 days before renewal.",
+          "id": "F1",
+          "start": 113,
+          "end": 199,
+          "line": 4
+        }
+      ],
+      "missing_topics": [
+        "P1",
+        "P2",
+        "P4",
+        "P5"
+      ],
+      "elapsed_ms": 5090
+    },
+    {
+      "id": "balanced-operating-agreement",
+      "status": "error",
+      "error_type": "ValueError",
+      "true_positive_rules": 0,
+      "missed_rules": [],
+      "unsupported_findings": 0,
+      "exact_citations": 0,
+      "returned_citations": 0,
+      "missing_topics_correct": false,
+      "usage": null,
+      "elapsed_ms": 4639
+    }
+  ],
+  "metrics": {
+    "rule_recall": 1.0,
+    "rule_precision": 0.8,
+    "missed_rule_count": 0,
+    "unsupported_finding_count": 1,
+    "accepted_citation_exactness": 1.0,
+    "successful_cases": 5,
+    "failed_cases": 1,
+    "missing_topic_exact_match": 0.6666666666666666,
+    "p50_latency_ms": 4639,
+    "p95_latency_ms": 6220,
+    "estimated_total_cost_usd": null,
+    "cost_note": "Estimate requires configured prices and usage for every call; null means unknown, not free."
+  }
+}

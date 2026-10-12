@@ -1,6 +1,12 @@
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import ReviewExperience from "../../src/features/review/ReviewExperience";
 
 const quote = "Customer liability is unlimited, including indirect damages.";
@@ -214,7 +220,7 @@ describe("Evidence-first review experience", () => {
   it("connects assistant citations to the source and distinguishes guided answers", async () => {
     await openSample();
     fireEvent.click(
-      screen.getByRole("button", { name: "Toggle ContractIQ assistant" }),
+      screen.getByRole("button", { name: "Toggle contractIQ assistant" }),
     );
     fireEvent.change(screen.getByRole("textbox", { name: "Ask a question" }), {
       target: { value: "Why is liability risky?" },
@@ -313,11 +319,9 @@ it("opens a blank own-contract workspace and explains unavailable AI", async () 
     name: "Review your own contract",
   });
   await waitFor(() => expect(start).toBeEnabled());
+  expect(screen.getByText("Start reviewing for free")).toBeVisible();
   expect(
-    screen.getByText("Free hackathon evaluation · no credit card"),
-  ).toBeVisible();
-  expect(
-    screen.getByText(/Import and inspect your own contract for free/),
+    screen.getByText(/You can upload and inspect a document now/),
   ).toBeVisible();
   fireEvent.click(start);
   expect(
@@ -396,4 +400,108 @@ it("previews extracted uploads before sending contract text for review", async (
   expect(
     requests.find((r) => r.path === "/contracts" && r.body)?.body?.text,
   ).toBe(source);
+});
+
+it("recovers from a non-JSON server error with a retry action", async () => {
+  vi.mocked(fetch).mockResolvedValueOnce(
+    new Response("<html>Service unavailable</html>", { status: 502 }),
+  );
+  render(<ReviewExperience />);
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "temporarily unavailable",
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Retry connection" }));
+  await waitFor(() =>
+    expect(
+      screen.getByRole("button", { name: "Review your own contract" }),
+    ).toBeEnabled(),
+  );
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});
+
+it("clears the contract draft and citations when starting another review", async () => {
+  liveEvaluation = true;
+  render(<ReviewExperience />);
+  const start = screen.getByRole("button", {
+    name: "Review your own contract",
+  });
+  await waitFor(() => expect(start).toBeEnabled());
+  fireEvent.click(start);
+  fireEvent.change(await screen.findByLabelText("Contract text"), {
+    target: { value: source },
+  });
+  fireEvent.change(screen.getByLabelText("Agreement name"), {
+    target: { value: "Previous contract" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Analyze agreement" }));
+  await screen.findByRole("heading", { name: review.title });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Toggle contractIQ assistant" }),
+  );
+  fireEvent.change(screen.getByLabelText("Ask a question"), {
+    target: { value: "Why is liability risky?" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Send question" }));
+  await screen.findByRole("button", { name: "F1 · View source" });
+  fireEvent.click(screen.getByRole("button", { name: "New review" }));
+  expect(screen.getByLabelText("Contract text")).toHaveValue("");
+  expect(screen.getByLabelText("Agreement name")).toHaveValue(
+    "Supplier agreement",
+  );
+  expect(
+    screen.queryByRole("button", { name: "F1 · View source" }),
+  ).not.toBeInTheDocument();
+});
+
+it("discards an assistant response that arrives after the review was closed", async () => {
+  await openSample();
+  const originalFetch = vi.mocked(fetch).getMockImplementation()!;
+  let answerRequest: ((value: Response) => void) | undefined;
+  vi.mocked(fetch).mockImplementation((input, init) =>
+    String(input).endsWith("/ask")
+      ? new Promise<Response>((resolve) => {
+          answerRequest = resolve;
+        })
+      : originalFetch(input, init),
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Toggle contractIQ assistant" }),
+  );
+  fireEvent.change(screen.getByLabelText("Ask a question"), {
+    target: { value: "Why is liability risky?" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Send question" }));
+  await waitFor(() => expect(answerRequest).toBeDefined());
+  fireEvent.click(screen.getByRole("button", { name: "New review" }));
+  await act(async () =>
+    answerRequest!(
+      new Response(
+        JSON.stringify({
+          answer: "Old contract answer",
+          citations: ["F1"],
+          mode: "sample",
+        }),
+      ),
+    ),
+  );
+  expect(screen.queryByText("Old contract answer")).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: "F1 · View source" }),
+  ).not.toBeInTheDocument();
+  expect(screen.getByLabelText("Ask a question")).toHaveValue("");
+});
+
+it("previews an uploaded revision and only analyzes it after confirmation", async () => {
+  liveEvaluation = true;
+  sessionStorage.setItem("contractiq-session", JSON.stringify({ token: "guest-session", reviewId: "review-1" }));
+  render(<ReviewExperience />);
+  await screen.findByRole("heading", { name: review.title });
+  fireEvent.click(screen.getByRole("button", { name: "Compare revision" }));
+  const upload = screen.getByLabelText("Upload revised agreement");
+  fireEvent.change(upload, { target: { files: [new File(["synthetic revision"], "revised.docx")] } });
+  await waitFor(() => expect(screen.getByLabelText("Revised agreement text")).toHaveValue(source));
+  expect(requests.some((r) => r.path === "/contracts" && r.body)).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "Analyze and compare revision" }));
+  await screen.findByRole("heading", { name: "Revised agreement" });
+  expect(requests.find((r) => r.body?.baseline_id)?.body?.text).toBe(source);
 });

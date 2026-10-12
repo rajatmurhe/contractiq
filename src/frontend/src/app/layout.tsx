@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "../index.css";
 
 export const metadata: Metadata = {
-  title: "ContractIQ — Evidence-first contract review",
+  title: "contractIQ — Evidence-first contract review",
   description:
     "Review supplier contracts with exact source evidence, compare revisions, and record a human decision. Try your own document for free.",
 };
