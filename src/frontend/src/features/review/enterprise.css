@@ -3078,3 +3078,10 @@
   line-height: 1.6;
   color: #53627a;
 }
+
+.review-export-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}

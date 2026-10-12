@@ -98,33 +98,49 @@ async function api<T>(
   token?: string,
   body?: unknown,
 ): Promise<T> {
-  const response = await fetch(`/api/review${path}`, {
-    method: body === undefined ? "GET" : "POST",
-    headers: {
-      "Content-Type":
-        body instanceof Blob ? "application/octet-stream" : "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...(body === undefined
-      ? {}
-      : { body: body instanceof Blob ? body : JSON.stringify(body) }),
-  });
-  const data = await response.json();
+  let response: Response;
+  try {
+    response = await fetch(`/api/review${path}`, {
+      method: body === undefined ? "GET" : "POST",
+      headers: {
+        "Content-Type":
+          body instanceof Blob
+            ? "application/octet-stream"
+            : "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      ...(body === undefined
+        ? {}
+        : { body: body instanceof Blob ? body : JSON.stringify(body) }),
+    });
+  } catch {
+    throw new Error(
+      "Could not reach contractIQ. Check your connection and try again.",
+    );
+  }
+  const data = await response.json().catch(() => null);
   if (response.status === 401 && token)
     window.dispatchEvent(
       new CustomEvent("contractiq-session-expired", { detail: token }),
     );
   if (!response.ok)
     throw new Error(
-      typeof data.detail === "string"
+      typeof data?.detail === "string"
         ? data.detail
-        : "Request failed. Please check your input and try again.",
+        : response.status >= 500
+          ? "contractIQ is temporarily unavailable. Please try again shortly."
+          : "Request failed. Please check your input and try again.",
+    );
+  if (data === null)
+    throw new Error(
+      "The server returned an unreadable response. Please retry.",
     );
   return data;
 }
 
 export default function ReviewExperience() {
   const [config, setConfig] = useState<Config>();
+  const [configAttempt, setConfigAttempt] = useState(0);
   const [restoring, setRestoring] = useState(true);
   const [session, setSession] = useState<Session>();
   const [review, setReview] = useState<Review>();
@@ -156,6 +172,17 @@ export default function ReviewExperience() {
   const decisionRef = useRef<HTMLElement>(null);
   const googleButton = useRef<HTMLDivElement>(null);
   const evidence = useRef<HTMLElement>(null);
+  const contextVersion = useRef(0);
+
+  useEffect(() => {
+    contextVersion.current += 1;
+    setAnswer("");
+    setQuestion("");
+    setCitations([]);
+    setChatMode("");
+    setChatBusy(false);
+    setAudit(undefined);
+  }, [session?.token, review?.id]);
 
   useEffect(() => {
     let active = true;
@@ -223,7 +250,7 @@ export default function ReviewExperience() {
       setText("");
       setChatOpen(false);
       setError(
-        "Your session expired. Start a new free evaluation or sign in again.",
+        "Your session expired. Start a new guest workspace or sign in again.",
       );
     };
     window.addEventListener("contractiq-session-expired", expire);
@@ -231,10 +258,18 @@ export default function ReviewExperience() {
       window.removeEventListener("contractiq-session-expired", expire);
   }, [session?.token]);
   useEffect(() => {
+    let active = true;
     api<Config>("/config")
-      .then(setConfig)
-      .catch((e) => setError(e.message));
-  }, []);
+      .then((value) => {
+        if (active) setConfig(value);
+      })
+      .catch((e) => {
+        if (active) setError(e.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [configAttempt]);
   useEffect(() => {
     if (!config?.google_client_id || session || restoring) return;
     const mount = () => {
@@ -276,10 +311,18 @@ export default function ReviewExperience() {
     };
   }, [config?.google_client_id, session, restoring]);
   useEffect(() => {
+    let active = true;
     if (session)
       api<History[]>("/contracts", session.token)
-        .then(setHistory)
-        .catch((e) => setError(e.message));
+        .then((value) => {
+          if (active) setHistory(value);
+        })
+        .catch((e) => {
+          if (active) setError(e.message);
+        });
+    return () => {
+      active = false;
+    };
   }, [session, review]);
   useEffect(() => {
     const mark = evidence.current;
@@ -299,7 +342,7 @@ export default function ReviewExperience() {
   }, [selected, review?.id]);
 
   async function startEvaluation() {
-    setBusy("Opening free evaluation");
+    setBusy("Opening your workspace");
     setError("");
     try {
       setSession(await api<Session>("/auth/guest", undefined, {}));
@@ -390,6 +433,11 @@ export default function ReviewExperience() {
     }
   }
   async function openBaseline(id: string) {
+    if (!session || busy) return;
+    setBusy("Opening agreement");
+    setError("");
+    setOverview(false);
+    setMobileNav(false);
     try {
       setReview(await api<Review>(`/contracts/${id}`, session!.token));
       setSelected(0);
@@ -402,6 +450,8 @@ export default function ReviewExperience() {
       setTab("findings");
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setBusy("");
     }
   }
   async function decide(decision: string) {
@@ -421,18 +471,24 @@ export default function ReviewExperience() {
     }
   }
   async function showAudit() {
+    if (!review || !session) return;
+    const version = contextVersion.current;
     setTab("audit");
     setError("");
     try {
-      setAudit(
-        await api<Audit>(`/contracts/${review!.id}/audit`, session!.token),
+      const result = await api<Audit>(
+        `/contracts/${review.id}/audit`,
+        session.token,
       );
+      if (version === contextVersion.current) setAudit(result);
     } catch (e) {
-      setError((e as Error).message);
+      if (version === contextVersion.current) setError((e as Error).message);
     }
   }
   async function ask(event: React.FormEvent) {
     event.preventDefault();
+    if (chatBusy || question.trim().length < 3) return;
+    const version = contextVersion.current;
     setChatBusy(true);
     setAnswer("");
     setCitations([]);
@@ -446,32 +502,45 @@ export default function ReviewExperience() {
         review ? session?.token : undefined,
         { question },
       );
+      if (version !== contextVersion.current) return;
       setAnswer(data.answer);
       setChatMode(data.mode);
       setCitations(data.citations || []);
     } catch (e) {
-      setAnswer((e as Error).message);
-      setChatMode("error");
+      if (version === contextVersion.current) {
+        setAnswer((e as Error).message);
+        setChatMode("error");
+      }
     } finally {
-      setChatBusy(false);
+      if (version === contextVersion.current) setChatBusy(false);
     }
   }
-  async function download() {
+  async function download(format: "html" | "json") {
     if (!review || !session) return;
     setError("");
     try {
-      const bundle = await api<unknown>(
-        `/contracts/${review.id}/export`,
+      const bundle = await api<{ html?: string }>(
+        `/contracts/${review.id}/${format === "html" ? "report" : "export"}`,
         session.token,
       );
       const url = URL.createObjectURL(
-        new Blob([JSON.stringify(bundle, null, 2)], {
-          type: "application/json",
-        }),
+        new Blob(
+          [
+            format === "html"
+              ? bundle.html || ""
+              : JSON.stringify(bundle, null, 2),
+          ],
+          {
+            type:
+              format === "html"
+                ? "text/html;charset=utf-8"
+                : "application/json",
+          },
+        ),
       );
       const link = document.createElement("a");
       link.href = url;
-      link.download = `contractiq-${review.id}.json`;
+      link.download = `contractIQ-${review.id}.${format}`;
       link.click();
       URL.revokeObjectURL(url);
     } catch (e) {
@@ -595,20 +664,20 @@ export default function ReviewExperience() {
           <span>
             <Scale size={21} />
           </span>
-          contract<span className="ciq-brand-iq">iq</span>
+          contract<span className="ciq-brand-iq">IQ</span>
           <small>CONTRACT INTELLIGENCE</small>
         </a>
         <nav>
           {!session ? (
             <>
               <a href="#workflow">How it works</a>
-              <a href="#evaluation">Free evaluation</a>
+              <a href="#pricing">Pricing</a>
               <button
                 className="ciq-button ciq-dark"
                 onClick={startEvaluation}
                 disabled={!config || !!busy || restoring}
               >
-                Test for free <ArrowUpRight size={15} />
+                Start reviewing <ArrowUpRight size={15} />
               </button>
             </>
           ) : (
@@ -618,7 +687,7 @@ export default function ReviewExperience() {
                 {session.demo
                   ? "Sample workspace"
                   : session.guest
-                    ? "Free evaluation"
+                    ? "Guest workspace"
                     : "Private workspace"}
               </span>
               <span className="user-avatar">{session.name.slice(0, 1)}</span>
@@ -637,6 +706,17 @@ export default function ReviewExperience() {
       {error && (
         <div className="ciq-error" role="alert">
           {error}
+          {!config && (
+            <button
+              className="ciq-button"
+              onClick={() => {
+                setError("");
+                setConfigAttempt((n) => n + 1);
+              }}
+            >
+              Retry connection
+            </button>
+          )}
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={16} />
           </button>
@@ -661,7 +741,10 @@ export default function ReviewExperience() {
               onClick={() => setMobileNav(false)}
             />
           )}
-          <aside className={`ciq-sidebar ${mobileNav ? "mobile-open" : ""}`}>
+          <aside
+            id="workspace-navigation"
+            className={`ciq-sidebar ${mobileNav ? "mobile-open" : ""}`}
+          >
             <button
               className="mobile-close-nav"
               aria-label="Close workspace navigation"
@@ -676,14 +759,14 @@ export default function ReviewExperience() {
               <div>
                 <strong>
                   {session.demo
-                    ? "Demo workspace"
+                    ? "Sample workspace"
                     : session.guest
-                      ? "Free evaluation"
+                      ? "Guest workspace"
                       : "My workspace"}
                 </strong>
                 <small>
                   {session.demo
-                    ? "Explore ContractIQ"
+                    ? "Explore contractIQ"
                     : "Contract intelligence"}
                 </small>
               </div>
@@ -747,6 +830,10 @@ export default function ReviewExperience() {
                 setOverview(false);
                 setMobileNav(false);
                 setReview(undefined);
+                setText("");
+                setTitle("Supplier agreement");
+                setUploadInfo("");
+                setError("");
                 setAudit(undefined);
                 setAnswer("");
                 setTab("findings");
@@ -773,24 +860,7 @@ export default function ReviewExperience() {
                   className={`ciq-history ${h.id === review?.id ? "active" : ""}`}
                   key={h.id}
                   disabled={!!busy}
-                  onClick={async () => {
-                    try {
-                      setOverview(false);
-                      setMobileNav(false);
-                      setFindingSearch("");
-                      setSeverity("all");
-                      setReview(
-                        await api<Review>(`/contracts/${h.id}`, session.token),
-                      );
-                      setSelected(0);
-                      setReason("");
-                      setAudit(undefined);
-                      setAnswer("");
-                      setTab("findings");
-                    } catch (e) {
-                      setError((e as Error).message);
-                    }
-                  }}
+                  onClick={() => void openBaseline(h.id)}
                 >
                   <FileText size={16} />
                   <span>
@@ -808,10 +878,10 @@ export default function ReviewExperience() {
               </strong>
               <p>
                 {session.demo
-                  ? "Curated findings. No model calls. Sign out to access Google login."
+                  ? "Explore sample findings and a revised draft. Sign out to review your own agreement."
                   : session.guest
                     ? "Free one-hour guest workspace. Refresh is supported in this tab. Export before signing out or closing the tab."
-                    : "Your reviews are scoped to your verified Google identity."}
+                    : "Only your account can access these reviews. Export a copy to keep your work; hosted storage may reset."}
               </p>
             </div>
           </aside>
@@ -1010,7 +1080,7 @@ export default function ReviewExperience() {
                 <p>
                   {session.demo
                     ? "Explore a synthetic supplier agreement with five curated deviations."
-                    : "Paste any contract or upload a PDF, Word (.docx), or text file. Check the extracted text before analysis. Clicking Analyze sends that text to the configured AI provider."}
+                    : "Paste any contract or upload a PDF, Word (.docx), or text file. Check the extracted text before analysis. Clicking Analyze sends that text to the AI provider."}
                 </p>
                 {session.demo ? (
                   <button
@@ -1107,10 +1177,10 @@ export default function ReviewExperience() {
                     {config?.input_byte_limit &&
                       config.input_byte_limit < 240000 && (
                         <p>
-                          The connected local model accepts up to{" "}
+                          This workspace accepts up to{" "}
                           {config.input_byte_limit.toLocaleString()} UTF-8 bytes
                           per review. Larger contracts need a model with a
-                          larger context.
+                          larger document limit.
                         </p>
                       )}
                     {uploadInfo && <p role="status">{uploadInfo}</p>}
@@ -1128,8 +1198,8 @@ export default function ReviewExperience() {
                     {!config?.live_enabled && (
                       <p>
                         You can import and inspect your contract now. AI
-                        analysis is unavailable until the host connects a model.
-                        Your text has not been analyzed.
+                        analysis is temporarily unavailable. Please try again
+                        later. Your text has not been analyzed.
                       </p>
                     )}
                   </>
@@ -1141,7 +1211,7 @@ export default function ReviewExperience() {
                   <div>
                     <div className="ciq-overline">
                       CONTRACT INTELLIGENCE /{" "}
-                      {review.mode === "sample" ? "CURATED DEMO" : "AI REVIEW"}
+                      {review.mode === "sample" ? "SAMPLE REVIEW" : "AI REVIEW"}
                     </div>
                     <h1>{review.title}</h1>
                     <p>
@@ -1149,9 +1219,20 @@ export default function ReviewExperience() {
                       {review.model}
                     </p>
                   </div>
-                  <button className="ciq-button" onClick={download}>
-                    <Download size={15} /> Export review
-                  </button>
+                  <div className="review-export-actions">
+                    <button
+                      className="ciq-button"
+                      onClick={() => download("html")}
+                    >
+                      <Download size={15} /> Download report
+                    </button>
+                    <button
+                      className="ciq-button ciq-plain"
+                      onClick={() => download("json")}
+                    >
+                      Export JSON
+                    </button>
+                  </div>
                 </div>
                 <div className="review-summary">
                   <div>
@@ -1462,6 +1543,14 @@ export default function ReviewExperience() {
                 )}
                 {tab === "revision" && (
                   <RevisionPanel
+                    onExtract={async (file) => {
+                      const result = await api<{ text: string }>(
+                        `/documents/extract?filename=${encodeURIComponent(file.name)}`,
+                        session.token,
+                        file,
+                      );
+                      return result.text;
+                    }}
                     key={review.id}
                     demo={session.demo}
                     sample={config?.revised_sample || ""}
@@ -1566,7 +1655,7 @@ export default function ReviewExperience() {
       )}
       <button
         className="ciq-chat-launch"
-        aria-label="Toggle ContractIQ assistant"
+        aria-label="Toggle contractIQ assistant"
         onClick={() => setChatOpen(!chatOpen)}
       >
         {chatOpen ? (
@@ -1574,7 +1663,7 @@ export default function ReviewExperience() {
         ) : (
           <>
             <MessageSquare size={19} />
-            <span>Ask ContractIQ</span>
+            <span>Ask contractIQ</span>
           </>
         )}
       </button>
@@ -1584,7 +1673,7 @@ export default function ReviewExperience() {
             <div>
               <Sparkles size={17} />
               <strong>
-                {review ? "Evidence assistant" : "Meet ContractIQ"}
+                {review ? "Evidence assistant" : "Meet contractIQ"}
               </strong>
             </div>
             <span>
@@ -1612,11 +1701,12 @@ export default function ReviewExperience() {
                     : "Guided response · no model call"}
               </small>
             )}
-            {citations.map((id) => (
+            {(review ? citations : []).map((id) => (
               <button
                 key={id}
                 onClick={() => {
-                  const i = review!.findings.findIndex((f) => f.id === id);
+                  const i =
+                    review?.findings.findIndex((f) => f.id === id) ?? -1;
                   if (i >= 0) {
                     setFindingSearch("");
                     setSeverity("all");

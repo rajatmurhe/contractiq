@@ -44,11 +44,11 @@ export function ProductLanding({
               <ArrowUpRight size={13} />
             </div>
             <h1>
-              Every clause.
+              Know the terms.
               <br />
-              Every risk.
+              See the risks.
               <br />
-              <span>A clearer decision.</span>
+              <span>Own the decision.</span>
             </h1>
             <p>
               Your workspace for supplier contract review. Surface commercial
@@ -56,10 +56,10 @@ export function ProductLanding({
               forward with confidence.
             </p>
             <div className="evaluation-callout" id="evaluation">
-              <strong>Free hackathon evaluation · no credit card</strong>
+              <strong>Start reviewing for free</strong>
               <p>
-                Test contract review, evidence chat, revision comparison,
-                decisions, and export. No paid feature gates.
+                Find terms to negotiate, compare revised drafts, and keep the
+                evidence behind every decision. No credit card required.
               </p>
               <button
                 className="ciq-button ciq-dark"
@@ -72,13 +72,13 @@ export function ProductLanding({
                 {!ready
                   ? "Checking review availability…"
                   : liveEnabled
-                  ? "No account needed. Upload a PDF, DOCX, or TXT, or paste your contract for live AI review. One-hour guest session; refresh is supported. Export before signing out or closing the tab."
-                  : "Import and inspect your own contract for free. AI analysis is currently unavailable until the host connects a model. The sample walkthrough is also available."}
+                    ? "Upload a PDF, DOCX, or TXT, or paste your agreement. Your guest workspace lasts one hour. Export your review before leaving."
+                    : "You can upload and inspect a document now. AI review is temporarily unavailable; explore the sample to see the workflow."}
               </small>
             </div>
             <div className="product-actions">
               <button
-                className="ciq-button ciq-dark ciq-large"
+                className="ciq-button ciq-large"
                 onClick={start}
                 disabled={!ready || busy}
               >
@@ -90,17 +90,17 @@ export function ProductLanding({
             </div>
             <div className="product-assurance">
               <span>
-                <CheckCircle2 size={14} /> No signup for the demo
+                <CheckCircle2 size={14} /> No account needed to start
               </span>
               <span>
-                <LockKeyhole size={14} /> Synthetic sample data
+                <LockKeyhole size={14} /> Source-linked findings
               </span>
             </div>
             <div ref={googleRef} className="google-signin" />
             {ready && !googleConfigured && (
               <small className="product-config">
-                Google sign-in for returning to saved reviews is not configured.
-                Guest testing requires no account.
+                Google sign-in is currently unavailable. You can still open a
+                guest workspace.
               </small>
             )}
           </div>
@@ -177,11 +177,11 @@ export function ProductLanding({
                   <p>Negotiate a cap at twelve months of fees.</p>
                 </div>
                 <button
-                  onClick={evaluate}
+                  onClick={start}
                   disabled={!ready || busy}
                   className="hero-open"
                 >
-                  Open the interactive review <ArrowRight size={16} />
+                  Explore this sample review <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -249,7 +249,7 @@ export function ProductLanding({
                 n: "03",
                 Icon: FileCheck2,
                 title: "Own the decision",
-                body: "Approve a review or request changes with a reason. Keep a persistent record of the human decision.",
+                body: "Approve a review or request changes with a reason. Export the evidence and a record of your decision.",
                 label: "You stay in control",
               },
             ].map(({ n, Icon, title, body, label }) => (
@@ -289,7 +289,7 @@ export function ProductLanding({
               “show me where.”
             </h2>
             <p>
-              A polished answer is not enough. ContractIQ validates quoted text
+              A polished answer is not enough. contractIQ validates quoted text
               against the agreement and keeps the human decision separate from
               the AI recommendation.
             </p>
@@ -301,7 +301,7 @@ export function ProductLanding({
                 <CheckCircle2 size={17} /> No automatic contract signing
               </span>
               <span>
-                <CheckCircle2 size={17} /> Clearly labeled sample and live modes
+                <CheckCircle2 size={17} /> Negotiation language you can copy
               </span>
             </div>
           </div>
@@ -310,7 +310,7 @@ export function ProductLanding({
           <div className="product-section-heading">
             <div>
               <span className="product-kicker">
-                FUTURE BUSINESS MODEL · NOT REQUIRED TO TEST
+                FREE EARLY ACCESS · PLANNED PRICING
               </span>
               <h2>
                 Start focused.
@@ -319,11 +319,11 @@ export function ProductLanding({
               </h2>
             </div>
             <p>
-              Testing is free for recruiters and judges.
+              All review features are free during early access.
               <br />
-              These are future commercial plans, not a checkout.
+              The plans below show our proposed launch pricing.
               <br />
-              No payment or subscription is needed.
+              No subscription is required today. Usage limits apply.
             </p>
           </div>
           <div className="product-plans">
@@ -333,21 +333,21 @@ export function ProductLanding({
                 price: "$49",
                 description: "For independent procurement leads.",
                 volume: "50 reviews / month",
-                label: "Test for free",
+                label: "Start reviewing",
               },
               {
                 name: "Team",
                 price: "$199",
                 description: "For a growing review practice.",
                 volume: "300 reviews / month",
-                label: "Test for free",
+                label: "Start reviewing",
               },
               {
                 name: "Enterprise",
                 price: "Custom",
-                description: "For a scoped enterprise pilot.",
+                description: "For organizations with tailored requirements.",
                 volume: "Custom review volume",
-                label: "Test for free",
+                label: "Start reviewing",
               },
             ].map((p, i) => (
               <article className={i === 1 ? "featured" : ""} key={p.name}>
@@ -398,16 +398,16 @@ export function ProductLanding({
           </div>
           <button
             className="ciq-button ciq-dark ciq-large"
-            onClick={start}
+            onClick={evaluate}
             disabled={!ready || busy}
           >
-            Try the interactive demo <ArrowRight size={18} />
+            Review your first agreement <ArrowRight size={18} />
           </button>
         </section>
       </main>
       <footer className="ciq-footer">
         <span>
-          contractiq <small>CONTRACT INTELLIGENCE</small>
+          contractIQ <small>CONTRACT INTELLIGENCE</small>
         </span>
         <span>Commercial review support. Human judgment required.</span>
         <a href="#workflow">
