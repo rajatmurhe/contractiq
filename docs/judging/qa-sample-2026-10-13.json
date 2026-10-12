@@ -1,0 +1,28 @@
+{
+  "base_url": "http://127.0.0.1:8019",
+  "verified_at": "2026-10-12T22:16:30.759622+00:00",
+  "mode": "sample",
+  "authentication": "sample",
+  "checks": [
+    "readiness",
+    "session can be resumed",
+    "correct inference mode",
+    "human decision required",
+    "source citations valid",
+    "revision linked",
+    "curated comparison",
+    "revision has independent decision",
+    "decision immutable",
+    "audit consistent",
+    "complete evidence export",
+    "printable report contains reviewed agreement",
+    "cross-session isolation",
+    "logout revokes access"
+  ],
+  "limitations": [
+    "This run does not verify backup recovery, Google browser popup, or practitioner value."
+  ],
+  "live_ai_configured": false,
+  "google_configured": false,
+  "result": "passed"
+}

@@ -32,6 +32,12 @@ import {
 } from "lucide-react";
 import "./review.css";
 import "./enterprise.css";
+import {
+  ContractAssistant,
+  CoverageSummary,
+  type Coverage,
+} from "./ContractAssistant";
+import { ReviewDataControls } from "./ReviewDataControls";
 import { ProductLanding } from "./ProductLanding";
 import { RevisionPanel, type Comparison } from "./RevisionPanel";
 
@@ -55,6 +61,9 @@ type Review = {
   status: string;
   findings: Finding[];
   missing_topics: string[];
+  coverage?: Coverage[];
+  created_at?: number;
+  playbook_version?: string;
   mode: string;
   model: string;
   elapsed_ms: number;
@@ -161,7 +170,6 @@ export default function ReviewExperience() {
   const [answer, setAnswer] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
   const [chatMode, setChatMode] = useState("");
-  const [citations, setCitations] = useState<string[]>([]);
   const [overview, setOverview] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [contractSearch, setContractSearch] = useState("");
@@ -178,7 +186,6 @@ export default function ReviewExperience() {
     contextVersion.current += 1;
     setAnswer("");
     setQuestion("");
-    setCitations([]);
     setChatMode("");
     setChatBusy(false);
     setAudit(undefined);
@@ -244,7 +251,6 @@ export default function ReviewExperience() {
       setReview(undefined);
       setHistory([]);
       setAnswer("");
-      setCitations([]);
       setAudit(undefined);
       setReason("");
       setText("");
@@ -352,7 +358,6 @@ export default function ReviewExperience() {
       setTitle("My contract");
       setUploadInfo("");
       setAnswer("");
-      setCitations([]);
       setTab("findings");
     } catch (e) {
       setError((e as Error).message);
@@ -424,7 +429,6 @@ export default function ReviewExperience() {
       setReason("");
       setAudit(undefined);
       setAnswer("");
-      setCitations([]);
       setTab("revision");
     } catch (e) {
       setError((e as Error).message);
@@ -443,7 +447,6 @@ export default function ReviewExperience() {
       setSelected(0);
       setReason("");
       setAnswer("");
-      setCitations([]);
       setAudit(undefined);
       setFindingSearch("");
       setSeverity("all");
@@ -491,7 +494,6 @@ export default function ReviewExperience() {
     const version = contextVersion.current;
     setChatBusy(true);
     setAnswer("");
-    setCitations([]);
     try {
       const data = await api<{
         answer: string;
@@ -505,7 +507,6 @@ export default function ReviewExperience() {
       if (version !== contextVersion.current) return;
       setAnswer(data.answer);
       setChatMode(data.mode);
-      setCitations(data.citations || []);
     } catch (e) {
       if (version === contextVersion.current) {
         setAnswer((e as Error).message);
@@ -1478,6 +1479,21 @@ export default function ReviewExperience() {
                         )}
                       </section>
                     </div>
+                    <CoverageSummary coverage={review.coverage} />
+                    {session && (
+                      <ReviewDataControls
+                        id={review.id}
+                        token={session.token}
+                        deleted={() => {
+                          setHistory((items) =>
+                            items.filter((item) => item.id !== review.id),
+                          );
+                          setReview(undefined);
+                          setText("");
+                          setChatOpen(false);
+                        }}
+                      />
+                    )}
                     {review.missing_topics.length > 0 && (
                       <div className="ciq-warning">
                         Not found in the reviewed text:{" "}
@@ -1653,6 +1669,15 @@ export default function ReviewExperience() {
           {busy}…
         </div>
       )}
+      {chatOpen && review && session && (
+        <ContractAssistant
+          key={review.id + session.token}
+          review={review}
+          token={session.token}
+          request={api}
+          close={() => setChatOpen(false)}
+        />
+      )}
       <button
         className="ciq-chat-launch"
         aria-label="Toggle contractIQ assistant"
@@ -1667,7 +1692,7 @@ export default function ReviewExperience() {
           </>
         )}
       </button>
-      {chatOpen && (
+      {chatOpen && !review && (
         <section className="ciq-chat">
           <header>
             <div>
@@ -1677,7 +1702,7 @@ export default function ReviewExperience() {
               </strong>
             </div>
             <span>
-              {review?.mode === "sample" || !config?.live_enabled
+              {!config?.live_enabled
                 ? "Guided sample · no model call"
                 : "AI assistant"}
             </span>
@@ -1701,25 +1726,6 @@ export default function ReviewExperience() {
                     : "Guided response · no model call"}
               </small>
             )}
-            {(review ? citations : []).map((id) => (
-              <button
-                key={id}
-                onClick={() => {
-                  const i =
-                    review?.findings.findIndex((f) => f.id === id) ?? -1;
-                  if (i >= 0) {
-                    setFindingSearch("");
-                    setSeverity("all");
-                    setOverview(false);
-                    setSourceFocus(false);
-                    setSelected(i);
-                    setTab("findings");
-                  }
-                }}
-              >
-                {id} · View source
-              </button>
-            ))}
           </div>
           <form onSubmit={ask}>
             <input

@@ -131,6 +131,7 @@ beforeEach(() => {
               },
             }
           : review;
+      else if (path.endsWith("/conversation")) data = [];
       else if (path === "/contracts/review-1") data = review;
       else if (path === "/contracts")
         data = [{ id: review.id, title: review.title, status: review.status }];
@@ -151,6 +152,21 @@ beforeEach(() => {
         data = {
           answer: "The cited clause leaves liability uncapped.",
           citations: ["F1"],
+          claims: [
+            {
+              text: "The cited clause leaves liability uncapped.",
+              source_ids: ["S1"],
+            },
+          ],
+          sources: [
+            {
+              id: "S1",
+              title: review.title,
+              quote,
+              line: 2,
+              version: "current",
+            },
+          ],
           mode: "sample",
         };
       else if (path === "/auth/logout") data = { status: "signed_out" };
@@ -225,11 +241,25 @@ describe("Evidence-first review experience", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Ask a question" }), {
       target: { value: "Why is liability risky?" },
     });
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Send question" }),
+      ).toBeEnabled(),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Send question" }),
+      ).toBeEnabled(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Send question" }));
     await screen.findByText("The cited clause leaves liability uncapped.");
-    expect(screen.getByText("Guided response · no model call")).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "F1 · View source" }));
-    expect(document.querySelector(".ciq-source mark")?.textContent).toBe(quote);
+    expect(screen.getByText("Sample source lookup")).toBeVisible();
+    fireEvent.click(
+      screen.getByRole("button", { name: "S1 · Current · line 2" }),
+    );
+    expect(
+      screen.getByRole("region", { name: "Cited source passage" }),
+    ).toHaveTextContent(quote);
   });
   it("revokes the session and clears contract content on sign-out", async () => {
     await openSample();
@@ -441,15 +471,18 @@ it("clears the contract draft and citations when starting another review", async
   fireEvent.change(screen.getByLabelText("Ask a question"), {
     target: { value: "Why is liability risky?" },
   });
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "Send question" })).toBeEnabled(),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Send question" }));
-  await screen.findByRole("button", { name: "F1 · View source" });
+  await screen.findByRole("button", { name: "S1 · Current · line 2" });
   fireEvent.click(screen.getByRole("button", { name: "New review" }));
   expect(screen.getByLabelText("Contract text")).toHaveValue("");
   expect(screen.getByLabelText("Agreement name")).toHaveValue(
     "Supplier agreement",
   );
   expect(
-    screen.queryByRole("button", { name: "F1 · View source" }),
+    screen.queryByRole("button", { name: "S1 · Current · line 2" }),
   ).not.toBeInTheDocument();
 });
 
@@ -470,6 +503,9 @@ it("discards an assistant response that arrives after the review was closed", as
   fireEvent.change(screen.getByLabelText("Ask a question"), {
     target: { value: "Why is liability risky?" },
   });
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "Send question" })).toBeEnabled(),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Send question" }));
   await waitFor(() => expect(answerRequest).toBeDefined());
   fireEvent.click(screen.getByRole("button", { name: "New review" }));
@@ -486,22 +522,31 @@ it("discards an assistant response that arrives after the review was closed", as
   );
   expect(screen.queryByText("Old contract answer")).not.toBeInTheDocument();
   expect(
-    screen.queryByRole("button", { name: "F1 · View source" }),
+    screen.queryByRole("button", { name: "S1 · Current · line 2" }),
   ).not.toBeInTheDocument();
   expect(screen.getByLabelText("Ask a question")).toHaveValue("");
 });
 
 it("previews an uploaded revision and only analyzes it after confirmation", async () => {
   liveEvaluation = true;
-  sessionStorage.setItem("contractiq-session", JSON.stringify({ token: "guest-session", reviewId: "review-1" }));
+  sessionStorage.setItem(
+    "contractiq-session",
+    JSON.stringify({ token: "guest-session", reviewId: "review-1" }),
+  );
   render(<ReviewExperience />);
   await screen.findByRole("heading", { name: review.title });
   fireEvent.click(screen.getByRole("button", { name: "Compare revision" }));
   const upload = screen.getByLabelText("Upload revised agreement");
-  fireEvent.change(upload, { target: { files: [new File(["synthetic revision"], "revised.docx")] } });
-  await waitFor(() => expect(screen.getByLabelText("Revised agreement text")).toHaveValue(source));
+  fireEvent.change(upload, {
+    target: { files: [new File(["synthetic revision"], "revised.docx")] },
+  });
+  await waitFor(() =>
+    expect(screen.getByLabelText("Revised agreement text")).toHaveValue(source),
+  );
   expect(requests.some((r) => r.path === "/contracts" && r.body)).toBe(false);
-  fireEvent.click(screen.getByRole("button", { name: "Analyze and compare revision" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Analyze and compare revision" }),
+  );
   await screen.findByRole("heading", { name: "Revised agreement" });
   expect(requests.find((r) => r.body?.baseline_id)?.body?.text).toBe(source);
 });

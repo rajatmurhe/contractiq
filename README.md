@@ -2,6 +2,8 @@
 
 contractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a Next.js App Router frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required during early access.
 
+**[Final submission package](docs/judging/final-submission.md)** · **[Latest QA](docs/judging/qa-2026-10-13.md)**
+
 ## Try it
 
 **[Open the live app](https://contractiq-frontend-2e3u.onrender.com/)** · **[Submission guide](docs/judging/submission.md)** · **[Architecture](docs/judging/submission.md#architecture)** · **[Google login setup](docs/google-login-setup.md)**
@@ -48,7 +50,7 @@ With Ollama running and `llama3.2:3b` already installed, run `make start-local`.
 | Import | PDF, DOCX, UTF-8 TXT, or pasted text; extraction preview before analysis; bounded parser worker |
 | Review | Five explicit procurement preferences: liability, indemnity, renewal, termination, data handling |
 | Evidence | Schema-validated findings, exact source matching, server-computed Unicode offsets; fabricated citations reject the result |
-| Questions | Retrieval over the current review's findings and allow-listed citation IDs; clear insufficient-evidence responses |
+| Questions | Passage retrieval across the selected agreement and linked revision; checked source IDs, saved conversation and insufficient-evidence responses |
 | Revision comparison | New review linked to owned baseline; exact text changes and rule-level risk changes; independent decision per version |
 | Decision | Required rationale, atomic final decision, no automatic signing or external actions |
 | Export | Printable HTML report (browser Print → Save as PDF) and authenticated JSON bundle with complete source, findings, comparison, playbook, decision and audit snapshot |
