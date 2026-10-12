@@ -19,7 +19,9 @@ def test_missing_and_compliant_topics_are_distinct(sample_policy_json):
     data['P2']['status'] = 'compliant'
     data['P2']['findings'] = []
     result = PolicyReview.model_validate(data).checked_review(SAMPLE)
-    assert result.missing_topics == ['P1']
+    assert result.missing_topics == []
+    assert result.coverage[0]['status'] == 'uncertain'
+    assert result.coverage[1]['status'] == 'compliant'
     assert {f.rule for f in result.findings} == {'P3', 'P4', 'P5'}
 
 

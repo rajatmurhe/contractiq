@@ -27,6 +27,15 @@ def printable_report(bundle: dict[str, Any]) -> str:
         )
         or "<p>No deviations were returned. This does not establish that every term is acceptable.</p>"
     )
+    coverage = (
+        "".join(
+            f"<article><h3>{text(item['label'])}: {text(item['status'])}</h3>"
+            f"{block(item['reason'])}{block(item.get('evidence') or 'No source evidence established.')}"
+            "</article>"
+            for item in review.get("coverage", [])
+        )
+        or "<p>Structured coverage unavailable for this older review.</p>"
+    )
     comparison = review.get("comparison")
     revisions = ""
     if comparison:
@@ -77,6 +86,7 @@ An exact quotation verifies its source, not the correctness or completeness of i
 <section><h2>Decision</h2>{block(review.get("decision_reason") or "No decision has been recorded.")}
 <p><strong>Topics not found:</strong> {text(missing)}. Check these against the complete agreement.</p></section>
 <section><h2>Findings and suggested changes</h2>{findings}</section>{revisions}
+<section><h2>Topic coverage</h2>{coverage}</section>
 <section><h2>Review playbook</h2>{block(bundle["playbook"])}</section>
 <section><h2>Complete reviewed text</h2>{block(review["text"])}</section>
 <section><h2>Record details</h2><p>Review ID: {text(review["id"])}<br>Audit check: {text(audit)}</p>
