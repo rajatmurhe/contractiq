@@ -78,9 +78,9 @@ async def evaluate(
             raise ValueError("Deployed evaluation requires --live and at most ten cases per run.")
     report: dict[str, Any] = {
         "schema_version": 1,
-        "engine_sha256": hashlib.sha256(
-            Path(__file__).with_name("engine.py").read_bytes()
-        ).hexdigest(),
+        "engine_sha256": None
+        if base_url
+        else hashlib.sha256(Path(__file__).with_name("engine.py").read_bytes()).hexdigest(),
         "created_at": datetime.now(UTC).isoformat(),
         "corpus_sha256": hashlib.sha256(json.dumps(corpus, sort_keys=True).encode()).hexdigest(),
         "mode": "live" if live else "corpus_validation_only",
