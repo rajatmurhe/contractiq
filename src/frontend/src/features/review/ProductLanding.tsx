@@ -56,10 +56,10 @@ export function ProductLanding({
               forward with confidence.
             </p>
             <div className="evaluation-callout" id="evaluation">
-              <strong>Start reviewing for free</strong>
+              <strong>Have a contract you want to understand?</strong>
               <p>
-                Find terms to negotiate, compare revised drafts, and keep the
-                evidence behind every decision. No credit card required.
+                Upload your contract, check the text, and get a review with
+                clear explanations and source quotes. Start free—no credit card required.
               </p>
               <button
                 className="ciq-button ciq-dark"

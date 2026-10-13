@@ -349,13 +349,13 @@ it("opens a blank own-contract workspace and explains unavailable AI", async () 
     name: "Review your own contract",
   });
   await waitFor(() => expect(start).toBeEnabled());
-  expect(screen.getByText("Start reviewing for free")).toBeVisible();
+  expect(screen.getByText("Have a contract you want to understand?")).toBeVisible();
   expect(
     screen.getByText(/You can upload and inspect a document now/),
   ).toBeVisible();
   fireEvent.click(start);
   expect(
-    await screen.findByRole("heading", { name: "What are we reviewing?" }),
+    await screen.findByRole("heading", { name: "Review your contract" }),
   ).toBeVisible();
   expect(screen.getByLabelText("Contract text")).toHaveValue("");
   expect(
@@ -373,7 +373,7 @@ it("opens an editable guest evaluation without Google when live AI is configured
   await waitFor(() => expect(start).toBeEnabled());
   fireEvent.click(start);
   expect(
-    await screen.findByRole("heading", { name: "What are we reviewing?" }),
+    await screen.findByRole("heading", { name: "Review your contract" }),
   ).toBeVisible();
   expect(screen.getByLabelText("Contract text")).toHaveValue("");
   fireEvent.change(screen.getByLabelText("Contract text"), {
