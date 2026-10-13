@@ -54,3 +54,20 @@ it("prefills a clause explanation and lets the user edit it before sending", asy
   rerender(<ContractAssistant review={review} token="private" request={request} close={() => {}} prompt={{ text: "Explain the renewal notice.", sequence: 2 }} />);
   expect(screen.getByLabelText("Ask a question")).toHaveValue("Explain the renewal notice.");
 });
+
+it("preserves a follow-up draft while the previous answer arrives", async () => {
+  let resolveAnswer!: (value: unknown) => void;
+  const pending = new Promise((resolve) => { resolveAnswer = resolve; });
+  const request = vi.fn().mockResolvedValueOnce([]).mockReturnValueOnce(pending);
+  render(<ContractAssistant review={review} token="private" request={request} close={() => {}} />);
+  await screen.findByText("What should I negotiate first?");
+  fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "When can I cancel?" } });
+  fireEvent.click(screen.getByRole("button", { name: "Send question" }));
+  expect(screen.getByRole("button", { name: "Send question" })).toBeDisabled();
+  expect(screen.getByText("Reading your agreement…")).toBeVisible();
+  fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "What about refunds?" } });
+  resolveAnswer({ answer: "The agreement requires notice.", mode: "live", sources: [] });
+  await screen.findByText("The agreement requires notice.");
+  expect(screen.getByLabelText("Ask a question")).toHaveValue("What about refunds?");
+  expect(request).toHaveBeenCalledTimes(2);
+});
