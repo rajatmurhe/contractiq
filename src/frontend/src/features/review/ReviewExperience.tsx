@@ -34,6 +34,7 @@ import "./review.css";
 import "./enterprise.css";
 import {
   ContractAssistant,
+  AssistantBot,
   CoverageSummary,
   type Coverage,
 } from "./ContractAssistant";
@@ -165,6 +166,7 @@ export default function ReviewExperience() {
   const [tab, setTab] = useState<
     "findings" | "audit" | "playbook" | "revision"
   >("findings");
+  const [clausePrompt, setClausePrompt] = useState<{ text: string; sequence: number; reviewId: string }>();
   const [chatOpen, setChatOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -1444,6 +1446,10 @@ export default function ReviewExperience() {
                         </div>
                         {finding ? (
                           <div className="ciq-finding-detail">
+                            <button className="ciq-explain-clause" onClick={() => {
+                              setClausePrompt({ text: `Explain this clause in simple language. What does it mean for me, and what exceptions should I check?\n\nClause: ${finding.quote}`, sequence: Date.now(), reviewId: review.id });
+                              setChatOpen(true);
+                            }}><AssistantBot /> Explain this clause</button>
                             <div className="ciq-overline">WHY IT MATTERS</div>
                             <p>{finding.rationale}</p>
                             <div className="ciq-proposal">
@@ -1675,6 +1681,7 @@ export default function ReviewExperience() {
           review={review}
           token={session.token}
           request={api}
+          prompt={clausePrompt?.reviewId === review.id ? clausePrompt : undefined}
           close={() => setChatOpen(false)}
         />
       )}
@@ -1687,7 +1694,7 @@ export default function ReviewExperience() {
           <X size={20} />
         ) : (
           <>
-            <MessageSquare size={19} />
+            <AssistantBot />
             <span>Ask contractIQ</span>
           </>
         )}

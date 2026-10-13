@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUp, BookOpen, Loader2, X } from "lucide-react";
+import { ArrowUp, Loader2, X } from "lucide-react";
 
 type Source = {
   id: string;
@@ -68,11 +68,28 @@ export function CoverageSummary({ coverage }: { coverage?: Coverage[] }) {
   );
 }
 
+export function AssistantBot({ thinking = false }: { thinking?: boolean }) {
+  return (
+    <span className={`ciq-bot ${thinking ? "ciq-bot-thinking" : ""}`} aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none">
+        <path d="M24 6v6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="24" cy="5" r="3" fill="currentColor" />
+        <rect x="8" y="13" width="32" height="27" rx="11" fill="currentColor" />
+        <rect x="12" y="18" width="24" height="15" rx="7" fill="white" />
+        <g className="ciq-bot-eyes" fill="currentColor"><circle cx="19" cy="25" r="2.5" /><circle cx="29" cy="25" r="2.5" /></g>
+        <path d="M20 36h8" stroke="white" strokeWidth="2" strokeLinecap="round" />
+        <path d="M5 23v7M43 23v7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    </span>
+  );
+}
+
 export function ContractAssistant({
   review,
   token,
   request,
   close,
+  prompt,
 }: {
   review: {
     id: string;
@@ -85,6 +102,7 @@ export function ContractAssistant({
   token: string;
   request: <T>(path: string, token?: string, body?: unknown) => Promise<T>;
   close: () => void;
+  prompt?: { text: string; sequence: number };
 }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [question, setQuestion] = useState("");
@@ -118,6 +136,12 @@ export function ContractAssistant({
   useEffect(() => {
     bottom.current?.scrollIntoView?.({ block: "nearest" });
   }, [turns, busy]);
+  useEffect(() => {
+    if (prompt) {
+      setQuestion(prompt.text);
+      input.current?.focus();
+    }
+  }, [prompt]);
   async function send(event: React.FormEvent) {
     event.preventDefault();
     if (busy || loading || question.trim().length < 3) return;
@@ -152,8 +176,8 @@ export function ContractAssistant({
     >
       <header>
         <div>
-          <BookOpen size={18} />
-          <strong>Ask contractIQ</strong>
+          <AssistantBot thinking={busy} />
+          <div><strong>Ask contractIQ</strong><small className="ciq-bot-subtitle">Your contract companion</small></div>
         </div>
         <button onClick={close} aria-label="Close assistant">
           <X size={18} />
@@ -188,12 +212,12 @@ export function ContractAssistant({
         {!loading && !turns.length && (
           <div className="ciq-assistant-starters">
             <p>
-              Understand a clause, check an exception, or prepare your next
-              negotiation.
+              Hi, I’m your contract companion. Ask me what a clause means,
+              how it affects you, or what you could negotiate.
             </p>
             {[
               "What should I negotiate first?",
-              "Explain the termination clause.",
+              "Explain the termination clause in simple language.",
               "Which topics need further review?",
               "What changed in this revision?",
             ].map((text) => (

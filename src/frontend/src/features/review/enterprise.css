@@ -3129,3 +3129,17 @@
 .ciq-data-controls { border: 1px solid #dce3ef; border-radius: 12px; padding: 16px; margin: 16px 0; background: white; color: #53627b; font-size: 13px; line-height: 1.6; }
 .ciq-data-controls summary { cursor: pointer; font-weight: 650; color: #233451; }
 .ciq-data-controls button { border: 1px solid #ccd5e5; border-radius: 8px; background: white; color: #813a38; padding: 9px 12px; margin-right: 8px; cursor: pointer; }
+
+/* Contract companion: an original, lightweight bot with reduced-motion support. */
+.ciq-bot { display:inline-flex; width:38px; height:38px; flex-shrink:0; color:#4255d4; }
+.ciq-bot svg { width:100%; height:100%; }
+.ciq-chat-launch .ciq-bot { color:white; width:32px; height:32px; }
+.ciq-bot-subtitle { display:block; font-size:11px; font-weight:400; color:#64748b; margin-top:3px; }
+.ciq-bot-eyes { transform-origin:24px 25px; animation:ciq-bot-blink 7s infinite; }
+.ciq-bot-thinking { animation:ciq-bot-bob 1.4s ease-in-out infinite; }
+.ciq-explain-clause { display:flex; align-items:center; gap:8px; border:1px solid #dbe0fa; border-radius:12px; padding:7px 12px; background:#f3f5ff; color:#3445b5; font-weight:600; margin:0 0 18px; cursor:pointer; }
+.ciq-explain-clause .ciq-bot { width:28px; height:28px; }
+.ciq-explain-clause:focus-visible { outline:3px solid #a5b4fc; outline-offset:3px; }
+@keyframes ciq-bot-blink { 0%,94%,98%,100% {transform:scaleY(1)} 96% {transform:scaleY(.15)} }
+@keyframes ciq-bot-bob { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-3px)} }
+@media (prefers-reduced-motion:reduce) { .ciq-bot-eyes,.ciq-bot-thinking { animation:none; } }

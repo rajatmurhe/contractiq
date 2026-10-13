@@ -42,3 +42,15 @@ describe("coverage", () => {
     expect(screen.getByText(/Detailed coverage is unavailable/)).toBeVisible();
   });
 });
+
+it("prefills a clause explanation and lets the user edit it before sending", async () => {
+  const request = vi.fn().mockResolvedValue([]);
+  const prompt = { text: "Explain this clause: liability is unlimited.", sequence: 1 };
+  const { rerender } = render(<ContractAssistant review={review} token="private" request={request} close={() => {}} prompt={prompt} />);
+  await screen.findByText("What should I negotiate first?");
+  expect(screen.getByLabelText("Ask a question")).toHaveValue(prompt.text);
+  expect(request).toHaveBeenCalledTimes(1);
+  fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "What does unlimited mean?" } });
+  rerender(<ContractAssistant review={review} token="private" request={request} close={() => {}} prompt={{ text: "Explain the renewal notice.", sequence: 2 }} />);
+  expect(screen.getByLabelText("Ask a question")).toHaveValue("Explain the renewal notice.");
+});
