@@ -438,6 +438,9 @@ async def completion(system: str, data: str, schema: dict[str, Any] | None = Non
                 "model": os.getenv("REVIEW_LLM_MODEL", "gpt-4o-mini"),
                 "temperature": 0,
                 "max_tokens": 5000,
+                **({"reasoning_effort": os.environ["REVIEW_REASONING_EFFORT"]}
+                   if os.getenv("REVIEW_REASONING_EFFORT") in {"low", "medium", "high"}
+                   else {}),
                 "response_format": (
                     {
                         "type": "json_schema",
