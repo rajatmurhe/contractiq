@@ -13,10 +13,9 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, cast
 from uuid import uuid4
 
-from httpx import HTTPStatusError
-
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import FileResponse
+from httpx import HTTPStatusError
 from pydantic import BaseModel, Field, ValidationError, ValidationInfo, field_validator
 from starlette.concurrency import run_in_threadpool
 from starlette.middleware.base import RequestResponseEndpoint
@@ -293,14 +292,16 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
         status = exc.response.status_code
         message = (
             "The AI provider's free usage limit was reached. Please retry later."
-            if status == 429 else
-            "The AI provider rejected its credentials or model access. The host must check configuration."
-            if status in {401, 403, 404} else
-            "The AI provider rejected the request. The host must check the model settings."
-            if status == 400 else
-            "The AI provider is temporarily unavailable. Please retry."
+            if status == 429
+            else "AI credentials or model access were rejected. The host must check configuration."
+            if status in {401, 403, 404}
+            else "The AI provider rejected the request. The host must check the model settings."
+            if status == 400
+            else "The AI provider is temporarily unavailable. Please retry."
         )
-        raise HTTPException(503, message + " Provider status: " + str(status) + ". No review was saved.") from None
+        raise HTTPException(
+            503, message + " Provider status: " + str(status) + ". No review was saved."
+        ) from None
     except ValidationError:
         raise HTTPException(
             422,
