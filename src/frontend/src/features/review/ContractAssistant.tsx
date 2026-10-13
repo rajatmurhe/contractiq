@@ -149,7 +149,7 @@ export function ContractAssistant({
   }, [review.id, token, request]);
   useEffect(() => {
     bottom.current?.scrollIntoView?.({ block: "nearest" });
-  }, [turns, busy]);
+  }, [turns, busy, source]);
   useEffect(() => {
     if (prompt) {
       setQuestion(prompt.text);
@@ -307,8 +307,6 @@ export function ContractAssistant({
           </p>
         )}
         {error && <p role="alert">{error}</p>}
-        <div ref={bottom} />
-      </div>
       {source && (
         <section
           className="ciq-cited-passage"
@@ -327,6 +325,8 @@ export function ContractAssistant({
           <blockquote>{source.quote}</blockquote>
         </section>
       )}
+        <div ref={bottom} />
+      </div>
       <form onSubmit={send}>
         <label htmlFor="contract-question">Ask about this agreement</label>
         <textarea

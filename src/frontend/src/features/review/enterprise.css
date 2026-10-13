@@ -3097,12 +3097,12 @@
 .ciq-coverage strong[data-state=compliant] { color: #216246; }
 .ciq-coverage strong[data-state=deviation] { color: #a33232; }
 .ciq-coverage blockquote { margin: 10px 0; padding-left: 12px; border-left: 3px solid #5a6fe0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.ciq-contract-assistant { position: fixed; right: 24px; top: 88px; bottom: 88px; width: min(460px, calc(100vw - 32px)); display: flex; flex-direction: column; border: 1px solid #d8dfed; border-radius: 18px; background: #fff; color: #1b2940; z-index: 120; box-shadow: 0 16px 70px #1b294033; overflow: hidden; }
-.ciq-contract-assistant > header { display: flex; justify-content: space-between; align-items: center; padding: 18px; border-bottom: 1px solid #e5e9f2; }
+.ciq-contract-assistant { position: fixed; right: 24px; top: 76px; bottom: 16px; width: min(620px, calc(100vw - 32px)); display: flex; flex-direction: column; border: 1px solid #d8dfed; border-radius: 18px; background: #fff; color: #1b2940; z-index: 120; box-shadow: 0 16px 70px #1b294033; overflow: hidden; }
+.ciq-contract-assistant > header { display: flex; justify-content: space-between; align-items: center; padding: 10px 18px; border-bottom: 1px solid #e5e9f2; }
 .ciq-contract-assistant header > div { display: flex; gap: 10px; align-items: center; }
 .ciq-contract-assistant button { cursor: pointer; }
 .ciq-contract-assistant header button, .ciq-cited-passage > button { background: transparent; border: 0; padding: 6px; color: inherit; }
-.ciq-assistant-context { padding: 12px 18px; background: #f6f8fc; font-size: 13px; }
+.ciq-assistant-context { padding: 8px 18px; background: #f6f8fc; font-size: 13px; }
 .ciq-assistant-context > strong, .ciq-assistant-context small { display: block; overflow-wrap: anywhere; }
 .ciq-assistant-context details { margin-top: 6px; color: #53627b; }
 .ciq-assistant-context details p { margin: 5px 0; }
@@ -3115,14 +3115,14 @@
 .ciq-source-links { display: flex; flex-wrap: wrap; gap: 5px; }
 .ciq-source-links button { border: 1px solid #cdd7f5; color: #304cae; background: #f5f7ff; font-size: 12px; padding: 6px 8px; border-radius: 7px; }
 .ciq-assistant-draft { background: #f7f8fc; border-left: 3px solid #566cce; padding: 12px; white-space: pre-wrap; }
-.ciq-cited-passage { border-top: 1px solid #dce3ef; padding: 16px; max-height: 35%; overflow: auto; background: #f4f7ff; }
+.ciq-cited-passage { border-top: 1px solid #dce3ef; padding: 16px; margin: 8px 0 16px; border-radius: 12px; background: #f4f7ff; }
 .ciq-cited-passage > button { float: right; }
 .ciq-cited-passage small { display: block; }
 .ciq-cited-passage blockquote { margin: 12px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.6; }
-.ciq-contract-assistant > form { position: relative; padding: 14px 18px; border-top: 1px solid #e5e9f2; }
+.ciq-contract-assistant > form { position: relative; padding: 10px 18px; border-top: 1px solid #e5e9f2; }
 .ciq-contract-assistant label { display: block; font-size: 12px; margin-bottom: 6px; }
 .ciq-contract-assistant textarea { width: 100%; box-sizing: border-box; padding: 10px 45px 10px 10px; border: 1px solid #bac7e4; border-radius: 10px; font: inherit; resize: vertical; max-height: 120px; }
-.ciq-contract-assistant form button { position: absolute; right: 25px; top: 45px; background: #3e53d8; color: #fff; border: 0; border-radius: 8px; padding: 6px; }
+.ciq-contract-assistant form button { position: absolute; right: 25px; top: 41px; background: #3e53d8; color: #fff; border: 0; border-radius: 8px; padding: 6px; }
 .ciq-contract-assistant button:disabled { opacity: .5; cursor: default; }
 .ciq-contract-assistant form small { display: block; font-size: 10px; color: #5e6d83; margin-top: 5px; }
 @media(max-width: 700px) { .ciq-contract-assistant { top: 70px; bottom: 12px; right: 8px; width: calc(100vw - 16px); } .ciq-coverage { padding: 16px; } }
@@ -3165,3 +3165,10 @@
 @keyframes ciq-pet-wave { 0%,100% {transform:rotate(0)} 50% {transform:rotate(-24deg)} }
 @media(max-width:700px) { .enterprise .ciq-pet-launch .ciq-bot { width:72px; height:80px; } .enterprise .ciq-pet-launch > span:last-child { font-size:11px; padding:5px 9px; } }
 @media(prefers-reduced-motion:reduce) { .ciq-bot *, .ciq-pet-launch:hover .ciq-pet-arm, .ciq-pet-launch:focus-visible .ciq-pet-arm { animation:none!important; } }
+
+/* Prioritize reading space; source passages share the conversation scroll area. */
+.ciq-contract-assistant > header, .ciq-assistant-context, .ciq-contract-assistant > form { flex-shrink:0; }
+.ciq-contract-assistant > header .ciq-bot { width:36px; height:40px; }
+.ciq-conversation-turn { font-size:15px; line-height:1.7; }
+.ciq-assistant-context details { max-height:140px; overflow:auto; }
+@media(max-width:700px) { .ciq-contract-assistant { top:64px; bottom:8px; } .ciq-contract-assistant > header { padding:8px 14px; } .ciq-assistant-context { padding:6px 14px; } .ciq-conversation { padding:14px; } }
