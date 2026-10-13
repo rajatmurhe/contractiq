@@ -17,13 +17,51 @@ Procurement teams can upload supplier agreements, inspect the clauses behind eac
 
 ---
 
-## Dashboard
+## Product Walkthrough
 
-### Contract Review & Conversational Assistant
+The screenshots below use synthetic agreements in the **curated sample workspace**. They show the current interface; sample findings are prepared and do not call a model. Live review of your own agreement uses the configured AI provider.
 
-![contractIQ dashboard and assistant](docs/judging/dashboard-assistant.png)
+### 1. Inspect the Agreement and Its Findings
 
-The workspace brings the source agreement, risk findings, review coverage and assistant into one view. Each source citation opens the passage used to support the answer.
+![Contract source and prioritized findings](docs/judging/screenshots/review-workspace.png)
+
+The agreement sits beside its findings, with severity filters and source line references. Select a finding to inspect the exact clause, understand its commercial impact and review proposed negotiation language. In this revised sample, indemnity and termination still require attention.
+
+### 2. Understand What the Review Checks
+
+![Commercial playbook used for the review](docs/judging/screenshots/commercial-playbook.png)
+
+The commercial playbook makes the review criteria visible: liability, indemnity, renewal, termination and data handling. These are procurement preferences that guide the assessment. They are editable in code and do not represent jurisdiction-specific legal requirements.
+
+### 3. Ask Questions and Open the Evidence
+
+![Dashboard assistant answering a governing-law question](docs/judging/dashboard-assistant.png)
+
+Ask about the selected agreement without searching through every paragraph. The assistant opens cited passages and preserves a conversation for that review. This sample screenshot shows a governing-law lookup outside the flagged findings. In live mode, model answers are checked for valid source references; proposed wording remains a draft.
+
+### 4. Compare a Negotiated Revision
+
+![Revision comparison with remaining and changed findings](docs/judging/screenshots/revision-comparison.png)
+
+Compare a new draft with the original agreement. This synthetic revision has two rules still flagged and three no longer flagged. Below the summary, before-and-after passages show the wording changes. Each version keeps its own evidence and decision; a disappearing finding does not by itself prove the issue is resolved.
+
+### 5. Check Coverage and Uncertainty
+
+![Coverage assessments beside source evidence and draft language](docs/judging/screenshots/coverage-and-decision.png)
+
+Coverage helps distinguish a deviation from an unresolved assessment. The revised sample marks several topics **Needs review** rather than treating the absence of a finding as confirmation. Inspect the clauses and exceptions before accepting the suggested wording.
+
+### 6. Record a Human Decision
+
+![Decision rationale and approval controls](docs/judging/screenshots/human-decision.png)
+
+The reviewer supplies a reason before approving the review or requesting changes. Approval records a decision; it does not sign the agreement or send anything to the supplier. Download the report or JSON bundle to retain the agreement, evidence and decision record.
+
+### 7. Inspect the Review Trail
+
+![Processing steps and audit view](docs/judging/screenshots/review-audit.png)
+
+The execution view shows the processing steps, timing and available usage information. Sample mode explicitly reports **No model call**. The audit history provides local hash-chain consistency checks; it is not an externally anchored or tamper-proof record.
 
 ### Try the Product
 
