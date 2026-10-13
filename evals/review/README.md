@@ -79,3 +79,9 @@ PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate --live --base-url h
 ```
 
 This creates a guest session, consumes provider credits through the API, and retains synthetic review records. Read the source and labels before sending a corpus to a public service. Prices remain unconfigured in the recorded runs, so total cost is unknown.
+
+## Groq dashboard assistant verification — 13 October 2026
+
+The deployed API completed the 17-check live workflow. `assistant-groq-2026-10-13.json` records six synthetic assistant cases with exact source-offset checks, citation checks and explicit draft/injection checks. All six passed after correcting scoring to inspect both the answer and the limitation shown in the dashboard. The original 5/6 checker report is preserved separately; the conflict explanation was in limitation. This is rescoring of the same responses, not fresh independent evaluation.
+
+Run `python scripts/evaluate_assistant_api.py` from the repository root to repeat the deployed synthetic cases; it consumes provider quota and spaces requests. Free plan limits can affect results. No API key is stored in the harness or reports. Keyword checks and a six-case set do not establish legal correctness, production reliability or ROI.

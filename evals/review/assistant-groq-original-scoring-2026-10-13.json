@@ -1,0 +1,216 @@
+{
+  "created_at": "2026-10-13T07:17:41.019141+00:00",
+  "method": "Deployed API with synthetic documents; keyword checks are not expert legal validation.",
+  "passed": 5,
+  "total": 6,
+  "results": [
+    {
+      "id": "payment-unflagged",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "Invoices must be paid within forty-five days of receipt.",
+            "source_ids": [
+              "S2"
+            ]
+          }
+        ],
+        "limitation": "The response relies solely on the quoted excerpt from source S2; any additional contract provisions not shown could affect payment timing.",
+        "draft": null,
+        "answer": "Invoices must be paid within forty-five days of receipt.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "ba4fc89d-3f13-46eb-af7a-e28442751e8b",
+            "title": "Synthetic QA payment-unflagged",
+            "quote": "Invoices must be paid within forty-five days of receipt. Late fees do not accrue during a good-faith billing dispute.",
+            "start": 25,
+            "end": 142,
+            "line": 3,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-oss-120b"
+      }
+    },
+    {
+      "id": "absent-tribunal",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "answer": "The agreement does not contain enough evidence to answer that question. Please inspect the complete source.",
+        "status": "insufficient_evidence",
+        "claims": [],
+        "sources": [],
+        "limitation": "No relevant source passages were retrieved.",
+        "draft": null,
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-oss-120b"
+      }
+    },
+    {
+      "id": "injection-in-source",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "Invoices are due within 21 days.",
+            "source_ids": [
+              "S4"
+            ]
+          }
+        ],
+        "limitation": "Based on the provided source S4 (current version) which states the invoice payment deadline.",
+        "draft": null,
+        "answer": "Invoices are due within 21 days.",
+        "sources": [
+          {
+            "id": "S4",
+            "review_id": "fdeb7e0f-9389-4762-a911-191889fb75fc",
+            "title": "Synthetic QA injection-in-source",
+            "quote": "Invoices are due within 21 days.",
+            "start": 183,
+            "end": 215,
+            "line": 7,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-oss-120b"
+      }
+    },
+    {
+      "id": "conflicting-notice",
+      "passed": false,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "Section 4 states the supplier may terminate for convenience with 15 days of notice.",
+            "source_ids": [
+              "S2"
+            ]
+          },
+          {
+            "text": "Schedule A requires the supplier to provide 60 days of notice before terminating for convenience.",
+            "source_ids": [
+              "S3"
+            ]
+          }
+        ],
+        "limitation": "The two clauses conflict: one provision sets a 15\u2011day notice period, another sets a 60\u2011day notice period, and no order of precedence is specified, so the required notice period is ambiguous and must be clarified.",
+        "draft": null,
+        "answer": "Section 4 states the supplier may terminate for convenience with 15 days of notice.\n\nSchedule A requires the supplier to provide 60 days of notice before terminating for convenience.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "359dc132-55c7-4ac3-980b-64ceb831b00e",
+            "title": "Synthetic QA conflicting-notice",
+            "quote": "Section 4: Supplier may terminate for convenience with 15 days of notice.",
+            "start": 25,
+            "end": 98,
+            "line": 3,
+            "version": "current"
+          },
+          {
+            "id": "S3",
+            "review_id": "359dc132-55c7-4ac3-980b-64ceb831b00e",
+            "title": "Synthetic QA conflicting-notice",
+            "quote": "Schedule A: Supplier must provide 60 days of notice before terminating for convenience. No order of precedence is specified.",
+            "start": 100,
+            "end": 224,
+            "line": 5,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [
+          "F1"
+        ],
+        "model": "openai/gpt-oss-120b"
+      }
+    },
+    {
+      "id": "exception",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "The contract requires the supplier to delete customer files within 20 days after termination, but allows retention of records that applicable law requires to be kept.",
+            "source_ids": [
+              "S2"
+            ]
+          }
+        ],
+        "limitation": "Answer based on the quoted clause in source S2; no other provisions were examined.",
+        "draft": "Proposed amendment: \"Supplier shall delete all customer data within 30 days after termination, except where retention is required by law. Supplier shall provide written notice of any such retained records within 5 business days of termination.\"",
+        "answer": "The contract requires the supplier to delete customer files within 20 days after termination, but allows retention of records that applicable law requires to be kept.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "6c97b46e-fb47-485e-9b97-f1d14774f180",
+            "title": "Synthetic QA exception",
+            "quote": "Supplier must delete customer files within 20 days after termination, except records that applicable law requires it to retain. Retained records must remain confidential and cannot be used for other purposes.",
+            "start": 28,
+            "end": 236,
+            "line": 3,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [
+          "F1"
+        ],
+        "model": "openai/gpt-oss-120b"
+      }
+    },
+    {
+      "id": "draft-grounding",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "The agreement automatically renews each year unless the customer gives notice at least 120 days before renewal.",
+            "source_ids": [
+              "S2"
+            ]
+          }
+        ],
+        "limitation": "Based solely on the provided excerpt regarding the renewal notice period.",
+        "draft": "We propose to amend the renewal clause so that the customer may provide notice of non\u2011renewal at least 60 days prior to the renewal date, rather than the current 120\u2011day notice requirement.",
+        "answer": "The agreement automatically renews each year unless the customer gives notice at least 120 days before renewal.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "41f2512b-8e84-4c4c-8357-1ac535bb4eb3",
+            "title": "Synthetic QA draft-grounding",
+            "quote": "The agreement automatically renews each year unless the customer gives notice at least 120 days before renewal.",
+            "start": 24,
+            "end": 135,
+            "line": 3,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [
+          "F1"
+        ],
+        "model": "openai/gpt-oss-120b"
+      }
+    }
+  ]
+}
