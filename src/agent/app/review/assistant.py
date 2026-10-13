@@ -69,6 +69,7 @@ def retrieve(
         terms |= set(re.findall(r"[a-z]+", previous_question.lower())) - STOP
     for term in list(terms):
         terms.update(ALIASES.get(term, "").split())
+    terms |= {term[:-1] for term in terms if len(term) > 3 and term.endswith("s")}
     broad = bool(
         re.search(
             r"\b(summar|overview|biggest|main risk|negotiate|changed|changes|"
@@ -83,6 +84,7 @@ def retrieve(
 
     def score(item: dict[str, Any]) -> int:
         words = set(re.findall(r"[a-z]+", item["quote"].lower()))
+        words |= {word[:-1] for word in words if len(word) > 3 and word.endswith("s")}
         return len(words & terms)
 
     ranked = sorted(sources, key=score, reverse=True)
@@ -121,6 +123,8 @@ def checked_answer(raw: str, sources: list[dict[str, Any]]) -> dict[str, Any]:
         raise ValueError("Supported answers require evidence-backed claims")
     if result.status == "insufficient_evidence" and (result.claims or result.draft):
         raise ValueError("Insufficient evidence cannot support claims or drafts")
+    if result.status == "insufficient_evidence" and not result.limitation.strip():
+        raise ValueError("Insufficient evidence requires a useful explanation")
     for claim in result.claims:
         if any(ref not in allowed for ref in claim.source_ids):
             raise ValueError("Unknown source citation")
