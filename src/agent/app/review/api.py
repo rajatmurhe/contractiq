@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, cast
 from uuid import uuid4
 
+from httpx import HTTPStatusError
+
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, ValidationError, ValidationInfo, field_validator
@@ -287,6 +289,18 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
         )
     except HTTPException:
         raise
+    except HTTPStatusError as exc:
+        status = exc.response.status_code
+        message = (
+            "The AI provider's free usage limit was reached. Please retry later."
+            if status == 429 else
+            "The AI provider rejected its credentials or model access. The host must check configuration."
+            if status in {401, 403, 404} else
+            "The AI provider rejected the request. The host must check the model settings."
+            if status == 400 else
+            "The AI provider is temporarily unavailable. Please retry."
+        )
+        raise HTTPException(503, message + " Provider status: " + str(status) + ". No review was saved.") from None
     except ValidationError:
         raise HTTPException(
             422,
