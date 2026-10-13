@@ -1079,11 +1079,11 @@ export default function ReviewExperience() {
                 <div className="ciq-overline">
                   EVERY GOOD DECISION STARTS WITH THE SOURCE
                 </div>
-                <h1>What are we reviewing?</h1>
+                <h1>{session.demo ? "Explore a sample contract" : "Review your contract"}</h1>
                 <p>
                   {session.demo
                     ? "Explore a synthetic supplier agreement with five curated deviations."
-                    : "Paste any contract or upload a PDF, Word (.docx), or text file. Check the extracted text before analysis. Clicking Analyze sends that text to the AI provider."}
+                    : "Upload your agreement to find terms that may need attention, with explanations and quotes from your document."}
                 </p>
                 {session.demo ? (
                   <button
@@ -1095,32 +1095,14 @@ export default function ReviewExperience() {
                   </button>
                 ) : (
                   <>
-                    <p>
-                      Reviews currently check five commercial topics: liability,
-                      indemnity, renewal, termination, and data handling. Other
-                      contract terms may need specialist review.
-                    </p>
-                    <label>
-                      Agreement name
-                      <input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        maxLength={150}
-                      />
-                    </label>
-                    <label>
-                      Contract text
-                      <textarea
-                        rows={14}
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        maxLength={60000}
-                        placeholder="Paste contract text here…"
-                      />
-                    </label>
-                    <div className="ciq-upload-actions">
-                      <label className="ciq-button ciq-file">
-                        Upload your contract
+                    <ol className="ciq-upload-steps" aria-label="How to review your contract">
+                      <li><b>1</b> Add your contract</li>
+                      <li><b>2</b> Check the text</li>
+                      <li><b>3</b> Get your review</li>
+                    </ol>
+                      <label className="ciq-button ciq-file ciq-upload-picker">
+                        <strong>Choose a contract file</strong>
+                        <span>PDF, Word (.docx), or TXT · up to 5 MB</span>
                         <input
                           type="file"
                           aria-label="Upload your contract"
@@ -1161,6 +1143,27 @@ export default function ReviewExperience() {
                           }}
                         />
                       </label>
+                    <p className="ciq-upload-hint">Choose a file above, or paste your contract below. You can edit the text before starting the review.</p>
+                    <label>
+                      Agreement name
+                      <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        maxLength={150}
+                      />
+                    </label>
+                    <label>
+                      Contract text
+                      <textarea
+                        rows={7}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        maxLength={60000}
+                        placeholder="Paste your contract here, or choose a file above to fill this in automatically."
+                      />
+                    </label>
+                    <div className="ciq-upload-actions">
+
                       <span>
                         {text.length.toLocaleString()} / 60,000 characters
                       </span>
@@ -1187,6 +1190,8 @@ export default function ReviewExperience() {
                         </p>
                       )}
                     {uploadInfo && <p role="status">{uploadInfo}</p>}
+                    {!busy && text.trim().length < 50 && <p className="ciq-upload-hint">Add at least 50 characters of contract text to enable analysis.</p>}
+                    <p>When you select Analyze agreement, your text is sent to the AI provider. The review checks liability, indemnity, renewal, termination, and data handling.</p>
                     <p>
                       PDF, DOCX, TXT · up to 5 MB and 60,000 extracted
                       characters. Scanned PDFs need OCR first.
