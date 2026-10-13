@@ -130,3 +130,10 @@ def test_live_assistant_regenerates_invalid_answer_once(client, monkeypatch):
     assert response.status_code == 200
     assert len(calls) == 2
     assert len(client.get('/api/review/contracts/' + body['id'] + '/conversation', headers=headers).json()) == 1
+
+
+def test_retrieval_matches_invoice_plural_and_rejects_empty_abstention():
+    sources = retrieve('What is the invoice payment deadline?', {'id': 'a', 'title': 'A', 'text': 'Invoices are due within 21 days.'})
+    assert sources and '21' in sources[0]['quote']
+    with pytest.raises(ValueError):
+        checked_answer('{"status":"insufficient_evidence","claims":[],"limitation":""}', sources)
