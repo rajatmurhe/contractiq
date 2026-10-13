@@ -35,9 +35,9 @@ The commercial playbook makes the review criteria visible: liability, indemnity,
 
 ### 3. Ask Questions and Open the Evidence
 
-![Dashboard assistant answering a governing-law question](docs/judging/dashboard-assistant.png)
+![Contract companion with a clause explanation ready to send](docs/judging/screenshots/bot-companion.png)
 
-Ask about the selected agreement without searching through every paragraph. The assistant opens cited passages and preserves a conversation for that review. This sample screenshot shows a governing-law lookup outside the flagged findings. In live mode, model answers are checked for valid source references; proposed wording remains a draft.
+Ask about the selected agreement without searching through every paragraph. The assistant opens cited passages and preserves a conversation for that review. The bot companion offers suggested questions and an **Explain this clause** shortcut beside each finding. The screenshot shows an editable explanation request tied to the liability clause. In live mode, model answers are checked for valid source references; proposed wording remains a draft.
 
 ### 4. Compare a Negotiated Revision
 
@@ -266,7 +266,7 @@ The October 13 release verification recorded:
 | Check | Result |
 | --- | --- |
 | Standalone backend tests | 94 passed |
-| Frontend interaction tests | 21 passed |
+| Frontend interaction tests | 22 passed |
 | Production build, lint and backend type checks | Passed |
 | Deployed sample workflow | 15 checks passed |
 | Live Groq workflow | 17 checks passed |
