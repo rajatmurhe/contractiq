@@ -1,22 +1,182 @@
-# contractIQ — evidence-first supplier contract review
+# contractIQ: AI Powered Contract Intelligence & Evidence-Based Review
 
-contractIQ helps procurement reviewers find commercial risks, inspect exact source evidence, compare negotiated drafts, and record a human decision. The active product is a Next.js App Router frontend and Python/FastAPI API served together from one origin. No subscription, checkout, or credit card is required during early access.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-contractIQ-00C853?style=for-the-badge&logo=render&logoColor=white)](https://contractiq-frontend-2e3u.onrender.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-Frontend-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-UI-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-Review%20Engine-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![SQLite](https://img.shields.io/badge/SQLite-Storage-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 
-**[Final submission package](docs/judging/final-submission.md)** · **[Latest QA](docs/judging/qa-2026-10-13.md)**
+**Live Application:** [contractIQ](https://contractiq-frontend-2e3u.onrender.com/)
 
-## Try it
+contractIQ is a full-stack AI contract intelligence platform that combines **commercial playbook review**, document extraction, contract passage retrieval, cited answers, revision comparison and human approval.
 
-**[Open the live app](https://contractiq-frontend-2e3u.onrender.com/)** · **[Submission guide](docs/judging/submission.md)** · **[Architecture](docs/judging/submission.md#architecture)** · **[Google login setup](docs/google-login-setup.md)**
+Procurement teams can upload supplier agreements, inspect the clauses behind each finding, ask questions about the selected contract and compare a negotiated draft before recording a decision.
 
-- **Free guest workspace:** enter without an account, upload your own PDF/DOCX/TXT or paste a contract, and inspect the extracted text. With a host-configured model, analyze, ask questions, compare revisions, decide and export.
-- **Curated walkthrough:** a separate sample entry offers synthetic agreements and prepared findings, including when no model key is configured. It does not pretend to analyze arbitrary text.
-- **Google sign-in:** optional for stable identity and returning to persisted reviews. Guest sessions last one hour, survive refresh in the same tab, and cannot be recovered after sign-out or closing the tab.
+> Turn a supplier agreement into a review you can inspect, discuss and act on.
 
-The host funds model usage. Guest session creation, review/chat calls and global hourly model calls are bounded. Future pricing on the landing page is a business-model proposal, not a feature gate.
+---
 
-## Run the complete app
+## Dashboard
 
-Python 3.11+ and Node 22.12+ are required for a source run:
+### Contract Review & Conversational Assistant
+
+![contractIQ dashboard and assistant](docs/judging/dashboard-assistant.png)
+
+The workspace brings the source agreement, risk findings, review coverage and assistant into one view. Each source citation opens the passage used to support the answer.
+
+### Try the Product
+
+- **Review your own agreement:** enter a free guest workspace or sign in with Google, upload PDF/DOCX/TXT or paste text, inspect the extraction and run AI review.
+- **Explore the sample:** use a separate curated agreement with prepared findings. Sample mode is clearly marked and makes no model call.
+- **Compare and decide:** upload a revised agreement, inspect changes, record a decision with a reason and export the review.
+
+Early access has no subscription or credit-card requirement. The host supplies AI access, subject to provider quotas and application usage limits.
+
+---
+
+## Architecture
+
+```text
+                 PDF / DOCX / TXT / Pasted Contract
+                                |
+                                v
+                    Text Extraction & Preview
+                                |
+                                v
+                       FastAPI Review API
+                                |
+             +------------------+------------------+
+             |                  |                  |
+             v                  v                  v
+      Playbook Review    Passage Retrieval    Revision Comparison
+             |                  |                  |
+             v                  v                  v
+      AI Assessments      AI Answer + Draft   Text & Finding Changes
+             |                  |                  |
+             +------------------+------------------+
+                                |
+                                v
+                  Schema & Source Validation
+                                |
+                                v
+                     Next.js Review Workspace
+                                |
+                                v
+                    Human Decision & Rationale
+                                |
+                                v
+                  SQLite / Audit / Report / JSON
+```
+
+The frontend and API are served together from one origin. Review history, conversations and decisions belong to the authenticated session or Google identity.
+
+## AI Review Pipeline
+
+```text
+Contract Text + Five Commercial Preferences
+                     |
+                     v
+              Model Assessment
+                     |
+                     v
+       Schema & Exact Quotation Checks
+                     |
+                     v
+ Findings + Suggested Wording + Topic Coverage
+                     |
+                     v
+        Source Inspection & Human Decision
+```
+
+### Commercial Playbook
+
+The review checks five explicit procurement preferences:
+
+| Topic | What the reviewer inspects |
+| --- | --- |
+| Liability | Exposure, liability limits and consequential damages |
+| Indemnity | Scope and reciprocity of indemnification obligations |
+| Renewal | Automatic renewal and cancellation notice |
+| Termination | Supplier convenience termination and prepaid-fee treatment |
+| Data handling | Deletion commitments and subprocessor notice |
+
+Coverage distinguishes a deviation, a matching clause, an absent topic and uncertainty. These are commercial preferences; the product does not certify jurisdictional legal compliance.
+
+### Document-Grounded Question Answering
+
+The dashboard assistant retrieves passages from the selected agreement using lexical matching, term aliases and nearby context. Comparison questions can retrieve the linked baseline with explicit version labels.
+
+```text
+User Question + Selected Agreement
+                  |
+                  v
+          Ranked Source Passages
+                  |
+                  v
+            AI Answer Generation
+                  |
+                  v
+       Schema & Citation-ID Validation
+                  |
+                  v
+       Answer + Clickable Sources + Limits
+```
+
+The assistant can answer questions about clauses outside the flagged findings, explain conflicting terms and propose negotiation wording. Proposed wording is displayed as a draft requiring review. Up to 20 conversation turns are stored per agreement; the previous question helps resolve short follow-ups.
+
+When relevant evidence cannot be retrieved or supported, the assistant returns an insufficient-evidence response. Invalid model answers are rejected, with one bounded regeneration attempt.
+
+### Source Transparency
+
+Findings use exact quotations with server-computed text offsets and line numbers. Assistant citations identify source passages and the current or baseline version. Returned source IDs are checked against the retrieved context.
+
+Exact quotations establish where text came from. They do not prove that every interpretation is correct; citation validation does not verify semantic entailment.
+
+## Key Capabilities
+
+### Document Upload & Processing
+
+Searchable PDF, Word `.docx`, UTF-8 `.txt` and pasted text are supported. Extraction happens before AI review so users can inspect the input. Limits are 5 MB, 60,000 extracted characters and 100 PDF pages. Scanned or locked PDFs are rejected; OCR is not implemented.
+
+### Revision Comparison
+
+A revised agreement is linked to its owned baseline. The workspace displays exact text changes and changes in flagged risks, with an independent decision for each version. A finding that is no longer flagged is not automatically considered resolved.
+
+### Decisions & Audit History
+
+Approval or a request for changes requires a rationale. Final decisions are atomic and immutable. Approval records the reviewer's decision; it does not sign the agreement or send changes externally. Audit records support local hash-chain consistency checks.
+
+### Reports & Export
+
+Download a printable HTML report or an authenticated JSON bundle containing the agreement, findings, comparison, playbook, decision, conversation and audit snapshot. Use browser Print → Save as PDF for a PDF copy.
+
+### Authentication & Data Controls
+
+Google sign-in provides a returning identity. Guest and sample sessions are isolated, expire after one hour and can be revoked by signing out. Guest access cannot be recovered after sign-out or closing the tab.
+
+Users can delete active reviews, conversations and audit records. A baseline with linked revisions must have its revisions removed first. Session expiry does not automatically delete stored reviews; model-provider retention and backups are separate.
+
+### Landing Assistant
+
+A landing-page assistant explains the product and workflow before users enter the review workspace.
+
+## Technology Stack
+
+| Layer | Technologies |
+| --- | --- |
+| Frontend | Next.js App Router, React, TypeScript, CSS, Lucide icons |
+| Backend | Python, FastAPI, Uvicorn, Pydantic, HTTPX |
+| AI & Retrieval | Configurable compatible model API, commercial playbook assessments, lexical passage retrieval, source validation |
+| Current verified provider | Groq · `openai/gpt-oss-120b` |
+| Document processing | pypdf, bounded DOCX/XML parsing, UTF-8 text extraction |
+| Authentication | Google identity verification, isolated guest/demo sessions |
+| Storage | SQLite for reviews, conversations, decisions and audit records |
+| Deployment | Docker, Render, GitHub Actions |
+
+## Run Locally
+
+Requires **Python 3.11+** and **Node.js 22.12+**.
 
 ```sh
 python3 -m venv .venv
@@ -26,64 +186,78 @@ npm --prefix src/frontend run build
 ./scripts/start-review.sh
 ```
 
-The root `Makefile` also provides `make setup`, `make build`, `make start`, `make test`, `make eval`, and `make demo` for this application.
+Open [http://127.0.0.1:8017](http://127.0.0.1:8017). The curated walkthrough works without model credentials.
 
-Open http://127.0.0.1:8017. No model credentials are needed for the curated walkthrough. To enable real guest reviews, set `REVIEW_LLM_API_KEY`, `REVIEW_LLM_BASE_URL`, and `REVIEW_LLM_MODEL` in the server environment. See [.env.review.example](.env.review.example) for variable names. Never put secrets in frontend `VITE_` variables. The source-run script uses exported environment variables, not automatic `.env` loading.
+### AI Configuration
 
-Docker runs the same app with a persistent local volume:
+Set these privately in the server environment to enable real reviews:
+
+| Variable | Groq configuration |
+| --- | --- |
+| `REVIEW_LLM_API_KEY` | Your private provider key |
+| `REVIEW_LLM_BASE_URL` | `https://api.groq.com/openai/v1` |
+| `REVIEW_LLM_MODEL` | `openai/gpt-oss-120b` |
+| `REVIEW_JSON_SCHEMA` | `0` |
+
+See [.env.review.example](.env.review.example) for configuration names and other provider examples. The source-run script reads exported environment variables and does not automatically load `.env`. Store keys only on the server and never commit them or place them in frontend variables.
+
+For Google login, follow the [Google setup guide](docs/google-login-setup.md).
+
+### Docker
 
 ```sh
-# Optional: copy .env.review.example to .env and configure values privately.
+# Configure .env privately using .env.review.example as a reference.
 docker compose up --build
 ```
 
-Docker Compose reads its environment from `.env` or exported variables. Source runs do not automatically read `.env`. Default UI/API port is 8017. `docker compose down` stops the service without deleting its named volume; `down -v` deletes stored review data.
+Compose reads `.env` or exported variables. A local named volume persists review data. `docker compose down` preserves that volume; `docker compose down -v` deletes it.
 
-### Optional local model configuration
+An optional local inference path is documented in [the pilot guide](docs/review-pilot.md). The tested small local model failed validation and is not the default provider.
 
-With Ollama running and `llama3.2:3b` already installed, run `make start-local`. The command creates a local model variant with a 16,384-token context, enables schema-constrained responses, and limits review input to 8,000 UTF-8 bytes to leave room for instructions and output. Set `REVIEW_LOCAL_MODEL` to use another installed instruction model with at least that context. This sends inference to localhost and requires no paid API key. Local responses may take up to three minutes. Model quality and latency depend on the model and hardware; citation validation still applies. **The installed 3B model failed validation on an independent synthetic review during verification; it is not enabled as the default or claimed ready. Use a stronger model and validate results before relying on this option.** This enables only the local app: a public deployment must have its own reachable inference service.
-
-## What is implemented
-
-| Workflow | Behavior |
-| --- | --- |
-| Import | PDF, DOCX, UTF-8 TXT, or pasted text; extraction preview before analysis; bounded parser worker |
-| Review | Five explicit procurement preferences: liability, indemnity, renewal, termination, data handling |
-| Evidence | Schema-validated findings, exact source matching, server-computed Unicode offsets; fabricated citations reject the result |
-| Questions | Passage retrieval across the selected agreement and linked revision; checked source IDs, saved conversation and insufficient-evidence responses |
-| Revision comparison | New review linked to owned baseline; exact text changes and rule-level risk changes; independent decision per version |
-| Decision | Required rationale, atomic final decision, no automatic signing or external actions |
-| Export | Printable HTML report (browser Print → Save as PDF) and authenticated JSON bundle with complete source, findings, comparison, playbook, decision and audit snapshot |
-| Access | Isolated expiring guest/demo sessions, verified Google identity option, session revocation |
-| Measurement | Review latency, provider token usage and optional cost estimates; synthetic evaluation runner |
-
-An exact quotation proves provenance, not correct interpretation. No-longer-flagged findings do not prove that a risk is resolved. Every result requires a human decision.
-
-## Verify
+## Testing & Evaluation
 
 ```sh
 .venv/bin/pip install pytest pytest-asyncio ruff mypy
 PYTHONPATH=src/agent .venv/bin/python -m pytest src/agent/tests/test_review*.py -q
 npm --prefix src/frontend run test:unit
 ./scripts/demo.sh
-PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate
 ```
 
-`demo.sh` checks the running service; it fails if the API fails. It never prints fabricated workflow success. The evaluation command above validates the corpus only. Add `--live` to run actual billable model inference against the 20 synthetic cases. Read [metric definitions and limitations](evals/review/README.md).
+The October 13 release verification recorded:
 
-## Deploy and submit
+| Check | Result |
+| --- | --- |
+| Standalone backend tests | 94 passed |
+| Frontend interaction tests | 21 passed |
+| Production build, lint and backend type checks | Passed |
+| Deployed sample workflow | 15 checks passed |
+| Live Groq workflow | 17 checks passed |
+| Six synthetic assistant cases | 6/6 after documented scoring correction |
 
-- New full-stack deployment: [render.review.yaml](render.review.yaml) and [Dockerfile.review](Dockerfile.review). Persistent hosting may cost money; early-access users pay no subscription.
-- Existing Render blueprint: [render.yaml](render.yaml) migrates the existing frontend to the same-origin app. It retains legacy resources to avoid implicit deletion; they are not dependencies of the active product. Its free service uses ephemeral storage unless you explicitly configure persistence.
-- [Configuration and deployment guide](docs/review-pilot.md)
-- [October 20 release checklist](docs/judging/october-20-release.md)
-- [Three-minute demonstration](docs/judging/demo-script.md)
+The original assistant checker scored 5/6 because it omitted the conflict explanation shown in the limitation text. Both reports are preserved. These are small synthetic regression tests, not independent legal-expert validation or a production reliability estimate.
+
+See the [QA report](docs/judging/qa-2026-10-13.md) and [evaluation results](evals/review/README.md). Run `python scripts/evaluate_assistant_api.py` to repeat the deployed synthetic assistant cases; it consumes provider quota. The older review corpus is validated with `PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate`; add `--live` for real model inference.
+
+## Pricing & Business Model
+
+Early access is free. Proposed plans are **$49/month for 50 reviews**, **$199/month for 300 reviews**, and enterprise pricing based on requirements. These are proposed plans; billing, willingness to pay and customer ROI have not been validated.
+
+## Deployment
+
+The live product runs on Render. Use [render.review.yaml](render.review.yaml) and [Dockerfile.review](Dockerfile.review) for a new full-stack deployment, or see [render.yaml](render.yaml) for the existing service configuration.
+
+The current free Render service may sleep and its SQLite storage can reset on deployment. Export important reviews. It is not a durable contract repository. Provider free-tier quotas can interrupt AI usage. Manual backup/restore tooling is available for hosts with filesystem access; scheduled off-host backup is not claimed.
+
+- [Deployment and configuration](docs/review-pilot.md)
+- [Free hosting and data storage](docs/judging/free-hosting.md)
+- [Final submission guide](docs/judging/final-submission.md)
+- [Three-minute demo](docs/judging/demo-script.md)
 - [Practitioner validation protocol](docs/judging/practitioner-validation.md)
 
-On October 11, 2026, the public Render deployment successfully reviewed an independent synthetic agreement through the configured OpenRouter integration and returned five findings with source quotes. This is an integration smoke test, not a model-quality benchmark. Google login is configured, and the account owner confirmed a successful browser sign-in on October 11. Repeat that check after deployment changes. The [October 12 QA report](docs/judging/qa-2026-10-12.md) records current local verification and all evaluation runs, including failures. These synthetic corpora informed development; they do not establish legal accuracy or customer ROI. Practitioner validation remains outstanding. Current branch changes are not deployed until merged and released.
+## Project Scope
 
-## Scope and legacy code
+Organization roles, SSO, OCR, billing, automated retention and external business-system execution are not implemented. Practitioner feedback remains outstanding. A human must inspect the evidence and make the final decision.
 
-Supported input is pasted text, searchable PDF, Word `.docx`, or UTF-8 `.txt` (5 MB, 60,000 extracted characters, at most 100 PDF pages). Extraction is transient and does not call AI. Scanned or locked PDFs are rejected; OCR, organization roles, SSO, billing, jurisdictional legal compliance, retention automation and SAP/Salesforce execution are not implemented in the active product. The audit checks local hash-chain consistency; it is not externally anchored.
+The earlier .NET, Keycloak and LangGraph prototype is retained for reference, with its architecture in [legacy documentation](docs/legacy/prototype-architecture.md). It is outside the active runtime and has known unresolved validation failures. Current CI checks the standalone review product.
 
-The earlier .NET/Keycloak/LangGraph prototype remains under its original directories for reference. Its architecture and mock demo are [archived here](docs/legacy/prototype-architecture.md). They are not part of the current runtime. Unused prototype frontend screens and their historical dependency manifest are retained in `docs/legacy/frontend`. The `Legacy prototype validation` workflow is manually runnable and has known unresolved failures; it is not a passing validation claim. `Review pilot` CI now checks the active product on every PR and main/develop push.
+Codex assisted development and testing.
