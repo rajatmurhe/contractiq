@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { ArrowUp, Loader2, X } from "lucide-react";
 
 type Source = {
@@ -69,16 +69,30 @@ export function CoverageSummary({ coverage }: { coverage?: Coverage[] }) {
 }
 
 export function AssistantBot({ thinking = false }: { thinking?: boolean }) {
+  const id = useId().replace(/:/g, "");
   return (
     <span className={`ciq-bot ${thinking ? "ciq-bot-thinking" : ""}`} aria-hidden="true">
-      <svg viewBox="0 0 48 48" fill="none">
-        <path d="M24 6v6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="24" cy="5" r="3" fill="currentColor" />
-        <rect x="8" y="13" width="32" height="27" rx="11" fill="currentColor" />
-        <rect x="12" y="18" width="24" height="15" rx="7" fill="white" />
-        <g className="ciq-bot-eyes" fill="currentColor"><circle cx="19" cy="25" r="2.5" /><circle cx="29" cy="25" r="2.5" /></g>
-        <path d="M20 36h8" stroke="white" strokeWidth="2" strokeLinecap="round" />
-        <path d="M5 23v7M43 23v7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <svg viewBox="0 0 120 132" fill="none">
+        <defs>
+          <linearGradient id={`${id}-shell`} x1="22" y1="15" x2="100" y2="110" gradientUnits="userSpaceOnUse"><stop stopColor="#fafaff"/><stop offset=".5" stopColor="#dfe4ff"/><stop offset="1" stopColor="#8999ed"/></linearGradient>
+          <linearGradient id={`${id}-face`} x1="35" y1="39" x2="85" y2="78" gradientUnits="userSpaceOnUse"><stop stopColor="#253360"/><stop offset="1" stopColor="#101831"/></linearGradient>
+        </defs>
+        <ellipse className="ciq-pet-shadow" cx="60" cy="122" rx="27" ry="5" fill="#5366c4" opacity=".18"/>
+        <g className="ciq-pet-body">
+          <path d="M36 40 26 13Q26 5 34 12L52 34M68 34 87 12Q95 5 94 15L85 42" fill={`url(#${id}-shell)`} stroke="#8698de" strokeWidth="1.5"/>
+          <path d="m34 22 7 14m40-1 6-13" stroke="#a8b6ef" strokeWidth="4" strokeLinecap="round"/>
+          <ellipse cx="45" cy="112" rx="12" ry="7" fill="#8595db"/><ellipse cx="76" cy="112" rx="12" ry="7" fill="#8595db"/>
+          <rect x="37" y="76" width="47" height="36" rx="19" fill={`url(#${id}-shell)`}/>
+          <path className="ciq-pet-arm" d="M85 85q22-11 18-23q-5-6-10 4L80 89" fill={`url(#${id}-shell)`} stroke="#97a7e6"/>
+          <path d="M36 84q-15 5-12 16q6 6 15-7" fill={`url(#${id}-shell)`}/>
+          <rect x="20" y="30" width="81" height="61" rx="28" fill={`url(#${id}-shell)`} stroke="#a4b2ea"/>
+          <path d="M33 40q25-12 52 0" stroke="white" strokeWidth="3" strokeLinecap="round" opacity=".8"/>
+          <rect x="29" y="43" width="63" height="37" rx="17" fill={`url(#${id}-face)`}/>
+          <g className="ciq-bot-eyes" fill="#9dedff"><rect x="42" y="54" width="8" height="12" rx="4"/><rect x="71" y="54" width="8" height="12" rx="4"/></g>
+          <path d="M56 68q5 5 10 0" stroke="#9dedff" strokeWidth="2.5" strokeLinecap="round"/>
+          <circle cx="37" cy="68" r="3" fill="#8c82ff" opacity=".5"/><circle cx="84" cy="68" r="3" fill="#8c82ff" opacity=".5"/>
+          <path d="m60 92 7 4-7 9-7-9 7-4Z" fill="#5368d9"/><path d="m57 97 2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        </g>
       </svg>
     </span>
   );
@@ -159,7 +173,7 @@ export function ContractAssistant({
       setTurns((previous) =>
         [...previous, { question: submitted, response }].slice(-20),
       );
-      setQuestion("");
+      setQuestion((current) => current.trim() === submitted ? "" : current);
     } catch (e) {
       if (active.current) setError((e as Error).message);
     } finally {
@@ -177,7 +191,7 @@ export function ContractAssistant({
       <header>
         <div>
           <AssistantBot thinking={busy} />
-          <div><strong>Ask contractIQ</strong><small className="ciq-bot-subtitle">Your contract companion</small></div>
+          <div><strong>Ask contractIQ</strong><small className="ciq-bot-subtitle">{busy ? "Reading your agreement…" : "Your contract companion"}</small></div>
         </div>
         <button onClick={close} aria-label="Close assistant">
           <X size={18} />
@@ -211,6 +225,7 @@ export function ContractAssistant({
         {loading && <p>Loading conversation…</p>}
         {!loading && !turns.length && (
           <div className="ciq-assistant-starters">
+            <div className="ciq-companion-welcome"><AssistantBot /><strong>A little clarity, clause by clause.</strong></div>
             <p>
               Hi, I’m your contract companion. Ask me what a clause means,
               how it affects you, or what you could negotiate.

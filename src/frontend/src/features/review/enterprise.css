@@ -3143,3 +3143,25 @@
 @keyframes ciq-bot-blink { 0%,94%,98%,100% {transform:scaleY(1)} 96% {transform:scaleY(.15)} }
 @keyframes ciq-bot-bob { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-3px)} }
 @media (prefers-reduced-motion:reduce) { .ciq-bot-eyes,.ciq-bot-thinking { animation:none; } }
+
+/* Companion character: a calm, expressive presence beside the workspace. */
+.ciq-bot { width:52px; height:58px; }
+.ciq-bot-eyes { transform-origin:60px 60px; }
+.ciq-pet-body { animation:ciq-pet-float 5s ease-in-out infinite; transform-origin:60px 85px; }
+.ciq-pet-arm { transform-origin:84px 87px; }
+.ciq-bot-thinking { animation:none; }
+.ciq-bot-thinking .ciq-pet-body { animation:ciq-pet-read 1.8s ease-in-out infinite; }
+.ciq-bot-thinking .ciq-bot-eyes { animation:ciq-bot-blink 2s infinite; }
+.enterprise .ciq-pet-launch { background:transparent; box-shadow:none; border:0; padding:0; display:flex; flex-direction:column; gap:0; }
+.enterprise .ciq-pet-launch .ciq-bot { display:inline-flex; width:100px; height:110px; filter:drop-shadow(0 5px 7px #24398124); }
+.enterprise .ciq-pet-launch > span:last-child { display:block; background:#fff; color:#33448a; border:1px solid #dce2f5; border-radius:18px; padding:7px 12px; font-size:12px; box-shadow:0 3px 12px #1e305014; }
+.ciq-pet-launch:hover .ciq-pet-arm, .ciq-pet-launch:focus-visible .ciq-pet-arm { animation:ciq-pet-wave .65s ease-in-out 3; }
+.ciq-pet-launch:focus-visible { outline:3px solid #657be0; outline-offset:5px; border-radius:20px; }
+.ciq-companion-welcome { display:flex; align-items:center; gap:12px; margin-bottom:12px; color:#354574; }
+.ciq-companion-welcome .ciq-bot { width:78px; height:86px; }
+.ciq-companion-welcome strong { font-size:18px; line-height:1.4; max-width:220px; }
+@keyframes ciq-pet-float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-4px) rotate(2deg)} }
+@keyframes ciq-pet-read { 0%,100% {transform:rotate(-3deg)} 50% {transform:rotate(3deg) translateY(-2px)} }
+@keyframes ciq-pet-wave { 0%,100% {transform:rotate(0)} 50% {transform:rotate(-24deg)} }
+@media(max-width:700px) { .enterprise .ciq-pet-launch .ciq-bot { width:72px; height:80px; } .enterprise .ciq-pet-launch > span:last-child { font-size:11px; padding:5px 9px; } }
+@media(prefers-reduced-motion:reduce) { .ciq-bot *, .ciq-pet-launch:hover .ciq-pet-arm, .ciq-pet-launch:focus-visible .ciq-pet-arm { animation:none!important; } }

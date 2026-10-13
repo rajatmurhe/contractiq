@@ -1686,7 +1686,8 @@ export default function ReviewExperience() {
         />
       )}
       <button
-        className="ciq-chat-launch"
+        className={`ciq-chat-launch ${chatOpen ? "" : "ciq-pet-launch"}`}
+        aria-expanded={chatOpen}
         aria-label="Toggle contractIQ assistant"
         onClick={() => setChatOpen(!chatOpen)}
       >
