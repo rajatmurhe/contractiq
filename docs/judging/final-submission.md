@@ -26,4 +26,8 @@ See `qa-2026-10-13.md` for the latest verification state, and `../../evals/revie
 
 Free Render hosting remains enabled at the owner's request. It may sleep and reset SQLite data on deployment. Export important reviews; the public service is not a durable contract repository. Manual backup/restore tooling is included for hosts with filesystem access. User deletion removes active review, chat and audit records; external provider records and backups have separate retention. Guest expiry does not itself delete records. No organization roles, SSO, automated retention or regulated compliance certification is claimed.
 
-The practitioner kit is ready but no participant is available. Google browser sign-in was previously confirmed by the account owner; latest release-specific verification must be recorded in the QA report. Codex assisted development and testing.
+The practitioner kit is ready but no participant is available. Google browser sign-in was previously confirmed by the account owner; the latest deployed guest workflow passed all 17 checks and the six-case assistant set is documented in the QA report. Codex assisted development and testing.
+
+## Release verification
+
+94 standalone backend tests and 21 frontend interaction tests passed. Frontend production build, lint and backend type checks passed. Live contract review and assistant were verified using Groq `openai/gpt-oss-120b`. See the QA report for exact scope, original failures, corrected scoring and free-tier limits.

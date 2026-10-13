@@ -1,0 +1,29 @@
+{
+  "base_url": "https://contractiq-frontend-2e3u.onrender.com",
+  "verified_at": "2026-10-13T06:09:02.861661+00:00",
+  "mode": "sample",
+  "authentication": "sample",
+  "checks": [
+    "readiness",
+    "live configuration present",
+    "session can be resumed",
+    "correct inference mode",
+    "human decision required",
+    "source citations valid",
+    "revision linked",
+    "curated comparison",
+    "revision has independent decision",
+    "decision immutable",
+    "audit consistent",
+    "complete evidence export",
+    "printable report contains reviewed agreement",
+    "cross-session isolation",
+    "logout revokes access"
+  ],
+  "limitations": [
+    "This run does not verify backup recovery, Google browser popup, or practitioner value."
+  ],
+  "live_ai_configured": true,
+  "google_configured": true,
+  "result": "passed"
+}

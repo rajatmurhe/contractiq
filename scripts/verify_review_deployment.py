@@ -140,9 +140,17 @@ def run(
                 check(
                     "live evidence answer has valid citations",
                     answer["mode"] == "live"
-                    and bool(answer["citations"])
-                    and set(answer["citations"])
-                    <= {finding["id"] for finding in baseline["findings"]},
+                    and answer.get("status") == "supported"
+                    and bool(answer.get("sources"))
+                    and all(
+                        source["review_id"] == baseline["id"]
+                        and baseline["text"][source["start"] : source["end"]] == source["quote"]
+                        for source in answer["sources"]
+                    )
+                    and all(
+                        set(claim["source_ids"]) <= {source["id"] for source in answer["sources"]}
+                        for claim in answer.get("claims", [])
+                    ),
                 )
             revision = request(
                 "POST",

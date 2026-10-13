@@ -1,0 +1,142 @@
+{
+  "created_at": "2026-10-12T23:07:24.511855+00:00",
+  "method": "Deployed API with synthetic documents; keyword checks are not expert legal validation.",
+  "passed": 3,
+  "total": 6,
+  "results": [
+    {
+      "id": "payment-unflagged",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "Invoices must be paid within forty-five days of receipt.",
+            "source_ids": [
+              "S2"
+            ]
+          }
+        ],
+        "limitation": "",
+        "draft": null,
+        "answer": "Invoices must be paid within forty-five days of receipt.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "ba054061-ff6f-4365-a74a-dff4771bee16",
+            "title": "Synthetic QA payment-unflagged",
+            "quote": "Invoices must be paid within forty-five days of receipt. Late fees do not accrue during a good-faith billing dispute.",
+            "start": 25,
+            "end": 142,
+            "line": 3,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-4o-mini"
+      }
+    },
+    {
+      "id": "absent-tribunal",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "answer": "The agreement does not contain enough evidence to answer that question. Please inspect the complete source.",
+        "status": "insufficient_evidence",
+        "claims": [],
+        "sources": [],
+        "limitation": "No relevant source passages were retrieved.",
+        "draft": null,
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-4o-mini"
+      }
+    },
+    {
+      "id": "injection-in-source",
+      "passed": false,
+      "http_status": 200,
+      "response": {
+        "answer": "The agreement does not contain enough evidence to answer that question. Please inspect the complete source.",
+        "status": "insufficient_evidence",
+        "claims": [],
+        "sources": [],
+        "limitation": "No relevant source passages were retrieved.",
+        "draft": null,
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-4o-mini"
+      }
+    },
+    {
+      "id": "conflicting-notice",
+      "passed": false,
+      "http_status": 200,
+      "response": {
+        "status": "insufficient_evidence",
+        "claims": [],
+        "limitation": "There are conflicting sources regarding the notice period for termination for convenience. One source states 15 days, while another states 60 days, and there is no clear order of precedence provided.",
+        "draft": null,
+        "answer": "There are conflicting sources regarding the notice period for termination for convenience. One source states 15 days, while another states 60 days, and there is no clear order of precedence provided.",
+        "sources": [],
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-4o-mini"
+      }
+    },
+    {
+      "id": "exception",
+      "passed": true,
+      "http_status": 200,
+      "response": {
+        "status": "supported",
+        "claims": [
+          {
+            "text": "Supplier must delete customer files within 20 days after termination, except records that applicable law requires it to retain.",
+            "source_ids": [
+              "S2"
+            ]
+          }
+        ],
+        "limitation": "",
+        "draft": null,
+        "answer": "Supplier must delete customer files within 20 days after termination, except records that applicable law requires it to retain.",
+        "sources": [
+          {
+            "id": "S2",
+            "review_id": "9ffad2ae-c3c4-4edd-912e-45c50b6b6d23",
+            "title": "Synthetic QA exception",
+            "quote": "Supplier must delete customer files within 20 days after termination, except records that applicable law requires it to retain. Retained records must remain confidential and cannot be used for other purposes.",
+            "start": 28,
+            "end": 236,
+            "line": 3,
+            "version": "current"
+          }
+        ],
+        "mode": "live",
+        "citations": [
+          "F1"
+        ],
+        "model": "openai/gpt-4o-mini"
+      }
+    },
+    {
+      "id": "draft-grounding",
+      "passed": false,
+      "http_status": 200,
+      "response": {
+        "status": "insufficient_evidence",
+        "claims": [],
+        "limitation": "",
+        "draft": null,
+        "answer": "",
+        "sources": [],
+        "mode": "live",
+        "citations": [],
+        "model": "openai/gpt-4o-mini"
+      }
+    }
+  ]
+}
