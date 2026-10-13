@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import { ArrowUp, Loader2, X } from "lucide-react";
+import { ArrowUp, Loader2, Maximize2, Minimize2, X } from "lucide-react";
 
 type Source = {
   id: string;
@@ -118,6 +118,7 @@ export function ContractAssistant({
   close: () => void;
   prompt?: { text: string; sequence: number };
 }) {
+  const [expanded, setExpanded] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [question, setQuestion] = useState("");
   const [busy, setBusy] = useState(false);
@@ -182,7 +183,7 @@ export function ContractAssistant({
   }
   return (
     <aside
-      className="ciq-contract-assistant"
+      className={`ciq-contract-assistant ${expanded ? "ciq-assistant-expanded" : ""}`}
       aria-label="Contract assistant"
       onKeyDown={(event) => {
         if (event.key === "Escape") close();
@@ -193,9 +194,14 @@ export function ContractAssistant({
           <AssistantBot thinking={busy} />
           <div><strong>Ask contractIQ</strong><small className="ciq-bot-subtitle">{busy ? "Reading your agreement…" : "Your contract companion"}</small></div>
         </div>
+        <div className="ciq-assistant-window-actions">
+          <button className="ciq-assistant-resize" onClick={() => setExpanded(!expanded)} aria-label={expanded ? "Compact assistant" : "Expand assistant"} aria-pressed={expanded} title={expanded ? "Compact view" : "Expand for reading"}>
+            {expanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+          </button>
         <button onClick={close} aria-label="Close assistant">
           <X size={18} />
         </button>
+        </div>
       </header>
       <div className="ciq-assistant-context">
         <strong>{review.title}</strong>
