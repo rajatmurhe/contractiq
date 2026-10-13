@@ -237,7 +237,7 @@ Set these privately in the server environment to enable real reviews:
 | `REVIEW_LLM_MODEL` | `openai/gpt-oss-120b` |
 | `REVIEW_JSON_SCHEMA` | `0` |
 
-See [.env.review.example](.env.review.example) for configuration names and other provider examples. The source-run script reads exported environment variables and does not automatically load `.env`. Store keys only on the server and never commit them or place them in frontend variables.
+See [.env.review.example](.env.review.example) for configuration names and other provider examples. The source-run script loads a private `.env.review` file when present; exported environment variables take precedence. Copy `.env.review.example` to `.env.review` and set all three provider fields together. Use `REVIEW_ENV_FILE` to select another private file. Store keys only on the server and never commit them or place them in frontend variables.
 
 For Google login, follow the [Google setup guide](docs/google-login-setup.md).
 
