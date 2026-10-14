@@ -290,6 +290,13 @@ async def create_review(payload: ReviewInput, user: Annotated[Json, Depends(sess
         raise
     except HTTPStatusError as exc:
         status = exc.response.status_code
+        if status == 413:
+            raise HTTPException(
+                422,
+                "This request exceeds the AI provider's token limit. "
+                "Please contact support to adjust the review capacity for this document. "
+                "Retrying the same request will not help. No review was saved.",
+            ) from None
         message = (
             "The AI provider's free usage limit was reached. Please retry later."
             if status == 429

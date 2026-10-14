@@ -1,5 +1,6 @@
 """Evidence-first review with deterministic source validation."""
 
+import asyncio
 import hashlib
 import json
 import math
@@ -437,10 +438,14 @@ async def completion(system: str, data: str, schema: dict[str, Any] | None = Non
             json={
                 "model": os.getenv("REVIEW_LLM_MODEL", "gpt-4o-mini"),
                 "temperature": 0,
-                "max_tokens": 5000,
-                **({"reasoning_effort": os.environ["REVIEW_REASONING_EFFORT"]}
-                   if os.getenv("REVIEW_REASONING_EFFORT") in {"low", "medium", "high"}
-                   else {}),
+                "max_tokens": min(
+                    5000, max(1000, int(os.getenv("REVIEW_MAX_OUTPUT_TOKENS", "3000")))
+                ),
+                **(
+                    {"reasoning_effort": os.environ["REVIEW_REASONING_EFFORT"]}
+                    if os.getenv("REVIEW_REASONING_EFFORT") in {"low", "medium", "high"}
+                    else {}
+                ),
                 "response_format": (
                     {
                         "type": "json_schema",
@@ -532,6 +537,83 @@ def sample_review() -> ModelReview:
     return ModelReview.model_validate(_SAMPLE_DATA["review"])
 
 
+def split_sections(source: str, limit: int) -> list[tuple[int, str]]:
+    """Cover the complete source without altering characters or citation offsets."""
+    sections = []
+    start = 0
+    while start < len(source):
+        end = min(start + limit, len(source))
+        if end < len(source):
+            boundary = source.rfind("\n\n", start + limit // 2, end)
+            if boundary < 0:
+                boundary = source.rfind("\n", start + limit // 2, end)
+            if boundary >= 0:
+                end = boundary + 1
+        sections.append((start, source[start:end]))
+        start = end
+    return sections
+
+
+def merge_sections(results: list[dict[str, Any]], source: str) -> dict[str, Any]:
+    """Never call conflicting or repeated cross-section assessments compliant."""
+    merged = dict(results[0])
+    coverage = []
+    findings: list[dict[str, Any]] = []
+    for rule in TOPICS:
+        assessments = [c for result in results for c in result["coverage"] if c["rule"] == rule]
+        present = [c for c in assessments if c["status"] != "missing"]
+        if not present:
+            item = dict(assessments[0])
+        elif len(present) == 1:
+            item = dict(present[0])
+            # A section cannot resolve definitions and exceptions elsewhere.
+            if item["status"] == "compliant":
+                item["status"] = "uncertain"
+            else:
+                findings.extend(
+                    f for result in results for f in result["findings"] if f["rule"] == rule
+                )
+        else:
+            item = dict(present[0])
+            item["status"] = "uncertain"
+        item["reason"] = (
+            "Reviewed in sections. Check cross-references, definitions, "
+            "and exceptions in the full agreement. "
+            + (
+                "Multiple sections address this topic; reconcile their terms before deciding."
+                if len(present) > 1
+                else str(item.get("reason", ""))
+            )
+        )
+        if item.get("evidence"):
+            position = item.get("start", source.find(item["evidence"]))
+            if (
+                position < 0
+                or source[position : position + len(item["evidence"])] != item["evidence"]
+            ):
+                raise ValueError("Section evidence does not match the complete document")
+            item["start"] = position
+            item["end"] = position + len(item["evidence"])
+            item["line"] = source[:position].count("\n") + 1
+        coverage.append(item)
+    for index, finding in enumerate(findings):
+        finding["id"] = f"F{index + 1}"
+        if source[finding["start"] : finding["end"]] != finding["quote"]:
+            raise ValueError("Section citation offset does not match the complete document")
+    merged.update(
+        findings=findings,
+        coverage=coverage,
+        missing_topics=[c["rule"] for c in coverage if c["status"] == "missing"],
+        trace=[
+            f"All {len(results)} document sections reviewed",
+            "Cross-section assessments require human reconciliation",
+            "Full-document source citations verified",
+            "Human decision required",
+        ],
+    )
+    return merged
+
+
 async def review(
     source: str,
     demo: bool,
@@ -546,23 +628,43 @@ async def review(
     token = _USAGE.set(usage)
     started = time.monotonic()
     try:
-        for attempt in range(2):
-            try:
-                result = await _review(source, demo, retry=bool(attempt))
-            except ValueError:
-                if demo or attempt:
-                    raise
+        limit = max(1000, int(os.getenv("REVIEW_SECTION_CHARS", "9000")))
+        sections = [(0, source)] if demo else split_sections(source, limit)
+        results = []
+        validation_retries = 0
+        for index, (offset, section) in enumerate(sections):
+            if index:
                 if before_retry:
                     before_retry()
-                continue
-            result["usage"] = usage if not demo else None
-            result["elapsed_ms"] = round((time.monotonic() - started) * 1000)
-            if attempt:
-                result["trace"].insert(
-                    1, "Invalid first response rejected; one validation retry used"
-                )
-            return result
-        raise RuntimeError("Review did not complete")
+                # Free providers account for input and reserved output tokens per minute.
+                await asyncio.sleep(min(65, max(0, float(os.getenv("REVIEW_SECTION_PAUSE", "60")))))
+            for attempt in range(2):
+                try:
+                    result = await _review(section, demo, retry=bool(attempt))
+                except ValueError:
+                    if demo or attempt:
+                        raise
+                    validation_retries += 1
+                    if before_retry:
+                        before_retry()
+                    continue
+                for finding in result["findings"]:
+                    finding["start"] += offset
+                    finding["end"] += offset
+                    finding["line"] = source[: finding["start"]].count("\n") + 1
+                for assessment in result["coverage"]:
+                    if "start" in assessment:
+                        assessment["start"] += offset
+                        assessment["end"] += offset
+                        assessment["line"] = source[: assessment["start"]].count("\n") + 1
+                results.append(result)
+                break
+        result = merge_sections(results, source) if len(results) > 1 else results[0]
+        if validation_retries:
+            result["trace"].append(f"{validation_retries} validation retry completed")
+        result["usage"] = usage if not demo else None
+        result["elapsed_ms"] = round((time.monotonic() - started) * 1000)
+        return result
     finally:
         _USAGE.reset(token)
 
