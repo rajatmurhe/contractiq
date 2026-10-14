@@ -19,7 +19,13 @@ Procurement teams can upload supplier agreements, inspect the clauses behind eac
 
 ## Product Walkthrough
 
-The screenshots below use synthetic agreements in the **curated sample workspace**. They show the current interface; sample findings are prepared and do not call a model. Live review of your own agreement uses the configured AI provider.
+The latest desktop screenshot below was captured from the live deployment on 15 October 2026. The workflow screenshots that follow use synthetic agreements in the **curated sample workspace**. Sample findings are prepared and do not call a model. Live review of your own agreement uses the configured AI provider.
+
+### Current Live Product
+
+![Current contractIQ landing page from the live deployment](docs/judging/screenshots/live-homepage.png)
+
+The landing page offers a direct path to review a user's own contract, an optional sample walkthrough, Google sign-in, and the contractIQ assistant.
 
 ### 1. Inspect the Agreement and Its Findings
 
