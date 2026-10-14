@@ -396,7 +396,7 @@ export default function ReviewExperience() {
     setOverview(false);
     setFindingSearch("");
     setSeverity("all");
-    setBusy("Reviewing against your playbook");
+    setBusy("Reviewing against your playbook. Longer contracts can take several minutes; keep this page open.");
     setError("");
     try {
       const r = await api<Review>("/contracts", session!.token, {

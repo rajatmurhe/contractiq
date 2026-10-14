@@ -38,6 +38,7 @@ yarn-error.log*
 **/*.egg-info/
 
 # Environment secrets
+.env.review
 .env
 *.env.local
 

@@ -237,7 +237,7 @@ Set these privately in the server environment to enable real reviews:
 | `REVIEW_LLM_MODEL` | `openai/gpt-oss-120b` |
 | `REVIEW_JSON_SCHEMA` | `0` |
 
-See [.env.review.example](.env.review.example) for configuration names and other provider examples. The source-run script reads exported environment variables and does not automatically load `.env`. Store keys only on the server and never commit them or place them in frontend variables.
+See [.env.review.example](.env.review.example) for configuration names and other provider examples. The source-run script loads a private `.env.review` file when present; exported environment variables take precedence. Copy `.env.review.example` to `.env.review` and set all three provider fields together. Use `REVIEW_ENV_FILE` to select another private file. Store keys only on the server and never commit them or place them in frontend variables.
 
 For Google login, follow the [Google setup guide](docs/google-login-setup.md).
 
@@ -299,3 +299,11 @@ Organization roles, SSO, OCR, billing, automated retention and external business
 The earlier .NET, Keycloak and LangGraph prototype is retained for reference, with its architecture in [legacy documentation](docs/legacy/prototype-architecture.md). It is outside the active runtime and has known unresolved validation failures. Current CI checks the standalone review product.
 
 Codex assisted development and testing.
+
+### Longer agreements
+
+Live review processes long agreements in sections while retaining citations against the complete original text. The default is 9,000 characters per section with a 60-second pause between sections, intended for providers with small per-minute token allowances. A roughly 33,000-character agreement can take several minutes. Keep the page open during review.
+
+Section analysis cannot reliably resolve definitions and exceptions across the whole agreement. Repeated or conflicting topic assessments are shown as uncertain and require human reconciliation; the app does not claim the agreement is compliant. Failed requests do not save a partial review.
+
+Server operators can tune `REVIEW_SECTION_CHARS`, `REVIEW_MAX_OUTPUT_TOKENS`, and `REVIEW_SECTION_PAUSE` for their provider. Smaller sections reduce request size but increase the number of calls. These limits do not eliminate account-wide rate limits or guarantee support for every document.

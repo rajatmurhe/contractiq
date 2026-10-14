@@ -10,4 +10,9 @@ if [[ ! -f src/frontend/out/index.html ]]; then
   exit 1
 fi
 export PYTHONPATH="src/agent${PYTHONPATH:+:$PYTHONPATH}"
-exec .venv/bin/python -m uvicorn app.review.api:app --host "${REVIEW_HOST:-127.0.0.1}" --port "${PORT:-8017}"
+review_env_args=()
+review_env_file="${REVIEW_ENV_FILE:-.env.review}"
+if [[ -f "$review_env_file" ]]; then
+  review_env_args=(--env-file "$review_env_file")
+fi
+exec .venv/bin/python -m uvicorn "${review_env_args[@]}" app.review.api:app --host "${REVIEW_HOST:-127.0.0.1}" --port "${PORT:-8017}"

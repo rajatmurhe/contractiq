@@ -355,7 +355,7 @@ def test_validation_retry_cannot_bypass_global_model_budget(client, monkeypatch)
     assert client.get('/api/review/contracts', headers=headers).json() == []
 
 
-@pytest.mark.parametrize('status', [400, 401, 403, 404, 429, 500])
+@pytest.mark.parametrize('status', [400, 401, 403, 404, 413, 429, 500])
 def test_provider_errors_expose_status_without_secrets_or_saved_review(client, monkeypatch, status):
     import httpx
     monkeypatch.setenv('REVIEW_LLM_API_KEY', 'private-test-key')
@@ -367,8 +367,12 @@ def test_provider_errors_expose_status_without_secrets_or_saved_review(client, m
     token = client.post('/api/review/auth/guest').json()['token']
     headers = {'Authorization': 'Bearer ' + token}
     response = client.post('/api/review/contracts', headers=headers, json={'text': SAMPLE})
-    assert response.status_code == 503
-    assert 'Provider status: ' + str(status) in response.json()['detail']
+    assert response.status_code == (422 if status == 413 else 503)
+    if status == 413:
+        assert 'token limit' in response.json()['detail']
+        assert 'temporarily unavailable' not in response.text
+    else:
+        assert 'Provider status: ' + str(status) in response.json()['detail']
     assert 'private-test-key' not in response.text
     assert 'private contract' not in response.text
     assert client.get('/api/review/contracts', headers=headers).json() == []
