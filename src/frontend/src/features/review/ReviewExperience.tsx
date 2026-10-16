@@ -1613,11 +1613,11 @@ export default function ReviewExperience() {
                       <div>
                         <strong>
                           {review.usage?.input_tokens == null
-                            ? "—"
+                            ? "Unavailable"
                             : review.usage.input_tokens.toLocaleString()}{" "}
                           /{" "}
                           {review.usage?.output_tokens == null
-                            ? "—"
+                            ? "Unavailable"
                             : review.usage.output_tokens.toLocaleString()}
                         </strong>
                         <span>Input / output tokens</span>

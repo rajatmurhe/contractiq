@@ -132,7 +132,7 @@
   grid-template-columns: 1.04fr 1fr;
   gap: 65px;
   align-items: center;
-  background: radial-gradient(ellipse at 85% 30%, #f0f4ff 0, transparent 50%);
+  background: #f3f6f9;
 }
 .release-badge {
   display: inline-flex;
@@ -238,7 +238,7 @@
     0 24px 70px -30px #1e3c8640,
     0 1px 3px #15213c08;
   overflow: hidden;
-  transform: perspective(1800px) rotateY(-4deg) rotateX(1deg);
+  transform: none;
 }
 .hero-rail {
   width: 51px;
@@ -579,7 +579,7 @@
   padding: 28px;
   border: 1px solid #e5eaf2;
   border-radius: 9px;
-  background: linear-gradient(135deg, #fff, #fbfcff);
+  background: #f3f6f9;
 }
 .product-steps article > div {
   display: flex;
@@ -672,13 +672,13 @@
   min-height: 275px;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle, #203c6640, transparent 68%);
+  background: #f3f6f9;
 }
 .product-trust-art > div {
   width: 103px;
   height: 115px;
   border: 1px solid #476593;
-  background: linear-gradient(135deg, #304a70, #21354f);
+  background: #f3f6f9;
   border-radius: 20px;
   display: grid;
   place-items: center;
@@ -736,7 +736,7 @@
 }
 .product-plans article.featured {
   border-color: #97aff4;
-  background: linear-gradient(150deg, #f5f7ff, #fff);
+  background: #f3f6f9;
   box-shadow: 0 8px 25px #315bea08;
 }
 .plan-name {
@@ -1708,7 +1708,7 @@
   color: #a1b0c5;
 }
 .overview-guide {
-  background: linear-gradient(140deg, #1b2e4d, #243b60);
+  background: #1b2e4d;
   border-radius: 9px;
   padding: 27px;
   color: #e9f0fc;
@@ -3190,3 +3190,21 @@
 .ciq-upload-picker:focus-within { outline:3px solid #536cdd; outline-offset:3px; }
 .ciq-upload-picker:hover { background:#edf1ff!important; }
 .ciq-upload .ciq-upload-hint { font-size:13px; line-height:1.6; color:#53627a; }
+
+/* Restrained product presentation: plain surfaces and quiet controls. */
+.enterprise button, .enterprise .ciq-button, .enterprise .ciq-pet-label { border-radius: 6px; }
+.enterprise .product-hero { background: #fff; }
+.enterprise .product-hero h1 { font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1.12; letter-spacing: -.035em; overflow-wrap: break-word; }
+.enterprise .product-hero-copy { min-width: 0; }
+.enterprise .product-trust { background: #172b42; }
+.enterprise .product-trust-art > div { background: #253f59; }
+.enterprise .product-final-cta { background: #f3f6f9; }
+.hero-example-note { font-size: 13px; line-height: 1.6; color: #526479; padding: 16px 0; }
+.product-legal-note { font-size: 13px; line-height: 1.6; color: #526479; margin: 18px 0; }
+.product-legal-note a { text-decoration: underline; text-underline-offset: 3px; }
+.ciq-footer nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.enterprise .ciq-bot *, .enterprise .ciq-pet-launch:hover .ciq-pet-arm,
+.enterprise .ciq-pet-launch:focus-visible .ciq-pet-arm { animation: none !important; }
+.enterprise .ciq-pet-launch:hover .ciq-bot, .enterprise .ciq-pet-launch:focus-visible .ciq-bot { transform: none; }
+
+.enterprise .ciq-pet-launch > span:last-child { border-radius: 6px; }
