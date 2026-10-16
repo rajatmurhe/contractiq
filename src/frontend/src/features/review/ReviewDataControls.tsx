@@ -37,6 +37,7 @@ export function ReviewDataControls({
   return (
     <details className="ciq-data-controls">
       <summary>Your data and privacy</summary>
+      <p><a href="/privacy/">Privacy policy</a> · <a href="/terms/">Terms and conditions</a></p>
       <p>
         Your agreement and relevant conversation passages are sent to the
         configured model provider when you request AI analysis. Provider

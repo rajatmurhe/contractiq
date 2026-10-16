@@ -40,26 +40,24 @@ export function ProductLanding({
           <div className="product-hero-copy">
             <div className="release-badge">
               <span />
-              <span>EVIDENCE-FIRST CONTRACT INTELLIGENCE</span>
+              <span>SUPPLIER CONTRACT REVIEW</span>
               <ArrowUpRight size={13} />
             </div>
             <h1>
-              Know the terms.
+              Review supplier contracts.
               <br />
-              See the risks.
-              <br />
-              <span>Own the decision.</span>
+              <span>Check the clauses behind each finding.</span>
             </h1>
             <p>
-              Your workspace for supplier contract review. Surface commercial
-              risks, trace every finding to its source, and move negotiations
-              forward with confidence.
+              Upload an agreement to check liability, indemnity, renewal,
+              termination, and data handling against your procurement playbook.
+              Ask questions, compare revisions, and record your decision.
             </p>
             <div className="evaluation-callout" id="evaluation">
               <strong>Have a contract you want to understand?</strong>
               <p>
                 Upload your contract, check the text, and get a review with
-                clear explanations and source quotes. Start free—no credit card required.
+                clear explanations and source quotes. Start free. No credit card required.
               </p>
               <button
                 className="ciq-button ciq-dark"
@@ -96,6 +94,10 @@ export function ProductLanding({
                 <LockKeyhole size={14} /> Source-linked findings
               </span>
             </div>
+            <p className="product-legal-note">
+              Before uploading, read our <a href="/privacy/">privacy policy</a> and
+              {" "}<a href="/terms/">terms and conditions</a>.
+            </p>
             <div ref={googleRef} className="google-signin" />
             {ready && !googleConfigured && (
               <small className="product-config">
@@ -106,7 +108,7 @@ export function ProductLanding({
           </div>
           <div className="hero-product-wrap">
             <div className="hero-product-label">
-              <span>YOUR NEXT AGREEMENT, UNDERSTOOD.</span>
+              <span>SUPPLIER AGREEMENT EXAMPLE</span>
               <span>01 / REVIEW</span>
             </div>
             <div className="hero-product">
@@ -136,28 +138,14 @@ export function ProductLanding({
                   </div>
                   <span className="hero-awaiting">Needs review</span>
                 </div>
-                <div className="hero-mini-stats">
-                  <div>
-                    <strong>05</strong>
-                    <span>Findings</span>
-                  </div>
-                  <div>
-                    <strong className="hero-red">02</strong>
-                    <span>Critical risks</span>
-                  </div>
-                  <div>
-                    <CheckCircle2 size={23} />
-                    <span>Sources verified</span>
-                  </div>
-                </div>
+                <p className="hero-example-note">Illustrative clause from our synthetic sample agreement.</p>
                 <div className="hero-review-card">
                   <div>
                     <span className="ciq-severity critical">CRITICAL</span>
                     <span>01 / LIABILITY</span>
                   </div>
                   <h3>
-                    Unlimited exposure.
-                    <br />A clear place to negotiate.
+                    Liability has no stated cap.
                   </h3>
                   <blockquote>
                     Customer's liability under this Agreement is{" "}
@@ -213,12 +201,10 @@ export function ProductLanding({
           <div className="product-section-heading">
             <div>
               <span className="product-kicker">
-                LESS SEARCHING. MORE UNDERSTANDING.
+                REVIEW WORKFLOW
               </span>
               <h2>
-                From the fine print
-                <br />
-                to the next move.
+                Upload, inspect, and decide.
               </h2>
             </div>
             <p>
@@ -226,7 +212,7 @@ export function ProductLanding({
               <br />
               Read the source, understand the risk, and decide
               <br />
-              what happens next—all in one place.
+              what happens next in one workspace.
             </p>
           </div>
           <div className="product-steps">
@@ -282,16 +268,14 @@ export function ProductLanding({
             <span className="trust-coordinate c">DECISION</span>
           </div>
           <div>
-            <span className="product-kicker">BUILT TO BE QUESTIONED</span>
+            <span className="product-kicker">SOURCE CHECKS</span>
             <h2>
-              Trust starts with
-              <br />
-              “show me where.”
+              Inspect the source before acting.
             </h2>
             <p>
-              A polished answer is not enough. contractIQ validates quoted text
-              against the agreement and keeps the human decision separate from
-              the AI recommendation.
+              contractIQ checks that quoted text appears in the agreement.
+              Review the full clause and its exceptions before using a finding
+              or proposed wording. Source matching does not prove an interpretation is correct.
             </p>
             <div className="trust-checks">
               <span>
@@ -313,9 +297,7 @@ export function ProductLanding({
                 FREE EARLY ACCESS · PLANNED PRICING
               </span>
               <h2>
-                Start focused.
-                <br />
-                Build from there.
+                Free early access. Proposed plans below.
               </h2>
             </div>
             <p>
@@ -388,12 +370,10 @@ export function ProductLanding({
         <section className="product-final-cta">
           <div>
             <span className="product-kicker">
-              YOUR NEXT DECISION STARTS HERE
+              REVIEW YOUR AGREEMENT
             </span>
             <h2>
-              Open an agreement.
-              <br />
-              Find your next move.
+              Upload a supplier contract to begin.
             </h2>
           </div>
           <button
@@ -410,9 +390,10 @@ export function ProductLanding({
           contractIQ <small>CONTRACT INTELLIGENCE</small>
         </span>
         <span>Commercial review support. Human judgment required.</span>
-        <a href="#workflow">
-          Explore the product <ArrowUpRight size={12} />
-        </a>
+        <nav aria-label="Legal information">
+          <a href="/privacy/">Privacy policy</a>
+          <a href="/terms/">Terms and conditions</a>
+        </nav>
       </footer>
     </>
   );
