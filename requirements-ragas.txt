@@ -1,0 +1,2 @@
+# Isolated evaluation dependencies; these are not installed in the web service.
+ragas==0.4.3

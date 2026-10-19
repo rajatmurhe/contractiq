@@ -282,6 +282,8 @@ The original assistant checker scored 5/6 because it omitted the conflict explan
 
 See the [QA report](docs/judging/qa-2026-10-13.md) and [evaluation results](evals/review/README.md). Run `python scripts/evaluate_assistant_api.py` to repeat the deployed synthetic assistant cases; it consumes provider quota. The older review corpus is validated with `PYTHONPATH=src/agent .venv/bin/python -m app.review.evaluate`; add `--live` for real model inference.
 
+Contract Q&A also has a 24-question [Ragas benchmark](evals/ragas/README.md) for answer faithfulness and retrieval context precision. Pushes and pull requests validate the synthetic set without model calls; the live Ragas scoring workflow is manually triggered because it uses provider quota. Scores are model-judged regression signals, not legal accuracy claims.
+
 ## Pricing & Business Model
 
 Early access is free. Proposed plans are **$49/month for 50 reviews**, **$199/month for 300 reviews**, and enterprise pricing based on requirements. These are proposed plans; billing, willingness to pay and customer ROI have not been validated.

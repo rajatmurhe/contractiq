@@ -1,0 +1,72 @@
+name: Contract Q&A Ragas evaluation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/agent/app/review/assistant.py'
+      - 'src/agent/app/review/api.py'
+      - 'scripts/evaluate_contract_qa_ragas.py'
+      - 'evals/ragas/**'
+      - 'requirements-ragas.txt'
+      - '.github/workflows/ragas.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/agent/app/review/assistant.py'
+      - 'src/agent/app/review/api.py'
+      - 'scripts/evaluate_contract_qa_ragas.py'
+      - 'evals/ragas/**'
+      - 'requirements-ragas.txt'
+      - '.github/workflows/ragas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-review.txt
+      - run: pip install -r requirements-review.txt
+      - name: Validate the synthetic benchmark and retrieval coverage
+        run: PYTHONPATH=src/agent python scripts/evaluate_contract_qa_ragas.py --validate-only
+
+  live-evaluation:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-ragas.txt
+      - run: pip install -r requirements-review.txt -r requirements-ragas.txt
+      - name: Run ContractIQ answers and Ragas judges
+        env:
+          REVIEW_LLM_API_KEY: ${{ secrets.REVIEW_LLM_API_KEY }}
+          REVIEW_LLM_BASE_URL: ${{ vars.REVIEW_LLM_BASE_URL }}
+          REVIEW_LLM_MODEL: ${{ vars.REVIEW_LLM_MODEL }}
+          RAGAS_EVAL_API_KEY: ${{ secrets.REVIEW_LLM_API_KEY }}
+          RAGAS_EVAL_BASE_URL: ${{ vars.REVIEW_LLM_BASE_URL }}
+          RAGAS_EVAL_MODEL: ${{ vars.RAGAS_EVAL_MODEL }}
+        run: |
+          if [ -z "$REVIEW_LLM_API_KEY" ]; then
+            echo "Add REVIEW_LLM_API_KEY to repository Actions secrets before running the live evaluation."
+            exit 2
+          fi
+          PYTHONPATH=src/agent python scripts/evaluate_contract_qa_ragas.py --output /tmp/ragas-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contractiq-ragas-report
+          path: /tmp/ragas-report.json
+          if-no-files-found: ignore
