@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "description": "Author-written questions over the synthetic Northstar Labs / Meridian Cloud sample MSA. Not legal advice and not practitioner-validated.",
+  "contract": "MASTER SERVICES AGREEMENT\nBetween Northstar Labs (Customer) and Meridian Cloud (Supplier).\nEffective date: 1 October 2026. Annual fees: USD 120,000.\n\n1. Limitation of liability\nCustomer's liability under this Agreement is unlimited, including indirect and consequential damages.\n\n2. Indemnification\nCustomer shall indemnify Supplier against all claims arising from use of the Services. Supplier has no reciprocal indemnification obligation.\n\n3. Renewal\nThis Agreement automatically renews for twelve months unless Customer provides written notice at least ninety days before the renewal date.\n\n4. Termination\nSupplier may terminate this Agreement for convenience on seven days' notice. Prepaid fees are non-refundable.\n\n5. Data protection\nSupplier may retain Customer Data indefinitely after termination and may transfer it to any subcontractor without prior notice.\n\n6. Governing law\nThis Agreement is governed by the laws of England and Wales.\n",
+  "cases": [
+    {"id":"parties","question":"Which companies are named as the customer and supplier in this agreement?","reference":"Northstar Labs is the Customer and Meridian Cloud is the Supplier."},
+    {"id":"effective-date","question":"What effective date does the agreement state?","reference":"The effective date is 1 October 2026."},
+    {"id":"annual-fees","question":"What annual fee amount is stated in the agreement?","reference":"The stated annual fees are USD 120,000."},
+    {"id":"liability-cap","question":"Does the contract cap the customer's liability, and what does it say?","reference":"The customer's liability is unlimited under the agreement."},
+    {"id":"damages","question":"Which kinds of damages are included in the customer's liability?","reference":"The clause says the customer's unlimited liability includes indirect and consequential damages."},
+    {"id":"liable-party","question":"Whose liability does the limitation clause describe?","reference":"The clause describes the Customer's liability."},
+    {"id":"indemnitor","question":"Who must provide indemnification under the indemnification clause?","reference":"The Customer must indemnify the Supplier."},
+    {"id":"indemnity-scope","question":"What claims are covered by the customer's indemnity?","reference":"The indemnity covers all claims arising from use of the Services."},
+    {"id":"reciprocal-indemnity","question":"Does the supplier have a reciprocal indemnification obligation?","reference":"No. The agreement expressly says the Supplier has no reciprocal indemnification obligation."},
+    {"id":"renewal-type","question":"Does the agreement renew automatically or only by a new signature?","reference":"The agreement automatically renews."},
+    {"id":"renewal-length","question":"How long is each automatic renewal term?","reference":"Each automatic renewal term is twelve months."},
+    {"id":"renewal-notice","question":"How early must the customer give written notice to prevent renewal?","reference":"The Customer must provide written notice at least ninety days before the renewal date."},
+    {"id":"notice-recipient","question":"Which party has the written notice obligation for stopping renewal?","reference":"The Customer must provide the written notice to prevent automatic renewal."},
+    {"id":"termination-party","question":"Which party may terminate for convenience?","reference":"The Supplier may terminate the agreement for convenience."},
+    {"id":"termination-notice","question":"How much notice must the supplier give for termination for convenience?","reference":"The Supplier may terminate for convenience on seven days' notice."},
+    {"id":"termination-kind","question":"Is the supplier's termination right limited to cause, or does it include convenience?","reference":"The agreement gives the Supplier a termination-for-convenience right."},
+    {"id":"prepaid-refund","question":"Are prepaid fees refundable under the termination clause?","reference":"No. The clause says prepaid fees are non-refundable."},
+    {"id":"retention-period","question":"How long may the supplier retain customer data after termination?","reference":"The Supplier may retain Customer Data indefinitely after termination."},
+    {"id":"data-deletion","question":"Does the contract require the supplier to delete customer data after termination?","reference":"The stated data clause allows indefinite retention and does not require deletion after termination."},
+    {"id":"subcontractor-transfer","question":"May the supplier transfer customer data to subcontractors?","reference":"Yes. The Supplier may transfer Customer Data to any subcontractor."},
+    {"id":"subcontractor-notice","question":"Must the supplier give prior notice before transferring customer data to a subcontractor?","reference":"No. The clause permits transfer to any subcontractor without prior notice."},
+    {"id":"governing-law","question":"Which country's laws govern this agreement?","reference":"The agreement is governed by the laws of England and Wales."},
+    {"id":"agreement-title","question":"What type of agreement is identified as a Master Services Agreement?","reference":"The document is a Master Services Agreement."},
+    {"id":"renewal-trigger","question":"What happens if the customer misses the renewal cancellation deadline?","reference":"The agreement automatically renews for twelve months unless the Customer provides written notice at least ninety days before the renewal date."}
+  ]
+}
